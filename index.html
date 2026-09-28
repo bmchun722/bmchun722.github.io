@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Byungmin Chun — Computational Electrochemist</title>
+<style>
+:root {
+  --navy: #0D1B2A;
+  --navy-mid: #1A2E42;
+  --blue: #4A7FA5;
+  --blue-light: #7AAFC8;
+  --cream: #F8F7F4;
+  --text: #1A1A1A;
+  --text-muted: #5A6472;
+  --border: #D8DCE2;
+  --radius: 4px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  background: var(--cream);
+  color: var(--text);
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+/* NAV */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--navy);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 2.5rem;
+  height: 56px;
+}
+.nav-name {
+  color: #fff;
+  font-size: 15px;
+  font-weight: normal;
+  letter-spacing: 0.02em;
+}
+.nav-links { display: flex; gap: 2rem; list-style: none; }
+.nav-links a {
+  color: rgba(255,255,255,0.65);
+  text-decoration: none;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: #fff; }
+
+/* HERO */
+.hero {
+  background: var(--navy);
+  color: #fff;
+  padding: 5rem 2.5rem 4rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+.hero-label {
+  font-family: system-ui, sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  color: var(--blue-light);
+  margin-bottom: 1.25rem;
+  display: block;
+}
+.hero h1 {
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  font-weight: normal;
+  line-height: 1.2;
+  margin-bottom: 1.25rem;
+  color: #fff;
+}
+.hero-sub {
+  font-family: system-ui, sans-serif;
+  font-size: 15px;
+  color: rgba(255,255,255,0.6);
+  max-width: 540px;
+  line-height: 1.7;
+  margin-bottom: 2rem;
+}
+.hero-contacts {
+  display: flex; gap: 1.5rem; flex-wrap: wrap;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+}
+.hero-contacts a {
+  color: var(--blue-light);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(122,175,200,0.3);
+  padding-bottom: 1px;
+  transition: border-color 0.2s;
+}
+.hero-contacts a:hover { border-color: var(--blue-light); }
+
+/* MAIN WRAPPER */
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 2.5rem;
+}
+
+/* SECTION */
+section { padding: 3.5rem 0; border-bottom: 1px solid var(--border); }
+section:last-child { border-bottom: none; }
+
+.section-header {
+  display: flex; align-items: baseline; gap: 1rem;
+  margin-bottom: 2rem;
+}
+.section-title {
+  font-size: 11px;
+  font-family: system-ui, sans-serif;
+  letter-spacing: 0.12em;
+  color: var(--blue);
+  text-transform: uppercase;
+  flex-shrink: 0;
+  width: 140px;
+}
+.section-rule { flex: 1; height: 1px; background: var(--border); }
+
+/* ABOUT */
+.about-text {
+  padding-left: 156px;
+  font-size: 17px;
+  line-height: 1.8;
+  color: #2A2A2A;
+  max-width: 640px;
+}
+
+/* TIMELINE */
+.timeline { padding-left: 156px; }
+.timeline-item { position: relative; padding-bottom: 2.25rem; }
+.timeline-item:last-child { padding-bottom: 0; }
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -24px; top: 6px;
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--blue);
+  border: 2px solid var(--cream);
+  box-shadow: 0 0 0 1px var(--blue);
+}
+.timeline-item::after {
+  content: '';
+  position: absolute;
+  left: -21px; top: 13px;
+  width: 1px;
+  height: calc(100% - 8px);
+  background: var(--border);
+}
+.timeline-item:last-child::after { display: none; }
+.tl-date {
+  font-family: system-ui, sans-serif;
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 2px;
+}
+.tl-title {
+  font-size: 15px;
+  font-weight: bold;
+  font-family: 'Georgia', serif;
+  color: var(--text);
+  margin-bottom: 1px;
+}
+.tl-org {
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  color: var(--blue);
+  margin-bottom: 6px;
+}
+.tl-desc {
+  font-family: system-ui, sans-serif;
+  font-size: 13.5px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+.tl-desc li { margin-left: 1.1rem; margin-top: 3px; }
+
+/* SKILLS */
+.skills-grid {
+  padding-left: 156px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+.skill-card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1.1rem;
+}
+.skill-card-label {
+  font-family: system-ui, sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--blue);
+  margin-bottom: 6px;
+}
+.skill-card-items {
+  font-family: system-ui, sans-serif;
+  font-size: 13.5px;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+/* CONFERENCES */
+.conf-list {
+  padding-left: 156px;
+  list-style: none;
+}
+.conf-list li {
+  font-family: system-ui, sans-serif;
+  font-size: 13.5px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  gap: 1rem;
+  align-items: baseline;
+}
+.conf-list li:last-child { border-bottom: none; }
+.conf-tag {
+  flex-shrink: 0;
+  font-size: 11px;
+  font-family: system-ui, sans-serif;
+  background: var(--navy);
+  color: rgba(255,255,255,0.8);
+  border-radius: 2px;
+  padding: 2px 7px;
+  letter-spacing: 0.04em;
+}
+.conf-tag.oral { background: var(--blue); }
+
+/* TOOL: TIME CONVERTER */
+.tool-wrapper { padding-left: 156px; }
+.tool-box {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+}
+.tool-intro {
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 1.25rem;
+}
+.tc-controls { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 1.25rem; align-items: center; }
+.tc-controls select, .tc-controls input {
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 6px 10px;
+  background: var(--cream);
+  color: var(--text);
+  height: 34px;
+}
+.tc-controls select { flex: 1; min-width: 140px; }
+.tc-controls input { flex: 1; min-width: 110px; }
+.tc-now-btn {
+  font-family: system-ui, sans-serif;
+  font-size: 12px;
+  padding: 0 14px;
+  height: 34px;
+  background: var(--navy);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.tc-now-btn:hover { background: var(--navy-mid); }
+.tc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 8px; }
+.tc-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.8rem 0.9rem;
+  background: var(--cream);
+  position: relative;
+}
+.tc-card.source-card { border-color: var(--blue); background: #EEF5FB; }
+.tc-card .rm-btn {
+  position: absolute; top: 6px; right: 6px;
+  font-size: 14px; line-height: 1;
+  background: none; border: none; cursor: pointer;
+  color: #aaa; display: none;
+}
+.tc-card:hover .rm-btn { display: block; }
+.tc-card.source-card .rm-btn { display: none !important; }
+.tc-city { font-size: 13px; font-weight: bold; font-family: system-ui, sans-serif; }
+.tc-country { font-size: 11px; color: var(--text-muted); font-family: system-ui, sans-serif; margin-top: 1px; }
+.tc-time { font-size: 22px; font-family: system-ui, sans-serif; font-weight: 600; color: var(--navy); margin-top: 8px; }
+.tc-date { font-size: 11px; color: var(--text-muted); font-family: system-ui, sans-serif; margin-top: 2px; }
+.tc-offset { font-size: 10px; color: #aaa; font-family: system-ui, sans-serif; margin-top: 4px; }
+.day-badge { font-size: 10px; background: var(--blue); color: #fff; border-radius: 2px; padding: 1px 5px; position: absolute; top: 6px; right: 6px; }
+.tc-add { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+.tc-add select { flex: 1; min-width: 160px; font-family: system-ui, sans-serif; font-size: 13px; border: 1px solid var(--border); border-radius: var(--radius); padding: 5px 8px; background: var(--cream); }
+.tc-add button { font-family: system-ui, sans-serif; font-size: 12px; padding: 0 14px; height: 32px; background: var(--navy); color: #fff; border: none; border-radius: var(--radius); cursor: pointer; }
+
+/* AWARDS */
+.awards-list { padding-left: 156px; list-style: none; }
+.awards-list li {
+  font-family: system-ui, sans-serif; font-size: 13.5px;
+  color: var(--text-muted); padding: 0.45rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.awards-list li:last-child { border-bottom: none; }
+
+/* REFERENCES */
+.refs-grid { padding-left: 156px; display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1rem; }
+.ref-card {
+  border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 1rem 1.1rem; background: #fff;
+}
+.ref-name { font-size: 14px; font-weight: bold; font-family: 'Georgia', serif; margin-bottom: 2px; }
+.ref-role { font-family: system-ui, sans-serif; font-size: 12px; color: var(--text-muted); line-height: 1.5; margin-bottom: 6px; }
+.ref-email { font-family: system-ui, sans-serif; font-size: 12px; color: var(--blue); word-break: break-all; }
+
+/* FOOTER */
+footer {
+  background: var(--navy);
+  color: rgba(255,255,255,0.4);
+  font-family: system-ui, sans-serif;
+  font-size: 12px;
+  text-align: center;
+  padding: 1.75rem;
+}
+
+@media (max-width: 640px) {
+  nav { padding: 0 1.25rem; }
+  .hero { padding: 3rem 1.25rem 2.5rem; }
+  .container { padding: 0 1.25rem; }
+  .about-text, .timeline, .skills-grid, .conf-list,
+  .awards-list, .refs-grid, .tool-wrapper { padding-left: 0; }
+  .timeline-item::before, .timeline-item::after { display: none; }
+  .section-title { width: auto; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-name">Byungmin Chun</span>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#research">Research</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#conferences">Conferences</a></li>
+    <li><a href="#tool">Time Converter</a></li>
+  </ul>
+</nav>
+
+<div style="background: var(--navy);">
+  <div class="hero">
+    <span class="hero-label">Computational Electrochemist · Korea University</span>
+    <h1>Byungmin Chun</h1>
+    <p class="hero-sub">
+      Graduate researcher developing multiscale computational frameworks for CO₂ reduction reaction (CO₂RR) kinetics — combining Bayesian optimization, surrogate modeling, and sensitivity analysis to understand electrocatalytic mechanisms.
+    </p>
+    <div class="hero-contacts">
+      <a href="mailto:bmchun722@korea.ac.kr">bmchun722@korea.ac.kr</a>
+      <span style="color:rgba(255,255,255,0.3);">+82-10-5495-2195</span>
+      <span style="color:rgba(255,255,255,0.3);">Seoul, South Korea</span>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="section-header">
+      <span class="section-title">About</span>
+      <div class="section-rule"></div>
+    </div>
+    <p class="about-text">
+      I am a master's student in the Stefan Ringe Group at Korea University, focused on multiscale modeling, numerical analysis, and optimization for electrochemical systems. My research centers on developing reliable computational tools that enable efficient kinetic analysis and mechanistic understanding of CO₂ reduction reactions — bridging atomistic simulations and continuum-level descriptions.
+    </p>
+  </section>
+
+  <!-- RESEARCH / EDUCATION -->
+  <section id="research">
+    <div class="section-header">
+      <span class="section-title">Experience</span>
+      <div class="section-rule"></div>
+    </div>
+    <div class="timeline">
+
+      <div class="timeline-item">
+        <div class="tl-date">Mar 2025 – Present</div>
+        <div class="tl-title">Master of Science in Chemistry</div>
+        <div class="tl-org">Korea University, Seoul</div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="tl-date">Jul 2026 – Sep 2026</div>
+        <div class="tl-title">NRF-DAAD Graduate Student Summer Fellow</div>
+        <div class="tl-org">WIAS &amp; MPI-FHI, Berlin</div>
+        <div class="tl-desc">
+          <ul>
+            <li>Developed kinetic analysis tools in Julia at Weierstrass Institute (WIAS)</li>
+            <li>Conducted sensitivity analysis on CO₂RR kinetic models at Max Planck Institute (MPI-FHI)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="tl-date">Mar 2025 – Present</div>
+        <div class="tl-title">Master's Student Researcher</div>
+        <div class="tl-org">Stefan Ringe Group, Korea University</div>
+        <div class="tl-desc">
+          <ul>
+            <li>Developing CO₂RR multiscale models using surrogate models to estimate modeling error</li>
+            <li>Exploring adequate CO₂RR mechanisms on copper surfaces</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="tl-date">Mar 2024 – Jan 2025</div>
+        <div class="tl-title">Undergraduate Student Researcher</div>
+        <div class="tl-org">Stefan Ringe Group, Korea University</div>
+        <div class="tl-desc">
+          <ul>
+            <li>Developed a global optimization framework for CO₂RR multiscale models to extract kinetic parameters</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="tl-date">Mar 2022 – Sep 2023</div>
+        <div class="tl-title">Military Service — CBR Operations Soldier</div>
+        <div class="tl-org">Republic of Korea Army, 53rd Infantry Division</div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="tl-date">Oct 2021 – Feb 2022</div>
+        <div class="tl-title">Undergraduate Student Researcher</div>
+        <div class="tl-org">Kwangyeol Lee Group, Korea University</div>
+        <div class="tl-desc">
+          <ul>
+            <li>Synthesized trimetallic nano-electrocatalysts for oxygen reduction reaction (ORR) in fuel cells</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="tl-date">Feb 2025</div>
+        <div class="tl-title">Bachelor of Science in Chemistry</div>
+        <div class="tl-org">Korea University, Seoul — GPA 4.04/4.5</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="skills">
+    <div class="section-header">
+      <span class="section-title">Skills</span>
+      <div class="section-rule"></div>
+    </div>
+    <div class="skills-grid">
+      <div class="skill-card">
+        <div class="skill-card-label">Programming</div>
+        <div class="skill-card-items">Julia · Python · C (basic)</div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-card-label">Optimization</div>
+        <div class="skill-card-items">Bayesian optimization · Gaussian process regression</div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-card-label">Data Analysis</div>
+        <div class="skill-card-items">Sensitivity analysis · Surrogate modeling</div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-card-label">Laboratory</div>
+        <div class="skill-card-items">Nanoparticle synthesis · Electrochemical analysis</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONFERENCES -->
+  <section id="conferences">
+    <div class="section-header">
+      <span class="section-title">Conferences</span>
+      <div class="section-rule"></div>
+    </div>
+    <ul class="conf-list">
+      <li>
+        <span class="conf-tag">Poster</span>
+        <span>2025 IPAM Workshop II: Bridging Scales from Atomistic to Continuum in Electrochemical Systems — UCLA, USA (Oct 2025)</span>
+      </li>
+      <li>
+        <span class="conf-tag">Poster</span>
+        <span>2025 KCS General Meeting — Changwon, South Korea (Oct 2025)</span>
+      </li>
+      <li>
+        <span class="conf-tag">Poster</span>
+        <span>2026 JuliaCon — Mainz, Germany (Aug 2026)</span>
+      </li>
+      <li>
+        <span class="conf-tag oral">Oral</span>
+        <span>2026 MPI-FHI, Berlin — "Towards Reliable Electrocatalytic Kinetics via Bayesian Optimization and Sensitivity" (Aug 2026)</span>
+      </li>
+      <li>
+        <span class="conf-tag oral">Oral</span>
+        <span>2026 WIAS, Berlin — "Towards Reliable Electrocatalytic Kinetics: Robust Sensitivity Analysis of Stiff System" (Sep 2026)</span>
+      </li>
+    </ul>
+  </section>
+
+  <!-- AWARDS -->
+  <section id="awards">
+    <div class="section-header">
+      <span class="section-title">Awards</span>
+      <div class="section-rule"></div>
+    </div>
+    <ul class="awards-list">
+      <li>Semester High Honors — 2nd Semester 2023, Korea University</li>
+      <li>Semester High Honors — 1st Semester 2024, Korea University</li>
+      <li>Semester High Honors — 2nd Semester 2024, Korea University</li>
+    </ul>
+  </section>
+
+  <!-- WORLD TIME CONVERTER TOOL -->
+  <section id="tool">
+    <div class="section-header">
+      <span class="section-title">Time Converter</span>
+      <div class="section-rule"></div>
+    </div>
+    <div class="tool-wrapper">
+      <div class="tool-box">
+        <p class="tool-intro">Collaborating across Berlin, Seoul, and beyond — a quick time zone reference.</p>
+        <div class="tc-controls">
+          <select id="srcCity"></select>
+          <input type="time" id="srcTime" />
+          <input type="date" id="srcDate" />
+          <button class="tc-now-btn" onclick="tcSetNow()">Now</button>
+        </div>
+        <div class="tc-grid" id="tcGrid"></div>
+        <div class="tc-add">
+          <select id="tcAddSel"></select>
+          <button onclick="tcAdd()">+ Add city</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+
+</div><!-- /container -->
+
+<footer>
+  &copy; 2026 Byungmin Chun &nbsp;·&nbsp; Korea University, Seoul
+</footer>
+
+<script>
+const CITIES=[
+  {id:'Asia/Seoul',city:'Seoul',country:'Korea',flag:'🇰🇷'},
+  {id:'Europe/Berlin',city:'Berlin',country:'Germany',flag:'🇩🇪'},
+  {id:'America/New_York',city:'New York',country:'USA',flag:'🇺🇸'},
+  {id:'Europe/London',city:'London',country:'UK',flag:'🇬🇧'},
+  {id:'Asia/Tokyo',city:'Tokyo',country:'Japan',flag:'🇯🇵'},
+  {id:'Asia/Shanghai',city:'Shanghai',country:'China',flag:'🇨🇳'},
+  {id:'Asia/Singapore',city:'Singapore',country:'SG',flag:'🇸🇬'},
+  {id:'America/Los_Angeles',city:'Los Angeles',country:'USA',flag:'🇺🇸'},
+  {id:'Australia/Sydney',city:'Sydney',country:'Australia',flag:'🇦🇺'},
+  {id:'Asia/Dubai',city:'Dubai',country:'UAE',flag:'🇦🇪'},
+  {id:'Europe/Paris',city:'Paris',country:'France',flag:'🇫🇷'},
+  {id:'America/Chicago',city:'Chicago',country:'USA',flag:'🇺🇸'},
+];
+const DAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+let tcSrcId='Asia/Seoul';
+let tcMs=Date.now();
+let tcDisplayed=['Asia/Seoul','Europe/Berlin','America/New_York','Europe/London'];
+
+function tcConvert(ms,tz){return new Date(new Date(ms).toLocaleString('en-US',{timeZone:tz}));}
+function tcFmt(d){return d.getHours().toString().padStart(2,'0')+':'+d.getMinutes().toString().padStart(2,'0');}
+function tcFmtDate(d){return DAYS[d.getDay()]+', '+MONTHS[d.getMonth()]+' '+d.getDate();}
+function tcOffset(tz){
+  const u=new Date(new Date(tcMs).toLocaleString('en-US',{timeZone:'UTC'}));
+  const t=new Date(new Date(tcMs).toLocaleString('en-US',{timeZone:tz}));
+  const d=(t-u)/60000;
+  const s=d>=0?'+':'-';const a=Math.abs(d);const h=Math.floor(a/60);const m=a%60;
+  return 'UTC'+s+h+(m?':'+String(m).padStart(2,'0'):'');
+}
+function tcDayDiff(a,b){
+  const ad=new Date(a.getFullYear(),a.getMonth(),a.getDate());
+  const bd=new Date(b.getFullYear(),b.getMonth(),b.getDate());
+  return Math.round((bd-ad)/86400000);
+}
+function tcRender(){
+  const src=tcConvert(tcMs,tcSrcId);
+  const grid=document.getElementById('tcGrid');
+  grid.innerHTML='';
+  tcDisplayed.forEach(tz=>{
+    const c=CITIES.find(x=>x.id===tz);if(!c)return;
+    const d=tcConvert(tcMs,tz);
+    const diff=tcDayDiff(src,d);
+    const isSrc=tz===tcSrcId;
+    const card=document.createElement('div');
+    card.className='tc-card'+(isSrc?' source-card':'');
+    const badge=diff!==0?`<span class="day-badge">${diff>0?'+'+diff:diff}d</span>`:'';
+    card.innerHTML=`
+      ${!isSrc?`<button class="rm-btn" onclick="tcRemove('${tz}')" title="Remove">✕</button>`:''}
+      ${!isSrc?badge:''}
+      <div class="tc-city">${c.flag} ${c.city}</div>
+      <div class="tc-country">${c.country}</div>
+      <div class="tc-time">${tcFmt(d)}</div>
+      <div class="tc-date">${tcFmtDate(d)}</div>
+      <div class="tc-offset">${tcOffset(tz)}</div>
+    `;
+    grid.appendChild(card);
+  });
+  const sel=document.getElementById('tcAddSel');
+  const prev=sel.value;
+  sel.innerHTML='';
+  CITIES.forEach(c=>{
+    const o=document.createElement('option');
+    o.value=c.id;o.textContent=c.flag+' '+c.city;
+    if(tcDisplayed.includes(c.id))o.disabled=true;
+    sel.appendChild(o);
+  });
+  try{sel.value=prev;}catch(e){}
+}
+function tcSetNow(){
+  tcMs=Date.now();
+  const d=tcConvert(tcMs,tcSrcId);
+  document.getElementById('srcTime').value=d.getHours().toString().padStart(2,'0')+':'+d.getMinutes().toString().padStart(2,'0');
+  document.getElementById('srcDate').value=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  tcRender();
+}
+function tcParseMs(){
+  const t=document.getElementById('srcTime').value;
+  const dt=document.getElementById('srcDate').value;
+  if(!t||!dt)return;
+  const iso=dt+'T'+t+':00';
+  const raw=new Date(iso+'Z');
+  const local=new Date(new Date(iso+'Z').toLocaleString('en-US',{timeZone:tcSrcId}));
+  tcMs=raw.getTime()-(local.getTime()-raw.getTime());
+  tcRender();
+}
+function tcAdd(){
+  const id=document.getElementById('tcAddSel').value;
+  if(!id||tcDisplayed.includes(id))return;
+  tcDisplayed.push(id);tcRender();
+}
+function tcRemove(tz){tcDisplayed=tcDisplayed.filter(d=>d!==tz);tcRender();}
+
+// init source select
+const srcSel=document.getElementById('srcCity');
+CITIES.forEach(c=>{const o=document.createElement('option');o.value=c.id;o.textContent=c.flag+' '+c.city;srcSel.appendChild(o);});
+srcSel.value=tcSrcId;
+srcSel.addEventListener('change',function(){tcSrcId=this.value;if(!tcDisplayed.includes(tcSrcId))tcDisplayed.unshift(tcSrcId);tcSetNow();});
+document.getElementById('srcTime').addEventListener('change',tcParseMs);
+document.getElementById('srcDate').addEventListener('change',tcParseMs);
+tcSetNow();
+</script>
+</body>
+</html>
