@@ -180,6 +180,8 @@ section:last-child { border-bottom: none; }
   line-height: 1.6;
 }
 .tl-desc li { margin-left: 1.1rem; margin-top: 3px; }
+.conf-list a, .tl-org a, .tl-desc a { color: var(--blue); text-decoration: none; border-bottom: 1px solid var(--blue-light); }
+.conf-list a:hover, .tl-org a:hover, .tl-desc a:hover { color: var(--navy); }
 
 /* SKILLS */
 .skills-grid {
@@ -354,7 +356,7 @@ footer {
     <li><a href="#education">Education</a></li>
     <li><a href="#research">Experience</a></li>
     <li><a href="#skills">Skills</a></li>
-    <li><a href="#conferences">Conferences</a></li>
+    <li><a href="#conferences">Conferences &amp; Talks</a></li>
     <li><a href="#tool">Time Converter</a></li>
   </ul>
 </nav>
@@ -430,8 +432,8 @@ footer {
         <div class="tl-org">WIAS &amp; MPI-FHI, Berlin</div>
         <div class="tl-desc">
           <ul>
-            <li>Developed kinetic analysis tools in Julia at Weierstrass Institute for Applied Analysis and Stochastics (WIAS)</li>
-            <li>Conducted sensitivity analysis on CO₂RR kinetic models at Fritz Haber Institute of the Max Planck Society (MPI-FHI)</li>
+            <li>Developed kinetic analysis tools in Julia at Weierstrass Institute for Applied Analysis and Stochastics (WIAS), under the supervision of <a href="https://www.wias-berlin.de/people/fuhrmann/" target="_blank" rel="noopener">Dr. Jürgen Fuhrmann</a></li>
+            <li>Studied sensitivity analysis methods for CO₂RR kinetic models at Fritz Haber Institute of the Max Planck Society (MPI-FHI), under the supervision of <a href="https://www.fhi.mpg.de/725772/matera_group" target="_blank" rel="noopener">Dr. Sebastian Matera</a></li>
           </ul>
         </div>
       </div>
@@ -439,7 +441,7 @@ footer {
       <div class="timeline-item">
         <div class="tl-date">Mar 2025 – Present</div>
         <div class="tl-title">Master's Student Researcher</div>
-        <div class="tl-org">Stefan Ringe Group, Korea University</div>
+        <div class="tl-org"><a href="https://ringelab.com/" target="_blank" rel="noopener">Stefan Ringe Group</a>, Korea University</div>
         <div class="tl-desc">
           <ul>
             <li>Developing CO₂RR multiscale models using surrogate models to estimate modeling error</li>
@@ -451,7 +453,7 @@ footer {
       <div class="timeline-item">
         <div class="tl-date">Mar 2024 – Jan 2025</div>
         <div class="tl-title">Undergraduate Student Researcher</div>
-        <div class="tl-org">Stefan Ringe Group, Korea University</div>
+        <div class="tl-org"><a href="https://ringelab.com/" target="_blank" rel="noopener">Stefan Ringe Group</a>, Korea University</div>
         <div class="tl-desc">
           <ul>
             <li>Developed a global optimization framework for CO₂RR multiscale models to extract kinetic parameters</li>
@@ -508,7 +510,7 @@ footer {
   <!-- CONFERENCES -->
   <section id="conferences">
     <div class="section-header">
-      <span class="section-title">Conferences</span>
+      <span class="section-title">Conferences &amp; Talks</span>
       <div class="section-rule"></div>
     </div>
     <ul class="conf-list">
@@ -530,7 +532,7 @@ footer {
       </li>
       <li>
         <span class="conf-tag oral">Oral</span>
-        <span>2026 Weierstrass Institute for Applied Analysis and Stochastics (WIAS), Berlin — "Towards Reliable Electrocatalytic Kinetics: Robust Sensitivity Analysis of Stiff System" (Sep 2026)</span>
+        <span>2026 Weierstrass Institute for Applied Analysis and Stochastics (WIAS), Berlin — "<a href="https://www.wias-berlin.de/seminars/nummath/index.jsp?lang=1" target="_blank" rel="noopener">Towards Reliable Electrocatalytic Kinetics: Robust Sensitivity Analysis of Stiff System</a>" (Sep 2026)</span>
       </li>
     </ul>
   </section>
