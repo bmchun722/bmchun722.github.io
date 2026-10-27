@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Animal Patterns | Byungmin Chun</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false}]});"></script>
+<style>
+:root {
+  --navy: #0D1B2A;
+  --navy-mid: #1A2E42;
+  --blue: #4A7FA5;
+  --blue-light: #7AAFC8;
+  --cream: #F8F7F4;
+  --text: #1A1A1A;
+  --text-muted: #5A6472;
+  --border: #D8DCE2;
+  --radius: 4px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  background: var(--cream);
+  color: var(--text);
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+/* NAV */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--navy);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 2.5rem;
+  height: 56px;
+}
+.nav-name { color: #fff; font-size: 15px; letter-spacing: 0.02em; text-decoration: none; }
+.nav-links { display: flex; gap: 2rem; list-style: none; }
+.nav-links a {
+  color: rgba(255,255,255,0.65);
+  text-decoration: none;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  transition: color 0.2s;
+}
+.nav-links a:hover, .nav-links a.active { color: #fff; }
+
+/* HERO */
+.hero-bg { background: var(--navy); }
+.hero { color: #fff; padding: 3.5rem 2.5rem 3rem; max-width: 900px; margin: 0 auto; }
+.hero-label {
+  font-family: system-ui, sans-serif; font-size: 12px; letter-spacing: 0.12em;
+  color: var(--blue-light); margin-bottom: 1rem; display: block;
+}
+.hero h1 { font-size: clamp(1.8rem, 4.5vw, 2.6rem); font-weight: normal; line-height: 1.2; margin-bottom: 1rem; }
+.hero p { font-family: system-ui, sans-serif; font-size: 15px; color: rgba(255,255,255,0.65); max-width: 680px; }
+
+.container { max-width: 900px; margin: 0 auto; padding: 0 2.5rem; }
+section { padding: 3rem 0 1rem; }
+.section-header { display: flex; align-items: center; gap: 1.25rem; margin-bottom: 1.5rem; }
+.section-title {
+  font-family: system-ui, sans-serif; font-size: 11px; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--blue); white-space: nowrap;
+}
+.section-rule { flex: 1; height: 1px; background: var(--border); }
+p { margin-bottom: 1rem; }
+.muted { color: var(--text-muted); }
+.small { font-family: system-ui, sans-serif; font-size: 13px; }
+
+/* SIMULATOR */
+.sim-box { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem; }
+.presets { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
+button {
+  font-family: system-ui, sans-serif; font-size: 13px; cursor: pointer;
+  background: var(--cream); color: var(--text); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 0.4rem 0.85rem;
+}
+button:hover { border-color: var(--blue); }
+button.active { background: var(--navy); color: #fff; border-color: var(--navy); }
+.canvas-wrap {
+  background: #ECEAE5; border-radius: var(--radius); display: flex; align-items: center; justify-content: center;
+  aspect-ratio: 2 / 1; overflow: hidden;
+}
+canvas { width: 100%; height: 100%; display: block; }
+.status {
+  display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem;
+  font-family: system-ui, sans-serif; font-size: 13px; margin: 0.6rem 0 1rem;
+}
+.regime { font-weight: 600; color: var(--navy-mid); }
+.controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem 1.5rem; }
+.ctl label {
+  display: flex; justify-content: space-between; font-family: system-ui, sans-serif; font-size: 13px; margin-bottom: 0.2rem;
+}
+.ctl label span.val { font-variant-numeric: tabular-nums; color: var(--blue); }
+.ctl input[type=range] { width: 100%; accent-color: var(--blue); }
+.ctl .hint { font-family: system-ui, sans-serif; font-size: 12px; color: var(--text-muted); line-height: 1.4; }
+.ctl select { width: 100%; font-family: system-ui, sans-serif; font-size: 13px; padding: 0.3rem; border: 1px solid var(--border); border-radius: var(--radius); background: #fff; }
+.actions { display: flex; gap: 0.5rem; margin-top: 1rem; flex-wrap: wrap; }
+.readout {
+  margin-top: 1rem; padding-top: 0.8rem; border-top: 1px solid var(--border);
+  font-family: system-ui, sans-serif; font-size: 12.5px; color: var(--text-muted);
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0.25rem 1rem;
+}
+.readout b { color: var(--text); font-weight: 600; font-variant-numeric: tabular-nums; }
+
+/* TABLES */
+.table-wrap { overflow-x: auto; margin-bottom: 1rem; }
+table { border-collapse: collapse; width: 100%; font-family: system-ui, sans-serif; font-size: 13.5px; background: #fff; }
+th, td { border-bottom: 1px solid var(--border); padding: 0.55rem 0.7rem; text-align: left; vertical-align: top; }
+th { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); font-weight: 600; background: var(--cream); }
+td.sym { white-space: nowrap; }
+.tag { display: inline-block; font-size: 11px; padding: 0.05rem 0.45rem; border-radius: 10px; white-space: nowrap; }
+.tag.slider { background: #E3EEF5; color: #2D5F80; }
+.tag.const { background: #EEE; color: #555; }
+.eq-box { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 0.5rem 1rem; margin-bottom: 1rem; overflow-x: auto; }
+ol.refs { padding-left: 1.25rem; font-size: 14px; }
+ol.refs li { margin-bottom: 0.4rem; }
+
+footer {
+  margin-top: 3rem; padding: 2rem 2.5rem; text-align: center;
+  font-family: system-ui, sans-serif; font-size: 12px; color: var(--text-muted); border-top: 1px solid var(--border);
+}
+
+@media (max-width: 640px) {
+  nav { padding: 0 1rem; }
+  .nav-links { gap: 1rem; }
+  .hero { padding: 2.5rem 1rem 2rem; }
+  .container { padding: 0 1rem; }
+  .sim-box { padding: 0.85rem; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-name" href="index.html">Byungmin Chun</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="patterns.html" class="active">Animal Patterns</a></li>
+  </ul>
+</nav>
+
+<div class="hero-bg">
+  <div class="hero">
+    <span class="hero-label">Reaction-Diffusion · Turing Patterns · Murray's Model</span>
+    <h1>How the Leopard Gets Its Spots</h1>
+    <p>
+      An interactive version of the animal-marking chapter (“Written on the Body”) of Philip Ball's
+      <em>Shapes</em>. Two chemicals react and diffuse on the skin of an embryo; pigment cells later
+      read the resulting pre-pattern. Move the sliders to turn a zebra into a leopard, or an elephant.
+    </p>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- SIMULATOR -->
+  <section id="simulator">
+    <div class="section-header">
+      <span class="section-title">Simulator</span>
+      <div class="section-rule"></div>
+    </div>
+
+    <div class="sim-box">
+      <div class="presets" id="presets">
+        <button data-preset="zebra">Zebra (stripes)</button>
+        <button data-preset="leopard">Leopard (spots)</button>
+        <button data-preset="elephant">Elephant (plain)</button>
+        <button data-preset="tail">Cheetah tail (spots → bands)</button>
+      </div>
+
+      <div class="canvas-wrap"><canvas id="canvas" width="720" height="360" aria-label="Simulated coat pattern"></canvas></div>
+      <div class="status">
+        <span>Prediction: <span class="regime" id="regime">–</span></span>
+        <span class="muted">t = <span id="simTime">0</span> &nbsp;·&nbsp; <span id="runState">running</span></span>
+      </div>
+
+      <div class="controls">
+        <div class="ctl">
+          <label for="dSlider">Diffusion ratio \(d = D_v/D_u\) <span class="val" id="dVal"></span></label>
+          <input type="range" id="dSlider" min="2" max="40" step="0.5">
+          <div class="hint">How much faster the inhibitor spreads. Below \(d_c\) nothing happens; just above it gives stripes; far above it gives spots. Applied live.</div>
+        </div>
+        <div class="ctl">
+          <label for="gSlider">Domain scale \(\gamma\) <span class="val" id="gVal"></span></label>
+          <input type="range" id="gSlider" min="0" max="4" step="0.01">
+          <div class="hint">\(\gamma \propto\) (embryo size)\(^2\) at the time the pattern is laid down. Restarts the simulation.</div>
+        </div>
+        <div class="ctl">
+          <label for="tSlider">Pigment threshold \(u^*\) <span class="val" id="tVal"></span></label>
+          <input type="range" id="tSlider" min="4" max="30" step="0.5">
+          <div class="hint">Melanocytes make dark pigment where \(u > u^*\). Changes only the read-out, not the chemistry.</div>
+        </div>
+        <div class="ctl">
+          <label for="geomSelect">Geometry</label>
+          <select id="geomSelect">
+            <option value="body">Flank of the body (flat rectangle, zero-flux edges)</option>
+            <option value="tail">Tapering tail (unrolled cone, periodic around)</option>
+          </select>
+          <div class="hint">On the tail, the circumference shrinks from root (left) to tip (right). Restarts the simulation.</div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button id="pauseBtn">Pause</button>
+        <button id="resetBtn">New random start</button>
+      </div>
+
+      <div class="readout">
+        <span>Steady state \((u_s, v_s)\): <b id="roSteady"></b></span>
+        <span>Critical ratio \(d_c\): <b id="roDc"></b></span>
+        <span>Intrinsic wavelength \(\lambda\): <b id="roLambda"></b></span>
+        <span>Unstable wavenumbers \(k\): <b id="roBand"></b></span>
+        <span>Domain size \(L = \sqrt{\gamma}\): <b id="roL"></b></span>
+        <span>Grid / time step: <b id="roGrid"></b></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- MODEL -->
+  <section id="model">
+    <div class="section-header">
+      <span class="section-title">The Model</span>
+      <div class="section-rule"></div>
+    </div>
+    <p>
+      Turing (1952) showed that two reacting, diffusing chemicals can turn a uniform mixture into a stationary
+      pattern. Gierer and Meinhardt (1972) identified the ingredients: a short-range <em>activator</em> that
+      promotes its own production, and a long-range <em>inhibitor</em> that diffuses faster. James Murray
+      proposed in the late 1970s that such a pre-pattern in the embryonic skin decides where melanocytes
+      make pigment. His coat-pattern calculations use the substrate-inhibition kinetics of Thomas (1975),
+      written in dimensionless form as
+    </p>
+    <div class="eq-box">
+      $$\frac{\partial u}{\partial t} = \gamma\, f(u,v) + \nabla^2 u, \qquad
+        \frac{\partial v}{\partial t} = \gamma\, g(u,v) + d\, \nabla^2 v,$$
+      $$f(u,v) = a - u - h(u,v), \qquad g(u,v) = \alpha\,(b - v) - h(u,v), \qquad
+        h(u,v) = \frac{\rho\, u\, v}{1 + u + K u^2}.$$
+    </div>
+    <p>
+      Here \(u\) and \(v\) are the two morphogen concentrations (in Thomas's experiment, uric acid and oxygen).
+      Both are supplied at constant rates (\(a\), \(\alpha b\)) and consumed together by the reaction \(h\).
+      Because \(h\) saturates and then falls for large \(u\) (the \(K u^2\) term), the kinetics act as an
+      activator-inhibitor pair with a built-in ceiling on self-enhancement, which is what lets stripes survive
+      (see the footnote in Ball, p. 166). The simulator solves the equivalent system with lengths rescaled
+      by \(\sqrt{\gamma}\), so that \(\gamma\) appears only as the domain size \(L = \sqrt{\gamma}\).
+    </p>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Symbol</th><th>Meaning</th><th>Value</th><th>Control</th><th>Why</th></tr></thead>
+        <tbody>
+          <tr><td class="sym">\(u, v\)</td><td>Morphogen concentrations on the skin (2-D fields)</td><td>start at \((u_s, v_s)\) + 1% noise</td><td><span class="tag const">state</span></td><td>The noise plays the role of molecular fluctuations that seed the instability.</td></tr>
+          <tr><td class="sym">\(d\)</td><td>Diffusion ratio \(D_v / D_u\): how much faster the inhibitor spreads</td><td>2 – 40</td><td><span class="tag slider">slider</span></td><td>The single most important switch: no pattern, stripes, or spots.</td></tr>
+          <tr><td class="sym">\(\gamma\)</td><td>Scale: reaction strength relative to diffusion, \(\gamma \propto L^2\) (embryo size squared)</td><td>1 – 10 000</td><td><span class="tag slider">slider</span></td><td>Murray's key point: the same chemistry gives different markings on embryos of different size and shape.</td></tr>
+          <tr><td class="sym">\(u^*\)</td><td>Pigment threshold read by melanocytes</td><td>4 – 30 (default 12)</td><td><span class="tag slider">slider</span></td><td>Sets how much of the pre-pattern becomes dark; thin vs. thick stripes, small vs. large spots.</td></tr>
+          <tr><td class="sym">\(a\)</td><td>Supply rate of \(u\)</td><td>92</td><td><span class="tag const">constant</span></td><td rowspan="5">Murray's values for Thomas kinetics. They fix the steady state and the shape of the reaction Jacobian; moving them mostly shifts \(d_c\) and \(\lambda\), which \(d\) and \(\gamma\) already control more transparently.</td></tr>
+          <tr><td class="sym">\(b\)</td><td>Reservoir level of \(v\)</td><td>64</td><td><span class="tag const">constant</span></td></tr>
+          <tr><td class="sym">\(\alpha\)</td><td>Relaxation rate of \(v\) toward \(b\)</td><td>1.5</td><td><span class="tag const">constant</span></td></tr>
+          <tr><td class="sym">\(\rho\)</td><td>Maximum reaction (consumption) rate</td><td>18.5</td><td><span class="tag const">constant</span></td></tr>
+          <tr><td class="sym">\(K\)</td><td>Substrate-inhibition strength (ceiling on self-enhancement)</td><td>0.1</td><td><span class="tag const">constant</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- REGIMES -->
+  <section id="regimes">
+    <div class="section-header">
+      <span class="section-title">Which Parameters Give Which Coat</span>
+      <div class="section-rule"></div>
+    </div>
+    <p>
+      Linearising about the uniform steady state \((u_s, v_s) \approx (9.93, 9.29)\) gives the Jacobian
+      \(f_u = 2.52,\ f_v = -8.83,\ g_u = 3.52,\ g_v = -10.33\). Since \(f_u > 0\), \(u\) is self-enhancing
+      (the activator); \(g_v < 0\) and \(f_v < 0\) make \(v\) the inhibitor. A small perturbation
+      \(\propto e^{i k x}\) grows if \(\det\!\big(J - k^2\,\mathrm{diag}(1, d)\big) < 0\), which first becomes
+      possible when \(d\) exceeds
+      $$d_c \approx 9.63, \qquad \lambda_c = 2\pi/k_c \approx 7.4 \ \text{(in units of } L/\sqrt{\gamma}\text{)}.$$
+      The ranges below for stripes vs. spots come from runs of this simulator on the default body
+      (\(\gamma = 3600\), \(u^* = 12\)); the boundaries are approximate and shift slightly with the random start.
+    </p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Coat</th><th>Parameters</th><th>Reason</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><b>Plain</b> (elephant preset)</td>
+            <td>\(d < d_c \approx 9.6\), any \(\gamma\). Preset: \(d = 7\).</td>
+            <td>The inhibitor does not outrun the activator. Every perturbation decays back to the uniform
+              state, so the skin is one colour everywhere. Diffusion only smooths; there is no Turing instability.</td>
+          </tr>
+          <tr>
+            <td><b>Plain</b> (too small)</td>
+            <td>\(d > d_c\) but \(L = \sqrt{\gamma} < \pi / k_{\max}\), roughly a third of a wavelength (\(\gamma \lesssim 5\) for \(d = 30\), \(\gamma \lesssim 7\) for \(d = 12\)).</td>
+            <td>The instability exists, but no allowed mode fits in the domain: with zero-flux edges the
+              wavenumbers are \(k = \pi\sqrt{(m/L_x)^2 + (n/L_y)^2}\), and even the longest one lies outside the
+              unstable band. Murray's explanation for uniformly coloured small mammals (and for small embryos).</td>
+          </tr>
+          <tr>
+            <td><b>Stripes</b> (zebra preset)</td>
+            <td>\(d\) just above \(d_c\): about \(9.6 < d \lesssim 14\). Preset: \(d = 12\), \(\gamma = 3600\).</td>
+            <td>Near onset only a narrow band of wavelengths around \(\lambda_c\) can grow, and growth is slow.
+              Sets of parallel waves (stripes) then win over spot arrays. The \(K u^2\) ceiling on
+              self-enhancement stops the stripes from pinching off into spots.</td>
+          </tr>
+          <tr>
+            <td><b>Mixed</b></td>
+            <td>about \(14 \lesssim d \lesssim 20\).</td>
+            <td>Stripes and spots coexist; stripes break into chains of spots.</td>
+          </tr>
+          <tr>
+            <td><b>Spots</b> (leopard preset)</td>
+            <td>\(d\) well above \(d_c\): about \(d \gtrsim 20\). Preset: \(d = 30\), \(\gamma = 3600\).</td>
+            <td>The fast inhibitor confines each activator peak to a compact island. Isolated peaks are now the
+              stable arrangement, so the pre-pattern becomes an array of spots of high \(u\).</td>
+          </tr>
+          <tr>
+            <td><b>Spots → bands</b> (cheetah tail preset)</td>
+            <td>Spot-forming \(d = 30\) on a tapering tail.</td>
+            <td>Where the circumference is less than about one wavelength, nothing can vary around the tail,
+              so only rings fit (bands). Where the tail is wide, spots fit. Ball, Fig. 4.7: the narrow tip of
+              a cheetah's or leopard's tail is banded even though the body is spotted.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="muted small">
+      Murray also argued that very large embryos (elephants, hippos) end up plain because the spots become so
+      crowded that they merge (“more is less”, Ball p. 169). With a fixed threshold, this simple model keeps
+      making ever more, ever smaller spots as \(\gamma\) grows, so the elephant preset uses the
+      \(d < d_c\) route instead.
+    </p>
+  </section>
+
+  <!-- NUMERICS -->
+  <section id="numerics">
+    <div class="section-header">
+      <span class="section-title">Numerical Method</span>
+      <div class="section-rule"></div>
+    </div>
+    <p>
+      Method of lines: the Laplacian is a second-order 5-point finite difference on a grid with spacing
+      \(h \approx 0.7\) (about ten cells per wavelength), and time is advanced with explicit forward Euler,
+      $$\Delta t = \min\!\left(0.9\,\frac{h^2}{4d},\ 0.02\right),$$
+      where the first bound is the diffusion stability limit and the second keeps the stiff reaction term stable.
+      The body uses zero-flux (Neumann) edges via reflected ghost cells. The tail is a cone cut open along its
+      length, so it is periodic around the circumference and zero-flux at both ends; each grid row has as many
+      cells as its circumference holds. The simulation pauses at \(t = 400\), when the patterns have settled (moving \(d\) or pressing Resume runs it further).
+      Source: <a href="assets/murray-patterns.js">assets/murray-patterns.js</a>.
+    </p>
+  </section>
+
+  <!-- REFERENCES -->
+  <section id="references">
+    <div class="section-header">
+      <span class="section-title">References</span>
+      <div class="section-rule"></div>
+    </div>
+    <ol class="refs">
+      <li>P. Ball, <em>Nature's Patterns: Shapes</em>, Oxford University Press (2009), Ch. 4 “Written on the Body”.</li>
+      <li>A. M. Turing, “The chemical basis of morphogenesis”, <em>Phil. Trans. R. Soc. B</em> 237, 37 (1952).</li>
+      <li>A. Gierer and H. Meinhardt, “A theory of biological pattern formation”, <em>Kybernetik</em> 12, 30 (1972).</li>
+      <li>D. Thomas, “Artificial enzyme membranes, transport, memory and oscillatory phenomena”, in <em>Analysis and Control of Immobilized Enzyme Systems</em> (1975).</li>
+      <li>J. D. Murray, “A pre-pattern formation mechanism for animal coat markings”, <em>J. Theor. Biol.</em> 88, 161 (1981).</li>
+      <li>J. D. Murray, <em>Mathematical Biology II: Spatial Models and Biomedical Applications</em>, 3rd ed., Springer (2003), Ch. 3.</li>
+    </ol>
+  </section>
+
+</div>
+
+<footer>
+  &copy; 2026 Byungmin Chun &nbsp;·&nbsp; Korea University, Seoul
+</footer>
+
+<script src="assets/murray-patterns.js"></script>
+<script>
+const PRESETS = {
+  zebra:    { d: 12, gamma: 3600, threshold: 12, geometry: 'body', light: [246, 244, 238], dark: [24, 22, 22] },
+  leopard:  { d: 30, gamma: 3600, threshold: 12, geometry: 'body', light: [222, 172, 92],  dark: [52, 34, 20] },
+  elephant: { d: 7,  gamma: 3600, threshold: 12, geometry: 'body', light: [138, 133, 128], dark: [84, 80, 77] },
+  tail:     { d: 30, gamma: 3600, threshold: 12, geometry: 'tail', light: [226, 184, 112], dark: [40, 28, 18] },
+};
+const T_MAX = 400, FRAME_BUDGET_MS = 14;
+
+const canvas = document.getElementById('canvas'), ctx = canvas.getContext('2d');
+const els = id => document.getElementById(id);
+const state = { d: 12, gamma: 3600, threshold: 12, geometry: 'body', light: PRESETS.zebra.light, dark: PRESETS.zebra.dark, paused: false, seed: 1, tEnd: T_MAX };
+let sim = null, image = null, offscreen = document.createElement('canvas');
+
+function geometryFor(kind, gamma) {
+  const L = Math.sqrt(gamma);
+  return kind === 'tail'
+    ? { kind: 'tail', length: 1.33 * L, cRoot: 0.47 * L, cTip: 0.05 * L }
+    : { kind: 'body', Lx: L, Ly: L / 2 };
+}
+
+// Does any allowed (m, n) != (0, 0) mode fall inside the unstable band?
+// Body: zero-flux modes k = pi * sqrt((m/Lx)^2 + (n/Ly)^2).
+// Tail: periodic around the (widest) root circumference, zero-flux along the length,
+//       k = sqrt((2 pi m / cRoot)^2 + (pi n / length)^2).
+function anyModeFits(band, geom) {
+  if (!band) return false;
+  const kx = geom.kind === 'tail' ? 2 * Math.PI / geom.cRoot : Math.PI / geom.Lx;
+  const ky = geom.kind === 'tail' ? Math.PI / geom.length : Math.PI / geom.Ly;
+  for (let m = 0; m * kx <= band[1]; m++) {
+    for (let n = 0; Math.hypot(m * kx, n * ky) <= band[1]; n++) {
+      if ((m > 0 || n > 0) && Math.hypot(m * kx, n * ky) >= band[0]) return true;
+    }
+  }
+  return false;
+}
+
+function predictRegime() {
+  const ls = linearStability(MURRAY_KINETICS, state.d), geom = geometryFor(state.geometry, state.gamma);
+  if (state.d <= ls.dc) return 'Plain: d < d_c, the uniform state is stable';
+  if (!anyModeFits(ls.band, geom)) return 'Plain: domain too small for any unstable mode';
+  if (geom.kind === 'tail') {
+    // If even the widest circumference holds no unstable mode, nothing can vary around the tail.
+    if (2 * Math.PI / geom.cRoot > ls.band[1]) return 'Bands only: the tail is too thin for spots';
+    return state.d >= 20 ? 'Spots at the wide root, bands at the narrow tip' : 'Bands and stripes along the tail';
+  }
+  if (state.d < 14) return 'Stripes (d just above d_c)';
+  if (state.d < 20) return 'Mixed stripes and spots';
+  return 'Spots (d well above d_c)';
+}
+
+function updateReadout() {
+  const ls = linearStability(MURRAY_KINETICS, state.d), g = sim.grid;
+  els('roSteady').textContent = `(${ls.steady.u.toFixed(2)}, ${ls.steady.v.toFixed(2)})`;
+  els('roDc').textContent = ls.dc.toFixed(2);
+  els('roLambda').textContent = ls.lambdaC.toFixed(2);
+  els('roBand').textContent = ls.band ? `${ls.band[0].toFixed(2)} – ${ls.band[1].toFixed(2)}` : 'none (stable)';
+  const L = Math.sqrt(state.gamma);
+  els('roL').textContent = `${L.toFixed(1)} ≈ ${(L / ls.lambdaC).toFixed(1)} λ`;
+  els('roGrid').textContent = `${g.n} cells, Δt = ${sim.timeStep().toExponential(1)}`;
+  els('regime').textContent = predictRegime();
+}
+
+function syncControls() {
+  els('dSlider').value = state.d; els('dVal').textContent = state.d.toFixed(1);
+  els('gSlider').value = Math.log10(state.gamma); els('gVal').textContent = Math.round(state.gamma).toLocaleString('en-US');
+  els('tSlider').value = state.threshold; els('tVal').textContent = state.threshold.toFixed(1);
+  els('geomSelect').value = state.geometry;
+}
+
+function rebuild() {
+  sim = new MurraySimulation({ d: state.d }, geometryFor(state.geometry, state.gamma), { seed: state.seed });
+  const g = sim.grid, maxW = Math.max(...g.W);
+  // Tail is drawn transposed: length runs left to right, circumference top to bottom.
+  if (g.periodic) { offscreen.width = g.ny; offscreen.height = maxW; }
+  else { offscreen.width = g.W[0]; offscreen.height = g.ny; }
+  image = offscreen.getContext('2d').createImageData(offscreen.width, offscreen.height);
+  state.tEnd = T_MAX;
+  setPaused(false);
+  updateReadout();
+  draw();
+}
+
+function draw() {
+  const g = sim.grid, u = sim.u, px = image.data, maxW = Math.max(...g.W);
+  const t0 = state.threshold, w = 0.6, [lr, lg, lb] = state.light, [dr, dg, db] = state.dark;
+  px.fill(0);
+  for (let j = 0; j < g.ny; j++) {
+    const off = g.periodic ? Math.floor((maxW - g.W[j]) / 2) : 0;
+    for (let i = 0; i < g.W[j]; i++) {
+      // Smoothstep around the threshold gives anti-aliased edges instead of a hard binary map.
+      let s = (u[g.start[j] + i] - (t0 - w)) / (2 * w);
+      s = s < 0 ? 0 : s > 1 ? 1 : s * s * (3 - 2 * s);
+      const x = g.periodic ? j : i, y = g.periodic ? off + i : j;
+      const p = 4 * (y * offscreen.width + x);
+      px[p] = lr + (dr - lr) * s; px[p + 1] = lg + (dg - lg) * s; px[p + 2] = lb + (db - lb) * s; px[p + 3] = 255;
+    }
+  }
+  offscreen.getContext('2d').putImageData(image, 0, 0);
+  // Fit the domain into the canvas preserving its aspect ratio.
+  const scale = Math.min(canvas.width / offscreen.width, canvas.height / offscreen.height);
+  const dw = offscreen.width * scale, dh = offscreen.height * scale;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.imageSmoothingEnabled = true;
+  ctx.drawImage(offscreen, (canvas.width - dw) / 2, (canvas.height - dh) / 2, dw, dh);
+  els('simTime').textContent = sim.t.toFixed(0);
+}
+
+function setPaused(p) {
+  state.paused = p;
+  els('pauseBtn').textContent = p ? 'Resume' : 'Pause';
+  els('runState').textContent = p ? (sim && sim.t >= state.tEnd ? 'settled' : 'paused') : 'running';
+}
+
+function loop() {
+  if (!state.paused && sim) {
+    const start = performance.now();
+    while (performance.now() - start < FRAME_BUDGET_MS && sim.t < state.tEnd) sim.step(20);
+    if (sim.t >= state.tEnd) setPaused(true);
+    draw();
+  }
+  requestAnimationFrame(loop);
+}
+
+function applyPreset(name) {
+  Object.assign(state, PRESETS[name]);
+  document.querySelectorAll('#presets button').forEach(b => b.classList.toggle('active', b.dataset.preset === name));
+  syncControls();
+  rebuild();
+}
+
+function clearPresetHighlight() {
+  document.querySelectorAll('#presets button').forEach(b => b.classList.remove('active'));
+}
+
+document.querySelectorAll('#presets button').forEach(b => b.addEventListener('click', () => applyPreset(b.dataset.preset)));
+els('dSlider').addEventListener('input', e => {
+  // d is applied live: the current pattern keeps evolving under the new diffusion ratio.
+  state.d = +e.target.value; sim.p.d = state.d; els('dVal').textContent = state.d.toFixed(1);
+  clearPresetHighlight(); updateReadout();
+  // Give the pattern time to re-settle under the new d.
+  state.tEnd = Math.max(state.tEnd, sim.t + T_MAX / 2);
+  setPaused(false);
+});
+els('gSlider').addEventListener('input', e => {
+  state.gamma = Math.pow(10, +e.target.value); els('gVal').textContent = Math.round(state.gamma).toLocaleString('en-US');
+  clearPresetHighlight(); rebuild();
+});
+els('tSlider').addEventListener('input', e => {
+  state.threshold = +e.target.value; els('tVal').textContent = state.threshold.toFixed(1);
+  clearPresetHighlight(); draw();
+});
+els('geomSelect').addEventListener('change', e => { state.geometry = e.target.value; clearPresetHighlight(); rebuild(); });
+els('pauseBtn').addEventListener('click', () => {
+  if (state.paused && sim.t >= state.tEnd) state.tEnd = sim.t + T_MAX / 2;
+  setPaused(!state.paused);
+});
+els('resetBtn').addEventListener('click', () => { state.seed++; rebuild(); });
+
+applyPreset('zebra');
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
