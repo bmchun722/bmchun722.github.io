@@ -241,12 +241,14 @@ footer {
         h(u,v) = \frac{\rho\, u\, v}{1 + u + K u^2}.$$
     </div>
     <p>
-      Here \(u\) and \(v\) are the two morphogen concentrations (in Thomas's experiment, uric acid and oxygen).
+      Here \(u\) and \(v\) are the two morphogen concentrations (in Murray's account of Thomas's enzyme
+      experiment, a substrate and a co-substrate: uric acid and oxygen).
       Both are supplied at constant rates (\(a\), \(\alpha b\)) and consumed together by the reaction \(h\).
       Because \(h\) saturates and then falls for large \(u\) (the \(K u^2\) term), the kinetics act as an
-      activator-inhibitor pair with a built-in ceiling on self-enhancement, which is what lets stripes survive
-      (see the footnote in Ball, p. 166). The simulator solves the equivalent system with lengths rescaled
-      by \(\sqrt{\gamma}\), so that \(\gamma\) appears only as the domain size \(L = \sqrt{\gamma}\).
+      activator-inhibitor pair with a built-in ceiling on self-enhancement. That is the kind of constraint
+      Ball says stripes typically need (footnote, p. 166). The simulator solves the equivalent system with
+      lengths rescaled by \(\sqrt{\gamma}\) and time by \(\gamma\) (\(x' = \sqrt{\gamma}\,x,\ t' = \gamma t\)),
+      so that \(\gamma\) appears only as the domain size \(L = \sqrt{\gamma}\); the times shown are \(t'\).
     </p>
 
     <div class="table-wrap">
@@ -257,7 +259,7 @@ footer {
           <tr><td class="sym">\(d\)</td><td>Diffusion ratio \(D_v / D_u\): how much faster the inhibitor spreads</td><td>2 – 40</td><td><span class="tag slider">slider</span></td><td>The single most important switch: no pattern, stripes, or spots.</td></tr>
           <tr><td class="sym">\(\gamma\)</td><td>Scale: reaction strength relative to diffusion, \(\gamma \propto L^2\) (embryo size squared)</td><td>1 – 10 000</td><td><span class="tag slider">slider</span></td><td>Murray's key point: the same chemistry gives different markings on embryos of different size and shape.</td></tr>
           <tr><td class="sym">\(u^*\)</td><td>Pigment threshold read by melanocytes</td><td>4 – 30 (default 12)</td><td><span class="tag slider">slider</span></td><td>Sets how much of the pre-pattern becomes dark; thin vs. thick stripes, small vs. large spots.</td></tr>
-          <tr><td class="sym">\(a\)</td><td>Supply rate of \(u\)</td><td>92</td><td><span class="tag const">constant</span></td><td rowspan="5">Murray's values for Thomas kinetics. They fix the steady state and the shape of the reaction Jacobian; moving them mostly shifts \(d_c\) and \(\lambda\), which \(d\) and \(\gamma\) already control more transparently.</td></tr>
+          <tr><td class="sym">\(a\)</td><td>Supply rate of \(u\)</td><td>92</td><td><span class="tag const">constant</span></td><td rowspan="5">A parameter set of the kind Murray uses for Thomas kinetics (<em>Math. Biol. II</em>, Chs. 2–3). They fix the steady state and the shape of the reaction Jacobian; moving them mostly shifts \(d_c\) and \(\lambda\), which \(d\) and \(\gamma\) already control more transparently.</td></tr>
           <tr><td class="sym">\(b\)</td><td>Reservoir level of \(v\)</td><td>64</td><td><span class="tag const">constant</span></td></tr>
           <tr><td class="sym">\(\alpha\)</td><td>Relaxation rate of \(v\) toward \(b\)</td><td>1.5</td><td><span class="tag const">constant</span></td></tr>
           <tr><td class="sym">\(\rho\)</td><td>Maximum reaction (consumption) rate</td><td>18.5</td><td><span class="tag const">constant</span></td></tr>
@@ -280,8 +282,11 @@ footer {
       \(\propto e^{i k x}\) grows if \(\det\!\big(J - k^2\,\mathrm{diag}(1, d)\big) < 0\), which first becomes
       possible when \(d\) exceeds
       $$d_c \approx 9.63, \qquad \lambda_c = 2\pi/k_c \approx 7.4 \ \text{(in units of } L/\sqrt{\gamma}\text{)}.$$
-      The ranges below for stripes vs. spots come from runs of this simulator on the default body
-      (\(\gamma = 3600\), \(u^* = 12\)); the boundaries are approximate and shift slightly with the random start.
+      Linear theory only says <em>whether</em> a pattern forms and its wavelength: in 2-D every wave direction
+      with \(|k|\) in the unstable band grows equally fast, so it cannot choose between stripes and spots. That
+      choice is made by the nonlinear terms. The stripe/spot ranges below are therefore observed in runs of this
+      simulator (several random starts) on the default body (\(\gamma = 3600\), \(u^* = 12\)); the transition is
+      gradual, and the boundaries are rough and specific to these settings.
     </p>
     <div class="table-wrap">
       <table>
@@ -295,35 +300,36 @@ footer {
           </tr>
           <tr>
             <td><b>Plain</b> (too small)</td>
-            <td>\(d > d_c\) but \(L = \sqrt{\gamma} < \pi / k_{\max}\), roughly a third of a wavelength (\(\gamma \lesssim 5\) for \(d = 30\), \(\gamma \lesssim 7\) for \(d = 12\)).</td>
+            <td>\(d > d_c\) but \(L = \sqrt{\gamma} < \pi / k_{\max}\): no mode fits for \(\gamma \lesssim 5\) (\(d = 30\)) or \(\gamma \lesssim 7\) (\(d = 12\)). Modes just inside the band edge grow very slowly, so in practice the domain stays plain up to \(\gamma \approx 6\)–\(9\).</td>
             <td>The instability exists, but no allowed mode fits in the domain: with zero-flux edges the
               wavenumbers are \(k = \pi\sqrt{(m/L_x)^2 + (n/L_y)^2}\), and even the longest one lies outside the
               unstable band. Murray's explanation for uniformly coloured small mammals (and for small embryos).</td>
           </tr>
           <tr>
             <td><b>Stripes</b> (zebra preset)</td>
-            <td>\(d\) just above \(d_c\): about \(9.6 < d \lesssim 14\). Preset: \(d = 12\), \(\gamma = 3600\).</td>
+            <td>\(d\) just above \(d_c\): roughly \(9.6 < d \lesssim 13\). Preset: \(d = 12\), \(\gamma = 3600\).</td>
             <td>Near onset only a narrow band of wavelengths around \(\lambda_c\) can grow, and growth is slow.
-              Sets of parallel waves (stripes) then win over spot arrays. The \(K u^2\) ceiling on
-              self-enhancement stops the stripes from pinching off into spots.</td>
+              In these runs the nonlinear terms then select stripes (long, connected dark bands). The saturation
+              of self-enhancement (\(K u^2\)) is the kind of constraint Ball notes stripes typically need.</td>
           </tr>
           <tr>
             <td><b>Mixed</b></td>
-            <td>about \(14 \lesssim d \lesssim 20\).</td>
-            <td>Stripes and spots coexist; stripes break into chains of spots.</td>
+            <td>roughly \(13 \lesssim d \lesssim 18\).</td>
+            <td>Stripes and spots coexist; stripes break into chains of spots. The change is gradual.</td>
           </tr>
           <tr>
             <td><b>Spots</b> (leopard preset)</td>
-            <td>\(d\) well above \(d_c\): about \(d \gtrsim 20\). Preset: \(d = 30\), \(\gamma = 3600\).</td>
-            <td>The fast inhibitor confines each activator peak to a compact island. Isolated peaks are now the
-              stable arrangement, so the pre-pattern becomes an array of spots of high \(u\).</td>
+            <td>\(d\) well above \(d_c\): roughly \(d \gtrsim 18\). Preset: \(d = 30\), \(\gamma = 3600\).</td>
+            <td>The fast inhibitor confines each activator peak to a compact island. In these runs isolated,
+              round peaks are what forms, so the pre-pattern becomes an array of spots of high \(u\).</td>
           </tr>
           <tr>
             <td><b>Spots → bands</b> (cheetah tail preset)</td>
             <td>Spot-forming \(d = 30\) on a tapering tail.</td>
-            <td>Where the circumference is less than about one wavelength, nothing can vary around the tail,
-              so only rings fit (bands). Where the tail is wide, spots fit. Ball, Fig. 4.7: the narrow tip of
-              a cheetah's or leopard's tail is banded even though the body is spotted.</td>
+            <td>Where the circumference is shorter than the shortest unstable wavelength \(2\pi/k_{\max}\)
+              (\(\approx 4.3\) for \(d = 30\)), nothing can vary around the tail, so only rings fit (bands).
+              Where the tail is wide, spots fit. This is Murray's model-tail result (Ball, Fig. 4.7); Ball notes that
+              real tails, e.g. of cheetahs and leopards, are often spotted at the root and banded at the tip (Fig. 4.6).</td>
           </tr>
         </tbody>
       </table>
@@ -343,7 +349,11 @@ footer {
       where the first bound is the diffusion stability limit and the second keeps the stiff reaction term stable.
       The body uses zero-flux (Neumann) edges via reflected ghost cells. The tail is a cone cut open along its
       length, so it is periodic around the circumference and zero-flux at both ends; each grid row has as many
-      cells as its circumference holds. The simulation pauses at \(t = 400\), when the patterns have settled (moving \(d\) or pressing Resume runs it further).
+      cells as its circumference holds, and neighbouring rows are coupled by nearest position. This ignores the
+      small curvature term of the cone's Laplacian, which is acceptable for the gentle taper used here.
+      The simulation stops at \(t = 400\) to save CPU: by then the pattern has mostly formed, but it keeps
+      rearranging slowly (moving \(d\) or pressing Resume runs it further). Very small domains need tiny time
+      steps, so for them the run is cut off earlier by a compute budget.
       Source: <a href="assets/murray-patterns.js">assets/murray-patterns.js</a>.
     </p>
   </section>
@@ -378,6 +388,8 @@ const PRESETS = {
   tail:     { d: 30, gamma: 3600, threshold: 12, geometry: 'tail', light: [226, 184, 112], dark: [40, 28, 18] },
 };
 const T_MAX = 400, FRAME_BUDGET_MS = 14;
+// Tiny domains need tiny dt (dt ~ h^2); cap their total work so the run ends in a few seconds.
+const MIN_STEPS = 2e5, CELL_UPDATE_BUDGET = 4e8;
 
 const canvas = document.getElementById('canvas'), ctx = canvas.getContext('2d');
 const els = id => document.getElementById(id);
@@ -414,10 +426,10 @@ function predictRegime() {
   if (geom.kind === 'tail') {
     // If even the widest circumference holds no unstable mode, nothing can vary around the tail.
     if (2 * Math.PI / geom.cRoot > ls.band[1]) return 'Bands only: the tail is too thin for spots';
-    return state.d >= 20 ? 'Spots at the wide root, bands at the narrow tip' : 'Bands and stripes along the tail';
+    return state.d >= 18 ? 'Spots at the wide root, bands at the narrow tip' : 'Bands and stripes along the tail';
   }
-  if (state.d < 14) return 'Stripes (d just above d_c)';
-  if (state.d < 20) return 'Mixed stripes and spots';
+  if (state.d < 13) return 'Stripes (d just above d_c)';
+  if (state.d < 18) return 'Mixed stripes and spots';
   return 'Spots (d well above d_c)';
 }
 
@@ -440,6 +452,15 @@ function syncControls() {
   els('geomSelect').value = state.geometry;
 }
 
+// Match the canvas backing store to its displayed size so HiDPI screens stay sharp.
+function fitCanvas() {
+  const r = canvas.getBoundingClientRect(), dpr = window.devicePixelRatio || 1;
+  if (r.width === 0) return;
+  canvas.width = Math.round(r.width * dpr);
+  canvas.height = Math.round(r.height * dpr);
+  if (sim) draw();
+}
+
 function rebuild() {
   sim = new MurraySimulation({ d: state.d }, geometryFor(state.geometry, state.gamma), { seed: state.seed });
   const g = sim.grid, maxW = Math.max(...g.W);
@@ -447,7 +468,7 @@ function rebuild() {
   if (g.periodic) { offscreen.width = g.ny; offscreen.height = maxW; }
   else { offscreen.width = g.W[0]; offscreen.height = g.ny; }
   image = offscreen.getContext('2d').createImageData(offscreen.width, offscreen.height);
-  state.tEnd = T_MAX;
+  state.tEnd = Math.min(T_MAX, sim.timeStep() * Math.max(MIN_STEPS, CELL_UPDATE_BUDGET / g.n));
   setPaused(false);
   updateReadout();
   draw();
@@ -481,7 +502,7 @@ function draw() {
 function setPaused(p) {
   state.paused = p;
   els('pauseBtn').textContent = p ? 'Resume' : 'Pause';
-  els('runState').textContent = p ? (sim && sim.t >= state.tEnd ? 'settled' : 'paused') : 'running';
+  els('runState').textContent = p ? (sim && sim.t >= state.tEnd ? 'stopped' : 'paused') : 'running';
 }
 
 function loop() {
@@ -510,9 +531,11 @@ els('dSlider').addEventListener('input', e => {
   // d is applied live: the current pattern keeps evolving under the new diffusion ratio.
   state.d = +e.target.value; sim.p.d = state.d; els('dVal').textContent = state.d.toFixed(1);
   clearPresetHighlight(); updateReadout();
-  // Give the pattern time to re-settle under the new d.
-  state.tEnd = Math.max(state.tEnd, sim.t + T_MAX / 2);
-  setPaused(false);
+  // If the run had stopped at tEnd, give the pattern time to re-settle; a manual pause stays paused.
+  if (sim.t >= state.tEnd) {
+    state.tEnd = sim.t + T_MAX / 2;
+    setPaused(false);
+  }
 });
 els('gSlider').addEventListener('input', e => {
   state.gamma = Math.pow(10, +e.target.value); els('gVal').textContent = Math.round(state.gamma).toLocaleString('en-US');
@@ -529,6 +552,8 @@ els('pauseBtn').addEventListener('click', () => {
 });
 els('resetBtn').addEventListener('click', () => { state.seed++; rebuild(); });
 
+fitCanvas();
+window.addEventListener('resize', fitCanvas);
 applyPreset('zebra');
 requestAnimationFrame(loop);
 </script>

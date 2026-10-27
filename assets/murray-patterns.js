@@ -87,7 +87,9 @@ function buildGrid(geometry, hTarget) {
       cx[k] = W[j] > 1 ? 1 / (hxRow[j] * hxRow[j]) : 0;
     }
   }
-  return { geometry, periodic, n, ny, hy, W, start, row, L, R, U, D, cx, cy: 1 / (hy * hy), hMin: Math.min(hy, ...hxRow) };
+  // Rows with a single cell have no x-diffusion (cx = 0), so they do not constrain dt.
+  const hMin = Math.min(hy, ...Array.from(hxRow).filter((_, j) => W[j] > 1));
+  return { geometry, periodic, n, ny, hy, W, start, row, L, R, U, D, cx, cy: 1 / (hy * hy), hMin };
 }
 
 class MurraySimulation {
