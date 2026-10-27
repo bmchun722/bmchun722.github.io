@@ -151,7 +151,7 @@ footer {
     <p>
       An interactive version of the animal-marking chapter (“Written on the Body”) of Philip Ball's
       <em>Shapes</em>. Two chemicals react and diffuse on the skin of an embryo; pigment cells later
-      read the resulting pre-pattern. Move the sliders to turn a zebra into a leopard, or an elephant.
+      read the resulting pre-pattern. Move the sliders to turn a zebra into a leopard.
     </p>
   </div>
 </div>
@@ -169,7 +169,6 @@ footer {
       <div class="presets" id="presets">
         <button data-preset="zebra">Zebra (stripes)</button>
         <button data-preset="leopard">Leopard (spots)</button>
-        <button data-preset="elephant">Elephant (plain)</button>
         <button data-preset="tail">Cheetah tail (spots → bands)</button>
       </div>
 
@@ -289,8 +288,8 @@ footer {
         <thead><tr><th>Coat</th><th>Parameters</th><th>Reason</th></tr></thead>
         <tbody>
           <tr>
-            <td><b>Plain</b> (elephant preset)</td>
-            <td>\(d < d_c \approx 9.6\), any \(\gamma\). Preset: \(d = 7\).</td>
+            <td><b>Plain</b> (no instability)</td>
+            <td>\(d < d_c \approx 9.6\), any \(\gamma\).</td>
             <td>The inhibitor does not outrun the activator. Every perturbation decays back to the uniform
               state, so the skin is one colour everywhere. Diffusion only smooths; there is no Turing instability.</td>
           </tr>
@@ -329,12 +328,6 @@ footer {
         </tbody>
       </table>
     </div>
-    <p class="muted small">
-      Murray also argued that very large embryos (elephants, hippos) end up plain because the spots become so
-      crowded that they merge (“more is less”, Ball p. 169). With a fixed threshold, this simple model keeps
-      making ever more, ever smaller spots as \(\gamma\) grows, so the elephant preset uses the
-      \(d < d_c\) route instead.
-    </p>
   </section>
 
   <!-- NUMERICS -->
@@ -382,7 +375,6 @@ footer {
 const PRESETS = {
   zebra:    { d: 12, gamma: 3600, threshold: 12, geometry: 'body', light: [246, 244, 238], dark: [24, 22, 22] },
   leopard:  { d: 30, gamma: 3600, threshold: 12, geometry: 'body', light: [222, 172, 92],  dark: [52, 34, 20] },
-  elephant: { d: 7,  gamma: 3600, threshold: 12, geometry: 'body', light: [138, 133, 128], dark: [84, 80, 77] },
   tail:     { d: 30, gamma: 3600, threshold: 12, geometry: 'tail', light: [226, 184, 112], dark: [40, 28, 18] },
 };
 const T_MAX = 400, FRAME_BUDGET_MS = 14;
