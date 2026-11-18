@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coupled Ion-Electron Transfer | Byungmin Chun</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false}]});"></script>
+<style>
+:root {
+  --navy: #0D1B2A;
+  --navy-mid: #1A2E42;
+  --blue: #4A7FA5;
+  --blue-light: #7AAFC8;
+  --cream: #F8F7F4;
+  --text: #1A1A1A;
+  --text-muted: #5A6472;
+  --border: #D8DCE2;
+  --radius: 4px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  background: var(--cream);
+  color: var(--text);
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+/* NAV */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--navy);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 2.5rem;
+  height: 56px;
+}
+.nav-name { color: #fff; font-size: 15px; letter-spacing: 0.02em; text-decoration: none; }
+.nav-links { display: flex; gap: 2rem; list-style: none; }
+.nav-links a {
+  color: rgba(255,255,255,0.65);
+  text-decoration: none;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  transition: color 0.2s;
+}
+.nav-links a:hover, .nav-links a.active { color: #fff; }
+
+/* HERO */
+.hero-bg { background: var(--navy); }
+.hero { color: #fff; padding: 3.5rem 2.5rem 3rem; max-width: 900px; margin: 0 auto; }
+.hero-label {
+  font-family: system-ui, sans-serif; font-size: 12px; letter-spacing: 0.12em;
+  color: var(--blue-light); margin-bottom: 1rem; display: block;
+}
+.hero h1 { font-size: clamp(1.8rem, 4.5vw, 2.6rem); font-weight: normal; line-height: 1.2; margin-bottom: 1rem; }
+.hero p { font-family: system-ui, sans-serif; font-size: 15px; color: rgba(255,255,255,0.65); max-width: 680px; }
+
+.container { max-width: 900px; margin: 0 auto; padding: 0 2.5rem; }
+section { padding: 3rem 0 1rem; }
+.section-header { display: flex; align-items: center; gap: 1.25rem; margin-bottom: 1.5rem; }
+.section-title {
+  font-family: system-ui, sans-serif; font-size: 11px; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--blue); white-space: nowrap;
+}
+.section-rule { flex: 1; height: 1px; background: var(--border); }
+p { margin-bottom: 1rem; }
+.muted { color: var(--text-muted); }
+.small { font-family: system-ui, sans-serif; font-size: 13px; }
+
+/* VIDEO */
+.video-box { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem; }
+.video-wrap { background: #000; border-radius: var(--radius); overflow: hidden; aspect-ratio: 16 / 9; }
+.video-wrap video { width: 100%; height: 100%; display: block; }
+.caption { font-family: system-ui, sans-serif; font-size: 13px; color: var(--text-muted); margin-top: 0.75rem; line-height: 1.5; }
+.legend { display: flex; flex-wrap: wrap; gap: 0.4rem 1.25rem; font-family: system-ui, sans-serif; font-size: 13px; margin-top: 0.75rem; }
+.swatch { display: inline-block; width: 0.8em; height: 0.8em; border-radius: 2px; margin-right: 0.35em; vertical-align: -0.05em; }
+
+/* TABLES */
+.table-wrap { overflow-x: auto; margin-bottom: 1rem; }
+table { border-collapse: collapse; width: 100%; font-family: system-ui, sans-serif; font-size: 13.5px; background: #fff; }
+th, td { border-bottom: 1px solid var(--border); padding: 0.55rem 0.7rem; text-align: left; vertical-align: top; }
+th { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); font-weight: 600; background: var(--cream); }
+td.sym { white-space: nowrap; }
+.eq-box { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 0.5rem 1rem; margin-bottom: 1rem; overflow-x: auto; }
+.note { background: #fff; border-left: 3px solid var(--blue); padding: 0.75rem 1rem; margin-bottom: 1rem; font-size: 15px; }
+ul.plain { padding-left: 1.25rem; margin-bottom: 1rem; }
+ul.plain li { margin-bottom: 0.35rem; }
+ol.refs { padding-left: 1.25rem; font-size: 14px; }
+ol.refs li { margin-bottom: 0.4rem; }
+
+footer {
+  margin-top: 3rem; padding: 2rem 2.5rem; text-align: center;
+  font-family: system-ui, sans-serif; font-size: 12px; color: var(--text-muted); border-top: 1px solid var(--border);
+}
+
+@media (max-width: 640px) {
+  nav { padding: 0 1rem; }
+  .nav-links { gap: 1rem; }
+  .hero { padding: 2.5rem 1rem 2rem; }
+  .container { padding: 0 1rem; }
+  .video-box { padding: 0.85rem; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-name" href="index.html">Byungmin Chun</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="patterns.html">Animal Patterns</a></li>
+    <li><a href="ciet.html" class="active">CIET</a></li>
+    <li><a href="proofs.html">Three Proofs</a></li>
+  </ul>
+</nav>
+
+<div class="hero-bg">
+  <div class="hero">
+    <span class="hero-label">Electrochemical Kinetics · Marcus Theory · Coupled Ion-Electron Transfer</span>
+    <h1>Where Does the Barrier Come From?</h1>
+    <p>
+      In coupled ion-electron transfer (CIET), an electron can only jump once the surrounding
+      solvent has rearranged <em>and</em> the ion has moved. This animation shows the two
+      free-energy surfaces of the reaction and how the transition state shifts between a
+      solvent-controlled and an ion-controlled picture.
+    </p>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- VIDEO -->
+  <section id="animation">
+    <div class="section-header">
+      <span class="section-title">Animation</span>
+      <div class="section-rule"></div>
+    </div>
+
+    <div class="video-box">
+      <div class="video-wrap">
+        <video autoplay muted loop playsinline preload="metadata"
+               poster="assets/ciet-poster.png"
+               aria-label="Animated free-energy surfaces of coupled ion-electron transfer">
+          <source src="assets/ciet-sweep.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="legend">
+        <span><span class="swatch" style="background:#3A7EA3"></span>Oxidized state \(\mu_O(x,\xi)\)</span>
+        <span><span class="swatch" style="background:#C0473A"></span>Reduced state \(\mu_R(x,\xi)\)</span>
+        <span><span class="swatch" style="background:#F08A24"></span>Iso-energetic line \(\mu_O = \mu_R\)</span>
+        <span><span class="swatch" style="background:#F2C94C"></span>Transition state (saddle point)</span>
+      </div>
+      <p class="caption">
+        The ratio \(s = \Delta E_{IT}/\lambda\) sweeps from 0.1 to 10 and back on a log scale while
+        \(\lambda + \Delta E_{IT}\) is held fixed. The surfaces follow eq. (6) of Fraggedakis
+        <em>et al.</em> (2021); the quadratic form of the ion-transfer term is an illustrative choice.
+      </p>
+    </div>
+  </section>
+
+  <!-- MODEL -->
+  <section id="model">
+    <div class="section-header">
+      <span class="section-title">The Two Surfaces</span>
+      <div class="section-rule"></div>
+    </div>
+
+    <p>
+      Marcus theory describes electron transfer with one coordinate \(x\), the polarization of the
+      surrounding solvent. CIET adds a second coordinate \(\xi\), the distance the ion moves. Each
+      redox state then has its own bowl-shaped free-energy surface:
+    </p>
+    <div class="eq-box">
+      $$\mu_O(x,\xi) = \mu_O^0 + \frac{\kappa}{2}(x - x_O)^2 + f_O(\xi), \qquad
+        \mu_R(x,\xi) = \mu_R^0 + \frac{\kappa}{2}(x - x_R)^2 + f_R(\xi)$$
+    </div>
+    <p>
+      The paper constrains the ion-transfer terms \(f_O, f_R\) but does not fix their form: each must
+      vanish at its own equilibrium point, and moving the ion without the electron (or vice versa)
+      costs the ion-electron separation energy \(\Delta E_{IT}\). The simplest functions with those
+      properties, and with a minimum at each equilibrium point, are parabolas in \(\xi\)
+      (taking \(\xi_O = 0\)):
+    </p>
+    <div class="eq-box">
+      $$f_O(\xi) = \Delta E_{IT}\,\frac{\xi^2}{\xi_R^2}, \qquad
+        f_R(\xi) = \Delta E_{IT}\,\frac{(\xi - \xi_R)^2}{\xi_R^2}$$
+    </div>
+    <p>
+      The electron can tunnel only where both states have the same energy, the orange line
+      \(\mu_O = \mu_R\). The reaction most likely crosses at the lowest point of that line, the yellow
+      saddle point.
+    </p>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Symbol</th><th>Meaning</th><th>In the animation</th></tr></thead>
+        <tbody>
+          <tr><td class="sym">\(x\)</td><td>Solvent polarization coordinate (Marcus coordinate)</td><td>\(x_O = -1,\ x_R = 1\)</td></tr>
+          <tr><td class="sym">\(\xi\)</td><td>Ionic coordinate, distance the ion moves</td><td>\(\xi_O = 0,\ \xi_R = 2\)</td></tr>
+          <tr><td class="sym">\(\lambda = \tfrac{\kappa}{2}(x_O - x_R)^2\)</td><td>Reorganization energy of the environment</td><td>\(\lambda = C/(1+s)\)</td></tr>
+          <tr><td class="sym">\(\Delta E_{IT}\)</td><td>Energy to separate the ion from the electron</td><td>\(\Delta E_{IT} = C\,s/(1+s)\)</td></tr>
+          <tr><td class="sym">\(\mu_R^0 - \mu_O^0\)</td><td>Driving force, set by the overpotential \(\eta\)</td><td>0 (equilibrium)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- READING -->
+  <section id="reading">
+    <div class="section-header">
+      <span class="section-title">What the Animation Shows</span>
+      <div class="section-rule"></div>
+    </div>
+
+    <ul class="plain">
+      <li><strong>Small \(s\) (\(\lambda \gg \Delta E_{IT}\))</strong>: the bowls are steep along \(x\) and
+        shallow along \(\xi\). The cost of crossing comes from reorganizing the solvent, as in classical
+        Marcus electron transfer.</li>
+      <li><strong>Large \(s\) (\(\Delta E_{IT} \gg \lambda\))</strong>: the bowls are steep along \(\xi\).
+        The cost of crossing comes from moving the ion.</li>
+      <li>The iso-energetic line rotates between the two limits, and the saddle point stays midway
+        between the two minima because the driving force is zero.</li>
+    </ul>
+
+    <div class="note">
+      <strong>Limits of this picture.</strong> With quadratic ion-transfer terms and
+      \(\lambda + \Delta E_{IT}\) fixed, the saddle-point height is the same, \((\lambda + \Delta E_{IT})/4\),
+      for every \(s\). The animation therefore shows <em>where</em> the barrier comes from, not how fast the
+      reaction is. The different rate laws of the two CIET limits (Marcus-like versus Butler-Volmer-like
+      kinetics) come from integrating over the electron energies in the electrode, which a free-energy
+      surface alone does not show.
+    </div>
+  </section>
+
+  <!-- METHODS -->
+  <section id="methods">
+    <div class="section-header">
+      <span class="section-title">How It Was Made</span>
+      <div class="section-rule"></div>
+    </div>
+    <p class="small muted">
+      Rendered with <a href="https://www.manim.community/">Manim Community Edition</a> v0.22 in Python.
+      The surfaces, the iso-energetic line and the saddle point are computed analytically; no figure from
+      the papers below is reproduced.
+    </p>
+  </section>
+
+  <!-- REFERENCES -->
+  <section id="references">
+    <div class="section-header">
+      <span class="section-title">References</span>
+      <div class="section-rule"></div>
+    </div>
+    <ol class="refs">
+      <li>D. Fraggedakis, M. McEldrew, R. B. Smith, Y. Krishnan, Y. Zhang, P. Bai, W. C. Chueh, Y. Shao-Horn and M. Z. Bazant, “Theory of coupled ion-electron transfer kinetics”, <em>Electrochim. Acta</em> (2021); arXiv:2007.12980.</li>
+      <li>M. Z. Bazant, “Unified quantum theory of electrochemical kinetics by coupled ion–electron transfer”, <em>Faraday Discuss.</em> 246, 60 (2023), doi:10.1039/D3FD00108C.</li>
+      <li>R. A. Marcus, “On the theory of oxidation-reduction reactions involving electron transfer. I”, <em>J. Chem. Phys.</em> 24, 966 (1956).</li>
+    </ol>
+  </section>
+
+</div>
+
+<footer>
+  &copy; 2026 Byungmin Chun &nbsp;·&nbsp; Korea University, Seoul
+</footer>
+</body>
+</html>
