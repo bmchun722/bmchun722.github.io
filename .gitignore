@@ -1,0 +1,3 @@
+# Manim render cache and Python bytecode (final clips are copied to assets/)
+animations/**/media/
+__pycache__/

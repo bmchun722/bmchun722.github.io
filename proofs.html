@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Three Proofs | Byungmin Chun</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false}]});"></script>
+<style>
+:root {
+  --navy: #0D1B2A;
+  --navy-mid: #1A2E42;
+  --blue: #4A7FA5;
+  --blue-light: #7AAFC8;
+  --cream: #F8F7F4;
+  --text: #1A1A1A;
+  --text-muted: #5A6472;
+  --border: #D8DCE2;
+  --radius: 4px;
+  --c-a: #3A7EA3;
+  --c-b: #C0473A;
+  --c-hi: #E0892B;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  background: var(--cream);
+  color: var(--text);
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+/* NAV */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--navy);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 2.5rem;
+  height: 56px;
+}
+.nav-name { color: #fff; font-size: 15px; letter-spacing: 0.02em; text-decoration: none; }
+.nav-links { display: flex; gap: 2rem; list-style: none; }
+.nav-links a {
+  color: rgba(255,255,255,0.65);
+  text-decoration: none;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  transition: color 0.2s;
+}
+.nav-links a:hover, .nav-links a.active { color: #fff; }
+
+/* HERO */
+.hero-bg { background: var(--navy); }
+.hero { color: #fff; padding: 3.5rem 2.5rem 3rem; max-width: 900px; margin: 0 auto; }
+.hero-label {
+  font-family: system-ui, sans-serif; font-size: 12px; letter-spacing: 0.12em;
+  color: var(--blue-light); margin-bottom: 1rem; display: block;
+}
+.hero h1 { font-size: clamp(1.8rem, 4.5vw, 2.6rem); font-weight: normal; line-height: 1.2; margin-bottom: 1rem; }
+.hero p { font-family: system-ui, sans-serif; font-size: 15px; color: rgba(255,255,255,0.65); max-width: 680px; }
+
+.container { max-width: 900px; margin: 0 auto; padding: 0 2.5rem; }
+section { padding: 3rem 0 1rem; }
+.section-header { display: flex; align-items: center; gap: 1.25rem; margin-bottom: 1.5rem; }
+.section-title {
+  font-family: system-ui, sans-serif; font-size: 11px; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--blue); white-space: nowrap;
+}
+.section-rule { flex: 1; height: 1px; background: var(--border); }
+h2 { font-weight: normal; font-size: 1.6rem; line-height: 1.25; margin-bottom: 0.75rem; }
+h3 {
+  font-family: system-ui, sans-serif; font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--navy-mid); margin: 1.75rem 0 0.6rem;
+}
+p { margin-bottom: 1rem; }
+.muted { color: var(--text-muted); }
+.small { font-family: system-ui, sans-serif; font-size: 13px; }
+
+/* HEURISTIC TAGS */
+.heuristics { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1rem; }
+.tag {
+  display: inline-block; font-family: system-ui, sans-serif; font-size: 12px;
+  padding: 0.1rem 0.6rem; border-radius: 10px; background: #E3EEF5; color: #2D5F80;
+}
+.polya {
+  background: #fff; border-left: 3px solid var(--blue); padding: 0.75rem 1rem; margin-bottom: 1rem;
+  font-family: system-ui, sans-serif; font-size: 14px; line-height: 1.55;
+}
+.polya b { color: var(--navy-mid); }
+
+/* INTERACTIVE BOXES */
+.sim-box { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem; margin-bottom: 1rem; }
+.sim-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+.panel-title { font-family: system-ui, sans-serif; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.4rem; }
+.canvas-wrap { background: #F3F1EC; border-radius: var(--radius); overflow: hidden; aspect-ratio: 4 / 3; }
+.canvas-wrap.drag { touch-action: none; user-select: none; -webkit-user-select: none; }
+.canvas-wrap.wide { aspect-ratio: 3 / 1; }
+canvas { width: 100%; height: 100%; display: block; }
+.controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0.75rem 1.25rem; margin-top: 0.8rem; }
+.ctl label { display: flex; justify-content: space-between; font-family: system-ui, sans-serif; font-size: 13px; margin-bottom: 0.15rem; }
+.ctl label span.val { font-variant-numeric: tabular-nums; color: var(--blue); }
+.ctl input[type=range] { width: 100%; accent-color: var(--blue); }
+button {
+  font-family: system-ui, sans-serif; font-size: 13px; cursor: pointer;
+  background: var(--cream); color: var(--text); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 0.4rem 0.85rem;
+}
+button:hover { border-color: var(--blue); }
+.actions { display: flex; gap: 0.5rem; margin-top: 0.8rem; flex-wrap: wrap; }
+.readout {
+  margin-top: 0.8rem; padding-top: 0.7rem; border-top: 1px solid var(--border);
+  font-family: system-ui, sans-serif; font-size: 12.5px; color: var(--text-muted);
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 0.2rem 1rem;
+}
+.readout b { color: var(--text); font-weight: 600; font-variant-numeric: tabular-nums; }
+.verdict { font-weight: 600; }
+.verdict.good { color: #2E7D4F; }
+.verdict.bad { color: var(--c-b); }
+
+/* TABLES & EQUATIONS */
+.table-wrap { overflow-x: auto; margin-bottom: 1rem; }
+table { border-collapse: collapse; width: 100%; font-family: system-ui, sans-serif; font-size: 13.5px; background: #fff; }
+th, td { border-bottom: 1px solid var(--border); padding: 0.55rem 0.7rem; text-align: left; vertical-align: top; }
+th { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); font-weight: 600; background: var(--cream); }
+.eq-box { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 0.5rem 1rem; margin-bottom: 1rem; overflow-x: auto; }
+ol.steps { padding-left: 1.4rem; margin-bottom: 1rem; }
+ol.steps li { margin-bottom: 0.5rem; }
+ol.refs { padding-left: 1.25rem; font-size: 14px; }
+ol.refs li { margin-bottom: 0.4rem; }
+.note { background: #fff; border-left: 3px solid var(--c-hi); padding: 0.75rem 1rem; margin-bottom: 1rem; font-size: 15px; }
+
+footer {
+  margin-top: 3rem; padding: 2rem 2.5rem; text-align: center;
+  font-family: system-ui, sans-serif; font-size: 12px; color: var(--text-muted); border-top: 1px solid var(--border);
+}
+
+@media (max-width: 720px) {
+  .sim-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 720px) {
+  .canvas-wrap.wide { aspect-ratio: 2 / 1; }
+}
+@media (max-width: 640px) {
+  nav { padding: 0.5rem 1rem; height: auto; flex-wrap: wrap; gap: 0.25rem; }
+  .nav-links { gap: 0.4rem 1rem; flex-wrap: wrap; }
+  .hero { padding: 2.5rem 1rem 2rem; }
+  .container { padding: 0 1rem; }
+  .sim-box { padding: 0.85rem; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-name" href="index.html">Byungmin Chun</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="patterns.html">Animal Patterns</a></li>
+    <li><a href="proofs.html" class="active">Three Proofs</a></li>
+  </ul>
+</nav>
+
+<div class="hero-bg">
+  <div class="hero">
+    <span class="hero-label">Electrocatalytic Kinetics · Nature's Patterns · Pólya's Heuristics</span>
+    <h1>Three Proofs Behind a Rate Law, Seen in Soap, Waves and Water</h1>
+    <p>
+      Yoon and Bazant's quantum theory of the metal dependence of electrocatalysis rests on three
+      classical moves: an equilibrium argument, the intersection of two straight lines, and an
+      expansion to the first term that does not vanish. Each move also explains a pattern from
+      Philip Ball's <em>Shapes</em>. Here each proof is worked first on the pattern, where it can
+      be seen, and then on the electrode, using the heuristics of Pólya's <em>How to Solve It</em>.
+    </p>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <div class="section-header">
+      <span class="section-title">Overview</span>
+      <div class="section-rule"></div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>#</th><th>Step in Yoon &amp; Bazant (2026)</th><th>Pattern in <em>Shapes</em></th><th>Pólya heuristic</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>Equilibrium thought experiment: the Galvani potential cancels the Fermi energy of the metal (Eqs. 7–10)</td><td>Soap films meet at 120° (Plateau's rules, Ch. 2)</td><td>Auxiliary problem · Variation of the problem</td></tr>
+          <tr><td>2</td><td>Two linear free-energy profiles intersect: the symmetry factor \(\alpha\) (Eqs. 19–22)</td><td>Colliding chemical waves fix a boundary (BZ reaction, Ch. 3)</td><td>Analogy · Figures · Generalization</td></tr>
+          <tr><td>3</td><td>Expansion to the first non-vanishing order: the ECIT and ICET limits (Eqs. 13, 23)</td><td>A thread of liquid breaks into beads (Rayleigh instability, Ch. 2)</td><td>Specialization · Test by dimension · Can you check the result?</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="small muted">
+      Pólya's heuristics are named after entries in the "Short Dictionary of Heuristic" of <em>How to Solve It</em>.
+      Book passages and figures are not reproduced. The examples are recalculated here from first principles.
+    </p>
+  </section>
+
+  <!-- PROOF 1 -->
+  <section id="proof1">
+    <div class="section-header">
+      <span class="section-title">Proof 1 · Equilibrium</span>
+      <div class="section-rule"></div>
+    </div>
+    <h2>Whatever can move, moves until the forces balance</h2>
+    <div class="heuristics"><span class="tag">Auxiliary problem</span><span class="tag">Variation of the problem</span></div>
+
+    <h3>The pattern: three soap films at 120°</h3>
+    <p>
+      Ball recounts Plateau's rule: where soap films meet, exactly three walls join, at 120°. Why
+      120° and not another angle? Make the question concrete. Three films are pinned to three
+      points \(A, B, C\) and join at a free junction \(P\). Surface tension is the same in every film,
+      so the energy is proportional to the total length
+    </p>
+    <div class="eq-box">$$L(P) = |P - A| + |P - B| + |P - C|.$$</div>
+    <ol class="steps">
+      <li><b>Name the free variable.</b> Only \(P\) can move; the anchors are the data.</li>
+      <li><b>Equilibrium means stationarity.</b> \(\nabla L = \hat u_A + \hat u_B + \hat u_C = 0\), where \(\hat u_i\) is the unit vector from \(A_i\) to \(P\). Each film pulls with the same tension, so the gradient is the net force.</li>
+      <li><b>Read off the geometry.</b> Three unit vectors that add to zero form a closed equilateral triangle, so each pair is 120° apart, <em>whatever the positions of the anchors</em>, as long as no angle of \(ABC\) reaches 120°.</li>
+    </ol>
+    <p>Drag the anchors or the junction, then press <em>Relax</em>: the junction slides down the gradient until the three pulls cancel.</p>
+
+    <div class="sim-box">
+      <div class="panel-title">Plateau junction</div>
+      <div class="canvas-wrap drag"><canvas id="plateauCanvas" role="img" aria-label="Three soap films meeting at a draggable junction"></canvas></div>
+      <div class="actions">
+        <button id="relaxBtn">Relax</button>
+        <button id="shuffleBtn">New anchors</button>
+      </div>
+      <div class="readout">
+        <span>Angles at \(P\): <b id="plAngles">–</b></span>
+        <span>Total length \(L\): <b id="plLength">–</b></span>
+        <span>Net force \(|\nabla L|\): <b id="plForce">–</b></span>
+        <span id="plVerdict" class="verdict">–</span>
+      </div>
+    </div>
+
+    <h3>The electrode: the Fermi energy drops out of equilibrium</h3>
+    <div class="polya">
+      <b>Auxiliary problem.</b> Yoon and Bazant do not attack "how does the metal change the rate?" directly. They first solve an easier
+      problem: two inert electrodes, Pt and a metal M, in the <em>same</em> solution at equilibrium, with no net reaction (their Fig. 1a).
+      <br><b>Variation of the problem.</b> Change only one datum, the metal, and ask what has to change with it.
+    </div>
+    <ol class="steps">
+      <li><b>Free variable.</b> Electrons can flow between electrode and solution, so the electrode's Galvani potential \(\phi_e\) is free. It plays the role of the junction \(P\).</li>
+      <li><b>Stationarity.</b> At equilibrium the reaction free energy vanishes, \(\mu_R - \mu_O - \mu_e = 0\). The redox couple fixes \(\mu_O\) and \(\mu_R\), so it fixes \(\mu_e = \mu_R - \mu_O\). These are the anchors.</li>
+      <li><b>Read off the compensation.</b> Since \(\mu_e = \varepsilon_F - e\phi_e\), changing the metal by \(\Delta\varepsilon_F\) must be met by \(e\,\Delta\phi_e = \Delta\varepsilon_F\) (Eq. 8). The equilibrium potential \(E_{eq}\) does not depend on the metal (Eqs. 9–10), just as 120° does not depend on where the anchors are.</li>
+    </ol>
+
+    <div class="sim-box">
+      <div class="panel-title">Energy levels of Pt (reference) and metal M</div>
+      <div class="canvas-wrap wide"><canvas id="fermiCanvas" aria-label="Electron energy levels for two electrodes"></canvas></div>
+      <div class="controls">
+        <div class="ctl">
+          <label for="dEfSlider">Fermi energy of M relative to Pt, \(\Delta\varepsilon_F\) <span class="val" id="dEfVal"></span></label>
+          <input type="range" id="dEfSlider" min="-1" max="1" step="0.01" value="-0.4">
+        </div>
+      </div>
+      <div class="readout">
+        <span>\(e\,\Delta\phi_e\): <b id="dPhiVal">–</b></span>
+        <span>\(\Delta\mu_e = \Delta\varepsilon_F - e\Delta\phi_e\): <b id="dMuVal">–</b></span>
+        <span>\(E_{eq}\) shift: <b>0 V</b></span>
+      </div>
+    </div>
+    <div class="note">
+      <strong>Why the proof matters for kinetics.</strong> Thermodynamics cannot see the metal, yet rates do. Yoon and Bazant's
+      hypothesis is that the compensating electrostatic shift \(\Delta\varepsilon_F = e\Delta\phi_e\), together with the surface potential
+      \(\Delta\chi_r\) of the reaction plane, enters the excess energy of the reactive electron (Eqs. 11–12). Proof 2 shows how much of that
+      shift reaches the barrier.
+    </div>
+  </section>
+
+  <!-- PROOF 2 -->
+  <section id="proof2">
+    <div class="section-header">
+      <span class="section-title">Proof 2 · Two Lines</span>
+      <div class="section-rule"></div>
+    </div>
+    <h2>Where two straight lines cross, a shift is shared in proportion to the slopes</h2>
+    <div class="heuristics"><span class="tag">Analogy</span><span class="tag">Figures</span><span class="tag">Generalization</span></div>
+
+    <h3>The pattern: territories of chemical waves</h3>
+    <p>
+      In the Belousov–Zhabotinsky reaction each pacemaker sends out waves. Ball notes that two waves annihilate when they collide,
+      because neither can excite the exhausted medium behind the other, and the collisions draw fixed boundaries between
+      territories. Where does the boundary sit? As a toy model, take one pair of fronts.
+    </p>
+    <div class="polya">
+      <b>Figures.</b> Draw position \(x\) against time \(t\). A front moving at constant speed is a straight line; its slope
+      \(s = 1/v\) is the time needed per unit distance (the <em>slowness</em>).
+    </div>
+    <p>
+      Source A at \(x = 0\) fires at \(t = 0\); source B at \(x = 1\) fires after a delay \(d\). The fronts are
+      \(t = s_A x\) and \(t = d + s_B (1 - x)\). Setting them equal gives
+    </p>
+    <div class="eq-box">$$x^{*} = \frac{s_B + d}{s_A + s_B}, \qquad t^{*} = \alpha\,(s_B + d), \qquad \alpha = \frac{s_A}{s_A + s_B}.$$</div>
+    <p>
+      Delaying B by \(\delta\) delays the collision by only \(\alpha\,\delta\), and moves the boundary towards B by
+      \(\delta/(s_A + s_B)\): A gains territory while B is late. The share \(\alpha\) is set by the slopes alone.
+    </p>
+
+    <h3>The electrode: the symmetry factor</h3>
+    <div class="polya">
+      <b>Analogy.</b> In the ICET regime, CIET treats the ion-transfer landscape as linear near the transition state (following
+      Gurney and Butler). The reactant free energy rises along the ion coordinate \(\xi\) with slope \(\beta_{red}\); the product
+      free energy, offset by the driving force \(\Delta G^{ex}\), rises the other way with slope \(\beta_{ox}\). These are the same two lines.
+      <br><b>Generalization.</b> The symmetric case \(s_A = s_B\) gives \(\alpha = 1/2\); the general case gives any \(\alpha\) between 0 and 1.
+    </div>
+    <div class="eq-box">$$G_O(\xi) = \beta_{red}\,\xi, \qquad G_R(\xi) = \Delta G^{ex} + \beta_{ox}(1-\xi)
+      \;\;\Longrightarrow\;\;
+      \Delta G^{\ddagger}_{red} = \alpha\,\Delta G^{ex} + \underbrace{\alpha(1-\alpha)(\beta_{red}+\beta_{ox})}_{\Delta G^{\ddagger}_{ICET}},
+      \qquad \alpha = \frac{\beta_{red}}{\beta_{red}+\beta_{ox}}$$</div>
+    <p>
+      The symmetry factor is exactly Eq. 19 of the paper, and the driving-force terms are Eqs. 20–21. The oxidation barrier is
+      \(\Delta G^{\ddagger}_{ox} = \Delta G^{\ddagger}_{red} - \Delta G^{ex} = -(1-\alpha)\,\Delta G^{ex} + \Delta G^{\ddagger}_{ICET}\), so the
+      net rate is Butler–Volmer with cathodic coefficient \(\alpha\) and anodic coefficient \(1-\alpha\) (Eq. 13).
+      The intrinsic barrier above is that of two bare lines. The paper's Eq. 22,
+      \(\Delta G^{\ddagger}_{ICET} = \alpha(1-\alpha)(\beta_{red}+\beta_{ox}+\lambda) - \Delta_e\), also includes the reorganization energy
+      \(\lambda\) and the chemisorption function \(\Delta_e\), which the two-line picture leaves out.
+    </p>
+    <p>
+      Now combine with Proof 1. The paper writes \(\Delta G^{ex} = \mu^{ex}_R - \mu^{ex}_O - \mu^{ex}_e\), and the metal raises the
+      electron's excess energy \(\mu^{ex}_e\) by \(S = \Delta\varepsilon_F - e\Delta\chi_r\) (Eq. 11). Shifting \(\Delta G^{ex}\) by \(-S\)
+      moves the two barriers in opposite directions, by the shares the two lines dictate:
+      \(\Delta G^{\ddagger}_{red} \to \Delta G^{\ddagger}_{red} - \alpha S\) and \(\Delta G^{\ddagger}_{ox} \to \Delta G^{\ddagger}_{ox} + (1-\alpha) S\).
+      The exchange-current barrier in Eq. 14 shifts by \((1-\alpha)(\Delta\varepsilon_F - e\Delta\chi_r)\), so the exchange current
+      changes by the factor \(\exp[-(1-\alpha)S/k_BT]\).
+    </p>
+
+    <div class="sim-box">
+      <div class="sim-grid">
+        <div>
+          <div class="panel-title">Waves: position–time diagram</div>
+          <div class="canvas-wrap"><canvas id="waveCanvas" aria-label="Space-time diagram of two colliding wave fronts"></canvas></div>
+        </div>
+        <div>
+          <div class="panel-title">ICET: free energy along the ion coordinate</div>
+          <div class="canvas-wrap"><canvas id="icetCanvas" aria-label="Two linear free-energy profiles and their intersection"></canvas></div>
+        </div>
+      </div>
+      <div class="controls">
+        <div class="ctl">
+          <label for="sASlider">\(s_A \leftrightarrow \beta_{red}\) <span class="val" id="sAVal"></span></label>
+          <input type="range" id="sASlider" min="0.3" max="2" step="0.01" value="1.2">
+        </div>
+        <div class="ctl">
+          <label for="sBSlider">\(s_B \leftrightarrow \beta_{ox}\) <span class="val" id="sBVal"></span></label>
+          <input type="range" id="sBSlider" min="0.3" max="2" step="0.01" value="0.8">
+        </div>
+        <div class="ctl">
+          <label for="dSlider">\(d \leftrightarrow \Delta G^{ex}\) <span class="val" id="dVal"></span></label>
+          <input type="range" id="dSlider" min="-0.6" max="0.6" step="0.01" value="0">
+        </div>
+      </div>
+      <div class="readout">
+        <span>\(\alpha\): <b id="alphaVal">–</b></span>
+        <span>Crossing \(x^{*} = \xi^{\ddagger}\): <b id="xStarVal">–</b></span>
+        <span>\(t^{*} = \Delta G^{\ddagger}_{red}\): <b id="tStarVal">–</b></span>
+        <span>\(\partial t^{*}/\partial d\): <b id="slopeVal">–</b></span>
+      </div>
+    </div>
+    <p class="small muted">The two panels use the same numbers. Read the left in units of time and the right in units of energy.</p>
+  </section>
+
+  <!-- PROOF 3 -->
+  <section id="proof3">
+    <div class="section-header">
+      <span class="section-title">Proof 3 · Expansion</span>
+      <div class="section-rule"></div>
+    </div>
+    <h2>Expand until the first term that does not vanish, and read its sign</h2>
+    <div class="heuristics"><span class="tag">Specialization</span><span class="tag">Test by dimension</span><span class="tag">Can you check the result?</span></div>
+
+    <h3>The pattern: why a thread of water breaks into beads</h3>
+    <p>
+      Ball describes the Rayleigh instability: dew on a spider thread, or a thin jet of water, breaks into a string of beads.
+      Surface tension minimizes area, but a cylinder already looks smooth. Does a ripple raise or lower the area?
+    </p>
+    <div class="polya">
+      <b>Specialization.</b> Take one ripple of wavenumber \(k\) and small amplitude \(\varepsilon\):
+      \(r(z) = a\,(1 + \varepsilon\cos kz)\), with \(a\) chosen so the volume of liquid stays fixed.
+    </div>
+    <ol class="steps">
+      <li><b>Volume constraint.</b> \(\pi a^2 (1 + \varepsilon^2/2) = \pi R^2\), so \(a \approx R(1 - \varepsilon^2/4)\).</li>
+      <li><b>Expand the area.</b> The first-order term averages to zero over a wavelength, so expand to second order:
+        $$\frac{\Delta A}{A_0} = \frac{\varepsilon^2}{4}\,\bigl(k^2R^2 - 1\bigr) + O(\varepsilon^4).$$</li>
+      <li><b>Read the sign.</b> Ripples longer than the circumference (\(kR < 1\), wavelength \(> 2\pi R\)) <em>lower</em> the area, so the column breaks up.</li>
+    </ol>
+    <p class="small muted">
+      The area argument gives only the threshold. Ball stresses that one wavelength grows fastest and sets the bead size; finding it
+      needs the flow inside the thread (Rayleigh's dynamic analysis), not just the area. At large amplitude the threshold also shifts
+      slightly, by terms of order \(\varepsilon^4\), which the panel shows near \(kR = 1\).
+    </p>
+    <div class="polya">
+      <b>Test by dimension.</b> The answer can depend only on the dimensionless product \(kR\). Dimensions alone do not fix the
+      threshold; the expansion supplies the value \(kR = 1\).
+      <b>Can you check the result?</b> The panel integrates the exact area numerically and compares it with the expansion.
+    </div>
+
+    <div class="sim-box">
+      <div class="panel-title">Rippled liquid column (fixed volume)</div>
+      <div class="canvas-wrap wide"><canvas id="columnCanvas" aria-label="Profile of a rippled liquid column"></canvas></div>
+      <div class="controls">
+        <div class="ctl">
+          <label for="kRSlider">\(kR\) <span class="val" id="kRVal"></span></label>
+          <input type="range" id="kRSlider" min="0.2" max="2" step="0.01" value="0.7">
+        </div>
+        <div class="ctl">
+          <label for="epsSlider">Amplitude \(\varepsilon\) <span class="val" id="epsVal"></span></label>
+          <input type="range" id="epsSlider" min="0.02" max="0.5" step="0.01" value="0.25">
+        </div>
+      </div>
+      <div class="readout">
+        <span>Exact \(\Delta A/A_0\): <b id="dAExact">–</b></span>
+        <span>2nd order: <b id="dAApprox">–</b></span>
+        <span id="colVerdict" class="verdict">–</span>
+      </div>
+    </div>
+
+    <h3>The electrode: two limits of one theory</h3>
+    <p>
+      The general CIET rate contains both a Marcus-like electron-transfer part and a Butler–Volmer-like ion-transfer part. Yoon and
+      Bazant obtain the working formulas as limits, compared by the dimensionless ratios of energies:
+    </p>
+    <ul class="steps" style="padding-left:1.4rem">
+      <li><b>ICET</b>, ion transfer limiting, \(\beta_{red/ox} \gg \lambda,\ e|\eta|\): Butler–Volmer with the symmetry factor of Proof 2 (Eq. 13).</li>
+      <li><b>ECIT</b>, electron transfer limiting, \(\beta_{red/ox} \ll \lambda\): a Marcus–Hush–Chidsey-type rate (Eq. 23, exchange current Eq. 25).</li>
+    </ul>
+    <p>
+      The same expansion argument shows why Butler–Volmer and Marcus agree near equilibrium and part ways at high overpotential.
+      Take the Marcus barrier for reduction at driving force \(e\eta\) (with the paper's \(\eta = (\mu_R - \mu_O - \mu_e)/e\), Eq. 10), and expand in the dimensionless ratio \(e\eta/\lambda\):
+    </p>
+    <div class="eq-box">$$\Delta G^{\ddagger} = \frac{(\lambda + e\eta)^2}{4\lambda}
+      = \underbrace{\frac{\lambda}{4} + \frac{1}{2}\,e\eta}_{\text{Butler–Volmer, }\alpha = 1/2} + \underbrace{\frac{(e\eta)^2}{4\lambda}}_{\text{curved Tafel plot}}.$$</div>
+    <p>
+      The first-order term is Butler–Volmer with \(\alpha = 1/2\). The second-order term has a fixed sign, and it bends the Tafel plot
+      once \(|e\eta|\) is no longer small compared with \(\lambda\). In our reading, this curvature is the practical signature that
+      separates Marcus-like from Butler–Volmer kinetics in experiments.
+    </p>
+
+    <div class="sim-box">
+      <div class="panel-title">Activation barrier vs. driving force</div>
+      <div class="canvas-wrap wide"><canvas id="marcusCanvas" aria-label="Marcus barrier and its linear Butler-Volmer approximation"></canvas></div>
+      <div class="controls">
+        <div class="ctl">
+          <label for="lamSlider">Reorganization energy \(\lambda\) (eV) <span class="val" id="lamVal"></span></label>
+          <input type="range" id="lamSlider" min="0.3" max="2" step="0.01" value="1">
+        </div>
+        <div class="ctl">
+          <label for="etaSlider">Marker \(e\eta\) (eV) <span class="val" id="etaVal"></span></label>
+          <input type="range" id="etaSlider" min="-1" max="1" step="0.01" value="0.3">
+        </div>
+      </div>
+      <div class="readout">
+        <span>Marcus: <b id="mExact">–</b></span>
+        <span>1st order (BV): <b id="mBV">–</b></span>
+        <span>Relative error: <b id="mErr">–</b></span>
+        <span>\(e\eta/\lambda\): <b id="mRatio">–</b></span>
+      </div>
+    </div>
+    <p class="small muted">
+      The single-parabola Marcus barrier is the simplest member of the ECIT family. The full ECIT formula (Eq. 23) also integrates over
+      electron energies in the metal. It is left out here because the expansion argument is the same.
+    </p>
+  </section>
+
+  <!-- LOOKING BACK -->
+  <section id="looking-back">
+    <div class="section-header">
+      <span class="section-title">Looking Back</span>
+      <div class="section-rule"></div>
+    </div>
+    <p>
+      Pólya's fourth step asks where else a method applies. In each proof the electrode theory used the same reasoning as the pattern:
+    </p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Method</th><th>What is held fixed</th><th>What adjusts</th><th>What the result does not depend on</th></tr></thead>
+        <tbody>
+          <tr><td>Stationarity</td><td>Anchors / redox couple</td><td>Junction / Galvani potential</td><td>Anchor positions / the metal's Fermi energy (at equilibrium)</td></tr>
+          <tr><td>Two lines</td><td>Slopes \(s_A, s_B\) / \(\beta_{red}, \beta_{ox}\)</td><td>Delay / driving force</td><td>The share \(\alpha\) does not depend on the shift</td></tr>
+          <tr><td>Expansion</td><td>Volume / reorganization energy</td><td>Ripple / overpotential</td><td>To first order, the details of the curvature</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- REFERENCES -->
+  <section id="references">
+    <div class="section-header">
+      <span class="section-title">References</span>
+      <div class="section-rule"></div>
+    </div>
+    <ol class="refs">
+      <li>J. Yoon and M. Z. Bazant, “Quantum theory of the metal dependence of electrocatalysis”, <em>J. Electrochem. Soc.</em> 173, 036502 (2026), doi:10.1149/1945-7111/ae3c46 (CC BY 4.0).</li>
+      <li>M. Z. Bazant, “Unified quantum theory of electrochemical kinetics by coupled ion–electron transfer”, <em>Faraday Discuss.</em> 246, 60 (2023), doi:10.1039/D3FD00108C.</li>
+      <li>D. Fraggedakis <em>et al.</em>, “Theory of coupled ion-electron transfer kinetics”, <em>Electrochim. Acta</em> (2021); arXiv:2007.12980.</li>
+      <li>P. Ball, <em>Nature's Patterns: Shapes</em>, Oxford University Press (2009), Ch. 2 “Lessons of the Beehive” and Ch. 3 “Making Waves”.</li>
+      <li>G. Pólya, <em>How to Solve It</em>, Princeton University Press, “Short Dictionary of Heuristic”.</li>
+      <li>Lord Rayleigh, “On the instability of jets”, <em>Proc. London Math. Soc.</em> 10, 4 (1878).</li>
+    </ol>
+  </section>
+
+</div>
+
+<footer>
+  &copy; 2026 Byungmin Chun &nbsp;·&nbsp; Korea University, Seoul
+</footer>
+
+<script>
+'use strict';
+
+// ---------- shared canvas helpers ----------
+const COL = { a: '#3A7EA3', b: '#C0473A', hi: '#E0892B', ink: '#1A1A1A', muted: '#5A6472', grid: '#D8DCE2', good: '#2E7D4F' };
+const $ = id => document.getElementById(id);
+
+// Canvas size is measured once and refreshed only on window resize, so the
+// animation loop does not force a layout or reallocate the bitmap every frame.
+const canvasSizes = new Map();
+function measureCanvas(canvas) {
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.getBoundingClientRect();
+  const W = Math.max(1, Math.round(rect.width * dpr)), H = Math.max(1, Math.round(rect.height * dpr));
+  if (canvas.width !== W || canvas.height !== H) { canvas.width = W; canvas.height = H; }
+  canvasSizes.set(canvas, { dpr, w: rect.width, h: rect.height });
+}
+function setupCanvas(canvas) {
+  if (!canvasSizes.has(canvas)) measureCanvas(canvas);
+  const { dpr, w, h } = canvasSizes.get(canvas);
+  const ctx = canvas.getContext('2d');
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  return { ctx, w, h };
+}
+
+function line(ctx, x0, y0, x1, y1, color, width = 2, dash = []) {
+  ctx.save(); ctx.strokeStyle = color; ctx.lineWidth = width; ctx.setLineDash(dash);
+  ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.stroke(); ctx.restore();
+}
+
+function arrow(ctx, x0, y0, x1, y1, color, width = 2) {
+  line(ctx, x0, y0, x1, y1, color, width);
+  const a = Math.atan2(y1 - y0, x1 - x0), s = 7;
+  ctx.save(); ctx.fillStyle = color; ctx.beginPath();
+  ctx.moveTo(x1, y1);
+  ctx.lineTo(x1 - s * Math.cos(a - 0.4), y1 - s * Math.sin(a - 0.4));
+  ctx.lineTo(x1 - s * Math.cos(a + 0.4), y1 - s * Math.sin(a + 0.4));
+  ctx.closePath(); ctx.fill(); ctx.restore();
+}
+
+function dot(ctx, x, y, r, color) {
+  ctx.save(); ctx.fillStyle = color; ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.fill(); ctx.restore();
+}
+
+function text(ctx, s, x, y, color = COL.ink, align = 'left', size = 12) {
+  ctx.save(); ctx.fillStyle = color; ctx.font = `${size}px system-ui, sans-serif`;
+  ctx.textAlign = align; ctx.textBaseline = 'middle'; ctx.fillText(s, x, y); ctx.restore();
+}
+
+// Linear map from a data box to the canvas with margins
+function makeMap(w, h, xmin, xmax, ymin, ymax, m = { l: 40, r: 14, t: 14, b: 30 }) {
+  return {
+    X: x => m.l + (x - xmin) / (xmax - xmin) * (w - m.l - m.r),
+    Y: y => h - m.b - (y - ymin) / (ymax - ymin) * (h - m.t - m.b),
+    m,
+  };
+}
+
+function axes(ctx, w, h, map, xlabel, ylabel) {
+  const { m } = map;
+  line(ctx, m.l, h - m.b, w - m.r, h - m.b, COL.muted, 1);
+  line(ctx, m.l, m.t, m.l, h - m.b, COL.muted, 1);
+  text(ctx, xlabel, w - m.r, h - m.b + 16, COL.muted, 'right', 11);
+  ctx.save(); ctx.translate(12, m.t + 4); ctx.rotate(-Math.PI / 2);
+  text(ctx, ylabel, 0, 0, COL.muted, 'right', 11); ctx.restore();
+}
+
+// ---------- Proof 1a: Plateau junction ----------
+const plateau = {
+  canvas: $('plateauCanvas'),
+  pts: [],       // anchors in [0,1]^2 data units
+  P: [0.5, 0.5], // junction
+  drag: -1,
+  relaxing: false,
+};
+
+function plateauNewAnchors() {
+  // Random triangle whose angles are all below 120 degrees (otherwise the junction collapses onto a vertex).
+  // Deterministic fallback: an equilateral-ish triangle.
+  plateau.pts = [[0.2, 0.25], [0.82, 0.3], [0.48, 0.85]];
+  for (let tries = 0; tries < 200; tries++) {
+    const pts = [0, 1, 2].map(i => {
+      const th = 2 * Math.PI * i / 3 + (Math.random() - 0.5) * 1.2;
+      const r = 0.3 + Math.random() * 0.15;
+      return [0.5 + r * Math.cos(th), 0.5 + r * Math.sin(th)];
+    });
+    if (maxTriangleAngle(pts) < 115) { plateau.pts = pts; break; }
+  }
+  plateau.P = [0.5 + (Math.random() - 0.5) * 0.3, 0.5 + (Math.random() - 0.5) * 0.3];
+  plateau.relaxing = false;
+  drawPlateau();
+}
+
+function maxTriangleAngle(pts) {
+  let mx = 0;
+  for (let i = 0; i < 3; i++) {
+    const a = pts[i], b = pts[(i + 1) % 3], c = pts[(i + 2) % 3];
+    const u = [b[0] - a[0], b[1] - a[1]], v = [c[0] - a[0], c[1] - a[1]];
+    const cos = (u[0] * v[0] + u[1] * v[1]) / (Math.hypot(...u) * Math.hypot(...v));
+    mx = Math.max(mx, Math.acos(Math.max(-1, Math.min(1, cos))) * 180 / Math.PI);
+  }
+  return mx;
+}
+
+// Unit vectors from each anchor towards P; their sum is grad L
+function plateauGrad(P, pts) {
+  const units = pts.map(A => {
+    const d = [P[0] - A[0], P[1] - A[1]], n = Math.hypot(...d);
+    return n < 1e-9 ? [0, 0] : [d[0] / n, d[1] / n];
+  });
+  const g = units.reduce((s, u) => [s[0] + u[0], s[1] + u[1]], [0, 0]);
+  return { units, g };
+}
+
+function plateauGeom() {
+  const { w, h } = plateau.size;
+  const s = Math.min(w, h) * 0.95, ox = (w - s) / 2, oy = (h - s) / 2;
+  return { toC: p => [ox + p[0] * s, oy + (1 - p[1]) * s], toD: c => [(c[0] - ox) / s, 1 - (c[1] - oy) / s] };
+}
+
+function drawPlateau() {
+  const { ctx, w, h } = setupCanvas(plateau.canvas);
+  plateau.size = { w, h };
+  const { toC } = plateauGeom();
+  const P = plateau.P, pts = plateau.pts;
+  ctx.clearRect(0, 0, w, h);
+
+  // films
+  pts.forEach(A => { const a = toC(A), p = toC(P); line(ctx, a[0], a[1], p[0], p[1], COL.a, 3); });
+  // anchors
+  pts.forEach((A, i) => { const a = toC(A); dot(ctx, a[0], a[1], 7, COL.ink); text(ctx, 'ABC'[i], a[0] + 10, a[1] - 10, COL.ink, 'left', 13); });
+
+  // tension arrows (unit pulls towards each anchor) and net force
+  const { units, g } = plateauGrad(P, pts);
+  const p = toC(P), L = 45;
+  units.forEach(u => arrow(ctx, p[0], p[1], p[0] - u[0] * L, p[1] + u[1] * L, COL.muted, 1.5));
+  const gn = Math.hypot(...g);
+  if (gn > 0.02) arrow(ctx, p[0], p[1], p[0] - g[0] * L, p[1] + g[1] * L, COL.b, 2.5);
+  dot(ctx, p[0], p[1], 7, COL.hi);
+  text(ctx, 'P', p[0] + 10, p[1] + 12, COL.ink, 'left', 13);
+
+  // readout: angles between neighbouring films at P (undefined when P sits on an anchor)
+  const collapsed = pts.some(A => Math.hypot(P[0] - A[0], P[1] - A[1]) < 0.01);
+  const angs = [];
+  for (let i = 0; i < 3; i++) for (let j = i + 1; j < 3; j++) {
+    const c = units[i][0] * units[j][0] + units[i][1] * units[j][1];
+    angs.push(Math.acos(Math.max(-1, Math.min(1, c))) * 180 / Math.PI);
+  }
+  const len = pts.reduce((s, A) => s + Math.hypot(P[0] - A[0], P[1] - A[1]), 0);
+  $('plAngles').textContent = collapsed ? 'n/a' : angs.map(a => a.toFixed(1) + '°').join(', ');
+  $('plLength').textContent = len.toFixed(4);
+  $('plForce').textContent = collapsed ? 'n/a' : gn.toFixed(3);
+  const v = $('plVerdict');
+  if (collapsed) {
+    v.textContent = maxTriangleAngle(pts) >= 120
+      ? 'Junction sits on an anchor: an angle of ABC is ≥ 120°, so no 120° junction exists'
+      : 'Junction sits on an anchor: drag it off and press Relax';
+    v.className = 'verdict bad';
+  }
+  else if (gn < 0.01) { v.textContent = 'Balanced: three 120° angles'; v.className = 'verdict good'; }
+  else { v.textContent = 'Not balanced: the red arrow is the net pull'; v.className = 'verdict bad'; }
+}
+
+function plateauStep() {
+  if (!plateau.relaxing) return;
+  const { g } = plateauGrad(plateau.P, plateau.pts);
+  const gn = Math.hypot(...g);
+  if (gn < 1e-3) { plateau.relaxing = false; drawPlateau(); return; }
+  // Move along -grad L (the net pull), with a step that shrinks near equilibrium
+  const step = Math.min(0.006, 0.02 * gn);
+  plateau.P = [plateau.P[0] - step * g[0] / gn, plateau.P[1] - step * g[1] / gn];
+  // Stop on an anchor (degenerate Steiner problem)
+  for (const A of plateau.pts) if (Math.hypot(plateau.P[0] - A[0], plateau.P[1] - A[1]) < 0.008) {
+    plateau.P = [...A]; plateau.relaxing = false; break;
+  }
+  drawPlateau();
+  requestAnimationFrame(plateauStep);
+}
+
+function plateauPointer(e) {
+  const r = plateau.canvas.getBoundingClientRect();
+  return [e.clientX - r.left, e.clientY - r.top];
+}
+plateau.canvas.addEventListener('pointerdown', e => {
+  if (e.button !== 0) return;
+  const c = plateauPointer(e), { toC } = plateauGeom();
+  const all = [...plateau.pts, plateau.P];
+  // Hit test in CSS pixels so the target stays finger-sized on small screens
+  let best = -1, bd = 24;
+  all.forEach((p, i) => { const q = toC(p), d = Math.hypot(q[0] - c[0], q[1] - c[1]); if (d < bd) { bd = d; best = i; } });
+  if (best >= 0) {
+    e.preventDefault();
+    plateau.drag = best; plateau.relaxing = false; plateau.canvas.setPointerCapture(e.pointerId);
+  }
+});
+plateau.canvas.addEventListener('pointermove', e => {
+  if (plateau.drag < 0) return;
+  const q = plateauGeom().toD(plateauPointer(e)).map(v => Math.max(0.02, Math.min(0.98, v)));
+  if (plateau.drag === 3) plateau.P = q; else plateau.pts[plateau.drag] = q;
+  drawPlateau();
+});
+['pointerup', 'pointercancel', 'lostpointercapture'].forEach(ev =>
+  plateau.canvas.addEventListener(ev, () => { plateau.drag = -1; }));
+$('relaxBtn').addEventListener('click', () => { if (!plateau.relaxing) { plateau.relaxing = true; requestAnimationFrame(plateauStep); } });
+$('shuffleBtn').addEventListener('click', plateauNewAnchors);
+
+// ---------- Proof 1b: Fermi level compensation ----------
+function drawFermi() {
+  const canvas = $('fermiCanvas');
+  const { ctx, w, h } = setupCanvas(canvas);
+  const dEf = +$('dEfSlider').value;
+  $('dEfVal').textContent = (dEf >= 0 ? '+' : '') + dEf.toFixed(2) + ' eV';
+  // Equilibrium condition mu_e = eps_F - e*phi_e = mu_R - mu_O fixes the Galvani shift
+  const dPhi = dEf;                 // e*Delta(phi_e) required by Eq. 8
+  const dMu = dEf - dPhi;           // Delta(mu_e), computed rather than asserted
+  $('dPhiVal').textContent = (dPhi >= 0 ? '+' : '') + dPhi.toFixed(2) + ' eV';
+  $('dMuVal').textContent = Math.abs(dMu).toFixed(2) + ' eV';
+  ctx.clearRect(0, 0, w, h);
+
+  // Energy axis: electron energy up; 1 eV = scale px. mu_e is fixed by the redox couple.
+  const scale = (h - 40) / 3.2, yMu = h / 2;
+  const Y = E => yMu - E * scale;           // E relative to mu_e
+  const colW = Math.min(150, w * 0.22);
+  const xs = [w * 0.22, w * 0.55];
+  const labels = ['Pt (reference)', 'Metal M'];
+  // Intrinsic Fermi energies relative to an arbitrary common origin; electrostatic shift brings both to mu_e
+  const epsPt = 0.6, epsM = epsPt + dEf;
+  [epsPt, epsM].forEach((eps, i) => {
+    const x = xs[i];
+    text(ctx, labels[i], x + colW / 2, 12, COL.ink, 'center', 12);
+    // intrinsic Fermi energy (before electrostatic shift), drawn relative to mu_e + offset
+    line(ctx, x, Y(eps), x + colW, Y(eps), COL.a, 2, [5, 4]);
+    text(ctx, 'ε_F', x - 6, Y(eps), COL.a, 'right', 11);
+    // shift -e*phi_e brings it to mu_e
+    if (Math.abs(eps) > 0.03) arrow(ctx, x + colW / 2, Y(eps), x + colW / 2, Y(0) + (eps > 0 ? -2 : 2), COL.hi, 2);
+    if (Math.abs(eps) > 0.15) text(ctx, '−eφ_e', x + colW / 2 + 8, (Y(eps) + Y(0)) / 2, COL.ink, 'left', 11);
+  });
+  // common Fermi level fixed by the redox couple
+  line(ctx, xs[0] - 10, Y(0), w - 12, Y(0), COL.b, 2.5);
+  text(ctx, 'μ_e = μ_R − μ_O', w - 14, Y(0) + 12, COL.b, 'right', 11);
+}
+$('dEfSlider').addEventListener('input', drawFermi);
+
+// ---------- Proof 2: two lines ----------
+function twoLines() {
+  const sA = +$('sASlider').value, sB = +$('sBSlider').value, d = +$('dSlider').value;
+  const alpha = sA / (sA + sB);
+  const xStar = (sB + d) / (sA + sB);
+  const tStar = alpha * (sB + d);
+  return { sA, sB, d, alpha, xStar, tStar };
+}
+
+const wave = { t0: performance.now() };
+
+function drawWave(now) {
+  const { sA, sB, d, xStar, tStar } = twoLines();
+  const canvas = $('waveCanvas');
+  const { ctx, w, h } = setupCanvas(canvas);
+  ctx.clearRect(0, 0, w, h);
+  const tMax = 2.6;
+  const map = makeMap(w, h, 0, 1, -0.7, tMax, { l: 34, r: 12, t: 40, b: 30 });
+  axes(ctx, w, h, map, 'position x', 'time t');
+  line(ctx, map.X(0), map.Y(0), map.X(1), map.Y(0), COL.grid, 1, [3, 3]);
+
+  // time cursor sweeps up to slightly after the collision
+  const period = 4000, tEnd = Math.min(tMax, Math.max(tStar, 0) + 0.5);
+  const tc = -0.6 + ((now - wave.t0) % period) / period * (tEnd + 0.6);
+
+  // fronts as lines in the x-t plane (only the part before the collision is physical)
+  const xValid = Math.max(0, Math.min(1, xStar));
+  line(ctx, map.X(0), map.Y(0), map.X(xValid), map.Y(sA * xValid), COL.a, 2.5);
+  line(ctx, map.X(1), map.Y(d), map.X(xValid), map.Y(d + sB * (1 - xValid)), COL.b, 2.5);
+  line(ctx, map.X(xValid), map.Y(sA * xValid), map.X(1), map.Y(sA), COL.a, 1, [4, 4]);
+  line(ctx, map.X(xValid), map.Y(d + sB * (1 - xValid)), map.X(0), map.Y(d + sB), COL.b, 1, [4, 4]);
+  if (xStar >= 0 && xStar <= 1) {
+    dot(ctx, map.X(xStar), map.Y(tStar), 6, COL.hi);
+    line(ctx, map.X(xStar), map.Y(tStar), map.X(xStar), h - map.m.b, COL.hi, 1, [3, 3]);
+  }
+  line(ctx, map.m.l, map.Y(tc), w - map.m.r, map.Y(tc), COL.muted, 1, [2, 4]);
+
+  // 1-D strip: medium at time tc. If x* falls outside [0, 1], one front reaches the
+  // other source before it fires and that source never fires (it is swallowed).
+  const yS = 18, xa = map.X(0), xb = map.X(1);
+  const bFires = xStar <= 1, aFires = xStar >= 0;
+  const xMeet = Math.max(0, Math.min(1, xStar));
+  ctx.fillStyle = '#E6E2DA'; ctx.fillRect(xa, yS - 7, xb - xa, 14);
+  const capA = bFires ? xMeet : 1, capB = aFires ? xMeet : 0;
+  const fA = aFires && tc >= 0 ? Math.min(tc / sA, capA) : null;
+  const fB = bFires && tc >= d ? Math.max(1 - (tc - d) / sB, capB) : null;
+  if (fA !== null && fA > 0) { ctx.fillStyle = 'rgba(58,126,163,0.35)'; ctx.fillRect(xa, yS - 7, map.X(fA) - xa, 14); }
+  if (fB !== null && fB < 1) { ctx.fillStyle = 'rgba(192,71,58,0.35)'; ctx.fillRect(map.X(fB), yS - 7, xb - map.X(fB), 14); }
+  if (fA !== null && fA < capA) line(ctx, map.X(fA), yS - 9, map.X(fA), yS + 9, COL.a, 3);
+  if (fB !== null && fB > capB) line(ctx, map.X(fB), yS - 9, map.X(fB), yS + 9, COL.b, 3);
+  if (aFires && bFires && fA !== null && fB !== null && fA >= xMeet && fB <= xMeet) line(ctx, map.X(xMeet), yS - 10, map.X(xMeet), yS + 10, COL.hi, 3);
+  text(ctx, 'A', xa - 10, yS, COL.a, 'center', 12);
+  text(ctx, 'B', xb + 8, yS, COL.b, 'center', 12);
+  if (!bFires) text(ctx, 'B never fires: A arrives first', w / 2, yS + 18, COL.ink, 'center', 11);
+  if (!aFires) text(ctx, 'A never fires: B arrives first', w / 2, yS + 18, COL.ink, 'center', 11);
+}
+
+// Animate only while the wave panel is on screen; a static frame for reduced motion
+const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+let waveVisible = true, waveLoopOn = false;
+function waveLoop(now) {
+  if (!waveVisible || reduceMotion) { waveLoopOn = false; return; }
+  drawWave(now);
+  requestAnimationFrame(waveLoop);
+}
+function startWave() {
+  if (reduceMotion) { drawWave(wave.t0 + 3000); return; }
+  if (!waveLoopOn) { waveLoopOn = true; requestAnimationFrame(waveLoop); }
+}
+if ('IntersectionObserver' in window) {
+  new IntersectionObserver(entries => {
+    waveVisible = entries[0].isIntersecting;
+    if (waveVisible) startWave();
+  }).observe($('waveCanvas'));
+}
+
+function drawIcet() {
+  const { sA, sB, d, alpha, xStar, tStar } = twoLines();
+  const canvas = $('icetCanvas');
+  const { ctx, w, h } = setupCanvas(canvas);
+  ctx.clearRect(0, 0, w, h);
+  const map = makeMap(w, h, 0, 1, -0.7, 2.6, { l: 34, r: 12, t: 40, b: 30 });
+  axes(ctx, w, h, map, 'ion coordinate ξ', 'free energy G');
+  line(ctx, map.X(0), map.Y(0), map.X(1), map.Y(0), COL.grid, 1, [3, 3]);
+  // G_O = beta_red * xi ; G_R = dG + beta_ox (1 - xi)
+  line(ctx, map.X(0), map.Y(0), map.X(1), map.Y(sA), COL.a, 2.5);
+  line(ctx, map.X(0), map.Y(d + sB), map.X(1), map.Y(d), COL.b, 2.5);
+  dot(ctx, map.X(0), map.Y(0), 5, COL.a); text(ctx, 'O + e⁻', map.X(0) + 8, map.Y(0) + 12, COL.a, 'left', 11);
+  dot(ctx, map.X(1), map.Y(d), 5, COL.b); text(ctx, 'R', map.X(1) - 8, map.Y(d) + 12, COL.b, 'right', 11);
+  if (xStar >= 0 && xStar <= 1) {
+    dot(ctx, map.X(xStar), map.Y(tStar), 6, COL.hi);
+    line(ctx, map.X(xStar), map.Y(0), map.X(xStar), map.Y(tStar), COL.hi, 1.5, [3, 3]);
+    text(ctx, 'ΔG‡_red', map.X(xStar) + 6, map.Y(tStar / 2), COL.ink, 'left', 11);
+  }
+  text(ctx, `α = ${alpha.toFixed(3)}`, w - 14, 18, COL.ink, 'right', 12);
+
+  $('sAVal').textContent = sA.toFixed(2);
+  $('sBVal').textContent = sB.toFixed(2);
+  $('dVal').textContent = (d >= 0 ? '+' : '') + d.toFixed(2);
+  $('alphaVal').textContent = alpha.toFixed(3);
+  $('xStarVal').textContent = (xStar >= 0 && xStar <= 1) ? xStar.toFixed(3) : 'outside [0, 1]';
+  $('tStarVal').textContent = tStar.toFixed(3);
+  $('slopeVal').textContent = `${alpha.toFixed(3)} (= α)`;
+}
+['sASlider', 'sBSlider', 'dSlider'].forEach(id => $(id).addEventListener('input', drawIcet));
+
+// ---------- Proof 3a: Rayleigh column ----------
+function columnArea(kR, eps) {
+  // Exact relative area change of r = a(1 + eps cos kz) at fixed volume (R = 1), trapezoid rule
+  const k = kR, a = 1 / Math.sqrt(1 + eps * eps / 2), Lw = 2 * Math.PI / k, n = 4000;
+  let A = 0;
+  for (let i = 0; i <= n; i++) {
+    const z = Lw * i / n, r = a * (1 + eps * Math.cos(k * z)), rp = -a * eps * k * Math.sin(k * z);
+    const f = 2 * Math.PI * r * Math.sqrt(1 + rp * rp);
+    A += (i === 0 || i === n) ? f / 2 : f;
+  }
+  A *= Lw / n;
+  return A / (2 * Math.PI * Lw) - 1;
+}
+
+function drawColumn() {
+  const kR = +$('kRSlider').value, eps = +$('epsSlider').value;
+  $('kRVal').textContent = kR.toFixed(2);
+  $('epsVal').textContent = eps.toFixed(2);
+  const canvas = $('columnCanvas');
+  const { ctx, w, h } = setupCanvas(canvas);
+  ctx.clearRect(0, 0, w, h);
+
+  const zSpan = 24;                      // window length in units of R
+  const px = (w - 24) / zSpan, cy = h / 2, R = Math.min(h * 0.25, px * 2.2);
+  const a = 1 / Math.sqrt(1 + eps * eps / 2);
+  // reference cylinder outline
+  line(ctx, 12, cy - R, w - 12, cy - R, COL.grid, 1, [4, 4]);
+  line(ctx, 12, cy + R, w - 12, cy + R, COL.grid, 1, [4, 4]);
+  // rippled column
+  ctx.save(); ctx.beginPath();
+  for (let i = 0; i <= 400; i++) {
+    const z = zSpan * i / 400, r = a * (1 + eps * Math.cos(kR * z));
+    const x = 12 + z * px, y = cy - r * R;
+    i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+  }
+  for (let i = 400; i >= 0; i--) {
+    const z = zSpan * i / 400, r = a * (1 + eps * Math.cos(kR * z));
+    ctx.lineTo(12 + z * px, cy + r * R);
+  }
+  ctx.closePath(); ctx.fillStyle = 'rgba(58,126,163,0.35)'; ctx.fill();
+  ctx.strokeStyle = COL.a; ctx.lineWidth = 2; ctx.stroke(); ctx.restore();
+  text(ctx, `λ = ${(2 * Math.PI / kR).toFixed(1)}R vs 2πR = ${(2 * Math.PI).toFixed(1)}R`, w / 2, h - 10, COL.ink, 'center', 11);
+
+  const exact = columnArea(kR, eps), approx = eps * eps / 4 * (kR * kR - 1);
+  $('dAExact').textContent = (exact >= 0 ? '+' : '') + exact.toExponential(3);
+  $('dAApprox').textContent = (approx >= 0 ? '+' : '') + approx.toExponential(3);
+  const v = $('colVerdict');
+  if (exact < 0) { v.textContent = 'Area decreases: the column breaks into beads'; v.className = 'verdict bad'; }
+  else { v.textContent = 'Area increases: the ripple decays'; v.className = 'verdict good'; }
+}
+['kRSlider', 'epsSlider'].forEach(id => $(id).addEventListener('input', drawColumn));
+
+// ---------- Proof 3b: Marcus vs Butler-Volmer ----------
+function drawMarcus() {
+  const lam = +$('lamSlider').value, eta = +$('etaSlider').value;
+  $('lamVal').textContent = lam.toFixed(2);
+  $('etaVal').textContent = (eta >= 0 ? '+' : '') + eta.toFixed(2);
+  const canvas = $('marcusCanvas');
+  const { ctx, w, h } = setupCanvas(canvas);
+  ctx.clearRect(0, 0, w, h);
+  const map = makeMap(w, h, -1, 1, 0, 1.6, { l: 40, r: 14, t: 14, b: 30 });
+  axes(ctx, w, h, map, 'driving force eη (eV)', 'ΔG‡ (eV)');
+  line(ctx, map.X(0), map.m.t, map.X(0), h - map.m.b, COL.grid, 1, [3, 3]);
+
+  const curve = (f, color, dash) => {
+    ctx.save(); ctx.strokeStyle = color; ctx.lineWidth = 2.5; ctx.setLineDash(dash); ctx.beginPath();
+    let started = false;
+    for (let i = 0; i <= 300; i++) {
+      const x = -1 + 2 * i / 300, y = f(x);
+      if (y < 0 || y > 1.6) { started = false; continue; }
+      started ? ctx.lineTo(map.X(x), map.Y(y)) : ctx.moveTo(map.X(x), map.Y(y));
+      started = true;
+    }
+    ctx.stroke(); ctx.restore();
+  };
+  const marcus = x => (lam + x) * (lam + x) / (4 * lam);
+  const bv = x => lam / 4 + x / 2;
+  curve(marcus, COL.a, []);
+  curve(bv, COL.b, [6, 4]);
+  dot(ctx, map.X(eta), map.Y(marcus(eta)), 5, COL.a);
+  if (bv(eta) >= 0) dot(ctx, map.X(eta), map.Y(bv(eta)), 5, COL.b);
+  text(ctx, 'Marcus', map.m.l + 8, 16, COL.a, 'left', 12);
+  text(ctx, 'BV, α = 1/2', map.m.l + 62, 16, COL.b, 'left', 12);
+
+  const m = marcus(eta), b = bv(eta);
+  $('mExact').textContent = m.toFixed(4) + ' eV';
+  // A negative linear "barrier" means the expansion has broken down (|eη| no longer small)
+  $('mBV').textContent = b >= 0 ? b.toFixed(4) + ' eV' : 'negative: expansion invalid';
+  $('mErr').textContent = m > 1e-3 ? (100 * (m - b) / m).toFixed(1) + ' %' : 'n/a (barrierless)';
+  $('mRatio').textContent = (eta / lam).toFixed(2);
+}
+['lamSlider', 'etaSlider'].forEach(id => $(id).addEventListener('input', drawMarcus));
+
+// ---------- init ----------
+function redrawAll() {
+  document.querySelectorAll('canvas').forEach(measureCanvas);
+  drawPlateau(); drawFermi(); drawIcet(); drawColumn(); drawMarcus(); drawWave(performance.now());
+}
+plateauNewAnchors();
+redrawAll();
+startWave();
+window.addEventListener('resize', redrawAll);
+</script>
+</body>
+</html>
