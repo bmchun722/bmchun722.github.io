@@ -1,3 +1,6 @@
 # Manim render cache and Python bytecode (final clips are copied to assets/)
 animations/**/media/
 __pycache__/
+
+# Separate CV repository (not part of the site)
+CV/
