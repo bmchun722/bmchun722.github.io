@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Surface Potential | Byungmin Chun</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false}]});"></script>
+<style>
+:root {
+  --navy: #0D1B2A;
+  --navy-mid: #1A2E42;
+  --blue: #4A7FA5;
+  --blue-light: #7AAFC8;
+  --cream: #F8F7F4;
+  --text: #1A1A1A;
+  --text-muted: #5A6472;
+  --border: #D8DCE2;
+  --radius: 4px;
+  --pcet: #3A7EA3;
+  --chem: #D9822B;
+  --transport: #8A939E;
+  --red: #C0473A;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  background: var(--cream);
+  color: var(--text);
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+/* NAV */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--navy);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 2.5rem;
+  height: 56px;
+}
+.nav-name { color: #fff; font-size: 15px; letter-spacing: 0.02em; text-decoration: none; }
+.nav-links { display: flex; gap: 2rem; list-style: none; }
+.nav-links a {
+  color: rgba(255,255,255,0.65);
+  text-decoration: none;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  transition: color 0.2s;
+}
+.nav-links a:hover, .nav-links a.active { color: #fff; }
+
+/* HERO */
+.hero-bg { background: var(--navy); }
+.hero { color: #fff; padding: 3.5rem 2.5rem 3rem; max-width: 900px; margin: 0 auto; }
+.hero-label {
+  font-family: system-ui, sans-serif; font-size: 12px; letter-spacing: 0.12em;
+  color: var(--blue-light); margin-bottom: 1rem; display: block;
+}
+.hero h1 { font-size: clamp(1.8rem, 4.5vw, 2.6rem); font-weight: normal; line-height: 1.2; margin-bottom: 1rem; }
+.hero p { font-family: system-ui, sans-serif; font-size: 15px; color: rgba(255,255,255,0.65); max-width: 680px; }
+
+.container { max-width: 900px; margin: 0 auto; padding: 0 2.5rem; }
+section { padding: 3rem 0 1rem; }
+.section-header { display: flex; align-items: center; gap: 1.25rem; margin-bottom: 1.5rem; }
+.section-title {
+  font-family: system-ui, sans-serif; font-size: 11px; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--blue); white-space: nowrap;
+}
+.section-rule { flex: 1; height: 1px; background: var(--border); }
+p { margin-bottom: 1rem; }
+.muted { color: var(--text-muted); }
+.small { font-family: system-ui, sans-serif; font-size: 13px; }
+
+/* INTERACTIVE BOXES */
+.sim-box { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem; margin-bottom: 1rem; }
+.presets { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
+button {
+  font-family: system-ui, sans-serif; font-size: 13px; cursor: pointer;
+  background: var(--cream); color: var(--text); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 0.4rem 0.85rem;
+}
+button:hover { border-color: var(--blue); }
+button.active { background: var(--navy); color: #fff; border-color: var(--navy); }
+.plot-wrap { background: #FBFAF8; border: 1px solid var(--border); border-radius: var(--radius); }
+.plot-wrap svg { width: 100%; height: auto; display: block; }
+.controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem 1.5rem; margin-top: 1rem; }
+.ctl label {
+  display: flex; justify-content: space-between; font-family: system-ui, sans-serif; font-size: 13px; margin-bottom: 0.2rem;
+}
+.ctl label span.val { font-variant-numeric: tabular-nums; color: var(--blue); }
+.ctl input[type=range] { width: 100%; accent-color: var(--blue); }
+.ctl .hint { font-family: system-ui, sans-serif; font-size: 12px; color: var(--text-muted); line-height: 1.4; }
+.readout {
+  margin-top: 1rem; padding-top: 0.8rem; border-top: 1px solid var(--border);
+  font-family: system-ui, sans-serif; font-size: 12.5px; color: var(--text-muted);
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.25rem 1rem;
+}
+.readout b { color: var(--text); font-weight: 600; font-variant-numeric: tabular-nums; }
+.caption { font-family: system-ui, sans-serif; font-size: 13px; color: var(--text-muted); margin-top: 0.75rem; line-height: 1.5; }
+.legend { display: flex; flex-wrap: wrap; gap: 0.4rem 1.25rem; font-family: system-ui, sans-serif; font-size: 13px; margin-top: 0.75rem; }
+.swatch { display: inline-block; width: 0.8em; height: 0.8em; border-radius: 2px; margin-right: 0.35em; vertical-align: -0.05em; }
+
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.panel h3 { font-family: system-ui, sans-serif; font-size: 13px; font-weight: 600; margin-bottom: 0.4rem; color: var(--navy-mid); }
+
+/* NETWORK */
+.net-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.35rem; margin-bottom: 0.6rem; font-family: system-ui, sans-serif; font-size: 13px; }
+.net-label { width: 100%; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); margin-top: 0.4rem; }
+.step {
+  border-width: 2px; border-style: solid; background: #fff; padding: 0.3rem 0.6rem; font-size: 12.5px;
+}
+.step.pcet { border-color: var(--pcet); }
+.step.chem { border-color: var(--chem); }
+.step.transport { border-color: var(--transport); border-style: dashed; }
+.step.rc { box-shadow: 0 0 0 3px #F2C94C; }
+.step.selected { background: var(--navy); color: #fff; }
+.arrow { color: var(--text-muted); }
+.note { background: #fff; border-left: 3px solid var(--blue); padding: 0.75rem 1rem; margin-bottom: 1rem; font-size: 15px; }
+#stepNote { min-height: 4.5rem; font-family: system-ui, sans-serif; font-size: 14px; }
+
+/* TABLES */
+.table-wrap { overflow-x: auto; margin-bottom: 1rem; }
+table { border-collapse: collapse; width: 100%; font-family: system-ui, sans-serif; font-size: 13.5px; background: #fff; }
+th, td { border-bottom: 1px solid var(--border); padding: 0.55rem 0.7rem; text-align: left; vertical-align: top; }
+th { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); font-weight: 600; background: var(--cream); }
+td.num { font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+.eq-box { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 0.5rem 1rem; margin-bottom: 1rem; overflow-x: auto; }
+ul.plain, ol.plain { padding-left: 1.25rem; margin-bottom: 1rem; }
+ul.plain li, ol.plain li { margin-bottom: 0.45rem; }
+ol.refs { padding-left: 1.25rem; font-size: 14px; }
+ol.refs li { margin-bottom: 0.4rem; }
+
+footer {
+  margin-top: 3rem; padding: 2rem 2.5rem; text-align: center;
+  font-family: system-ui, sans-serif; font-size: 12px; color: var(--text-muted); border-top: 1px solid var(--border);
+}
+
+@media (max-width: 640px) {
+  nav { padding: 0 1rem; }
+  nav { height: auto; min-height: 56px; flex-wrap: wrap; padding: 0.5rem 1rem; }
+  .nav-links { gap: 0.4rem 0.9rem; flex-wrap: wrap; }
+  .hero { padding: 2.5rem 1rem 2rem; }
+  .container { padding: 0 1rem; }
+  .sim-box { padding: 0.85rem; }
+  .two-col { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-name" href="index.html">Byungmin Chun</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="patterns.html">Animal Patterns</a></li>
+    <li><a href="ciet.html">CIET</a></li>
+    <li><a href="surface-potential.html" class="active">Surface Potential</a></li>
+    <li><a href="proofs.html">Three Proofs</a></li>
+  </ul>
+</nav>
+
+<div class="hero-bg">
+  <div class="hero">
+    <span class="hero-label">CIET · Surface Potential · Electric Double Layer · CO Reduction on Cu</span>
+    <h1>Where Does the Interface Enter the Rate?</h1>
+    <p>
+      Two descriptions of the same electrode/electrolyte interface. Yoon and Bazant (2026) let the water
+      at the reaction plane shift the effective electron concentration through a surface potential
+      \(\Delta\chi_r\), constant within each group of metals. My microkinetic model of CO reduction on Cu
+      lets the surface charge, set by the measured potential of zero charge, shift the energy of each
+      adsorbate through its dipole. This page puts the two side by side and asks what each one misses.
+    </p>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- 1. YOON -->
+  <section id="yoon">
+    <div class="section-header">
+      <span class="section-title">1 · A constant surface potential per group of metals</span>
+      <div class="section-rule"></div>
+    </div>
+
+    <p>
+      Yoon and Bazant extend coupled ion-electron transfer (CIET) theory with two electrode properties: the
+      intrinsic Fermi energy of the metal, \(\Delta\varepsilon_F\), and the surface potential at the reaction
+      plane, \(\Delta\chi_r\), both relative to a Pt reference electrode (RHE). The reaction does not
+      happen inside the metal but at a plane in the electrolyte, inside the double layer; the oriented water
+      dipoles between the metal and that plane add a potential drop \(\chi_r\). Both terms enter through the
+      excess electrochemical potential of the electrons (their Eq. 11):
+    </p>
+    <div class="eq-box">
+      $$\mu_e^{\mathrm{ex}} = \varepsilon + e\Delta\phi_e - e\Delta\chi_r = \varepsilon + \Delta\varepsilon_F - e\Delta\chi_r$$
+      $$\tilde c_e = \exp\!\left[\frac{\mu_e - \mu_e^{\mathrm{ex}}}{k_BT}\right] = \tilde c_{e,\infty}\,\exp\!\left[\frac{e\Delta\chi_r}{k_BT}\right] \qquad \text{(Eq. 12)}$$
+    </div>
+    <p>
+      So \(\Delta\chi_r\) acts on the <em>effective concentration of reactive electrons</em>, not on the energy of
+      any adsorbate. When ion transfer limits the rate (the ICET regime), CIET reduces to Butler-Volmer kinetics,
+      and the exchange current picks up the factor \((1-\alpha)\). With \(\Delta\varepsilon_F \approx -\Delta\Phi\)
+      (work function, their Appendix B):
+    </p>
+    <div class="eq-box">
+      $$I_{0,\mathrm{ICET}} = I_0^*\, f_v(\tilde c_O, \tilde c_R)\, \exp\!\left(-\frac{\Delta G_\ddagger^{\mathrm{ICET}} + (1-\alpha)(\Delta\varepsilon_F - e\Delta\chi_r)}{k_BT}\right) \quad \text{(Eq. 14)}$$
+      $$J_{0,\mathrm{ICET}} = J_0^* \exp\!\left(\frac{(1-\alpha)(\Delta\Phi + e\Delta\chi_r)}{k_BT}\right)
+        \;\Rightarrow\; \log_{10} J_0 = \frac{1-\alpha}{k_BT\ln 10}\,(\Delta\Phi + e\Delta\chi_r) + \text{const} \quad \text{(Eq. 29)}$$
+    </div>
+    <p>
+      The slope of \(\log_{10}J_0\) against the descriptor is therefore \((1-\alpha)/(k_BT\ln 10)\). At 298 K,
+      \(k_BT\ln 10 = 0.0592\) eV, so the fitted slope of 6.5 to 6.6 per eV corresponds to \(\alpha \approx 0.61\),
+      as stated in the paper. Trasatti's HER data fall on two parallel lines: d metals with positively charged
+      sp metals, and negatively charged sp metals (whether \(E_{\mathrm{eq,HER}}\) lies above or below
+      \(E_{\mathrm{pzc}}\) decides the group). Yoon and Bazant set \(\Delta\chi_r = 0\) V for the first group and
+      a single constant \(\Delta\chi_r = -0.4\) V for the second, and the two lines collapse. They state that a
+      first-principles calculation of \(\Delta\chi_r\) for each interface is beyond the scope of their work.
+      In Fig. 2a, Cu sits on the lower line, in the negatively charged sp group (\(\Delta\chi_r = -0.4\) V).
+    </p>
+
+    <div class="sim-box">
+      <div class="presets" id="axisMode">
+        <button data-mode="raw">x axis: \(\Delta\Phi\) (Fig. 2a)</button>
+        <button data-mode="corr">x axis: \(\Delta\Phi + e\Delta\chi_r\) (Fig. 2b)</button>
+      </div>
+      <div class="plot-wrap"><svg id="trasatti" viewBox="0 0 640 360" role="img" aria-label="Fitted lines of log exchange current density against the descriptor"></svg></div>
+      <div class="legend">
+        <span><span class="swatch" style="background:var(--pcet)"></span>d metals and positively charged sp metals, \(\Delta\chi_r = 0\)</span>
+        <span><span class="swatch" style="background:var(--chem)"></span>negatively charged sp metals (Hg excluded)</span>
+        <span><span class="swatch" style="background:#999"></span>master curve of Fig. 2b</span>
+        <span><span class="swatch" style="background:var(--red)"></span>slope implied by \(\alpha\)</span>
+      </div>
+      <div class="controls">
+        <div class="ctl">
+          <label for="chiSlider">\(\Delta\chi_r\) of the negatively charged group <span class="val" id="chiVal"></span></label>
+          <input type="range" id="chiSlider" min="-0.8" max="0.4" step="0.01" value="-0.4">
+          <div class="hint">Only used on the \(\Delta\Phi + e\Delta\chi_r\) axis. The two fitted lines meet at about \(-0.4\) V.</div>
+        </div>
+        <div class="ctl">
+          <label for="alphaSlider">Symmetry factor \(\alpha\) <span class="val" id="alphaVal"></span></label>
+          <input type="range" id="alphaSlider" min="0.3" max="0.9" step="0.01" value="0.61">
+          <div class="hint">Red line: slope \((1-\alpha)/(k_BT\ln 10)\) through the middle of the first group, for comparison.</div>
+        </div>
+      </div>
+      <div class="readout">
+        <span>Gap between the two lines: <b id="roGap"></b></span>
+        <span>Slope from \(\alpha\): <b id="roSlope"></b></span>
+        <span>\(J_0\) factor \(e^{(1-\alpha)e\Delta\chi_r/k_BT}\) (Eq. 29): <b id="roFactor"></b></span>
+      </div>
+      <p class="caption">
+        Only the fitted lines from the caption of Fig. 2 are drawn, over the approximate \(\Delta\Phi\) ranges
+        read from Fig. 2a: \(\log_{10}(J_0/\mathrm{A\,cm^{-2}}) = 6.6\,\Delta\Phi/\mathrm{eV} - 2.9\) (\(R^2 = 0.97\)) and
+        \(6.6\,\Delta\Phi/\mathrm{eV} - 5.5\) (\(R^2 = 0.93\)); master curve \(6.5(\Delta\Phi + e\Delta\chi_r)/\mathrm{eV} - 3.0\)
+        (\(R^2 = 0.98\)). No data points are reproduced. \(T = 298.15\) K.
+      </p>
+    </div>
+  </section>
+
+  <!-- 2. INTERFACES -->
+  <section id="interfaces">
+    <div class="section-header">
+      <span class="section-title">2 · Two pictures of the same interface</span>
+      <div class="section-rule"></div>
+    </div>
+
+    <p>
+      My model (CO reduction on Cu(211), pH 13, potentials vs. SHE) uses the double layer correction of Ringe
+      (2023). The electrode is a plate capacitor whose charge follows from the measured potential of zero
+      charge, and each adsorbate's formation energy shifts with that charge through \(\Delta a_i\), which is
+      proportional to the change of its dipole moment on adsorption:
+    </p>
+    <div class="eq-box">
+      $$\sigma = C_{\mathrm{gap}}\,(U - U_{\mathrm{PZC}}), \qquad C_{\mathrm{gap}} = 20\ \mu\mathrm{F\,cm^{-2}},\quad U_{\mathrm{PZC}} = 0.09\ \mathrm{V}$$
+      $$\Delta E_i(\sigma) = \Delta E_i^0 + \Delta a_i\,\sigma$$
+    </div>
+    <p>
+      \(\Delta a_i\) comes from charged-slab DFT with implicit solvation (VASPsol: a linear dielectric, \(\varepsilon_b = 78.4\), with a linearized Poisson-Boltzmann electrolyte);
+      the quadratic term of the fit is dropped. Move the potential and compare the two pictures.
+    </p>
+
+    <div class="sim-box">
+      <div class="two-col">
+        <div class="panel">
+          <h3>Yoon and Bazant: water at the reaction plane</h3>
+          <div class="presets" id="groupMode">
+            <button data-g="pos">positively charged metal</button>
+            <button data-g="neg">negatively charged sp metal</button>
+          </div>
+          <div class="plot-wrap"><svg id="yoonPanel" viewBox="0 0 300 220" role="img" aria-label="Water dipoles at the reaction plane"></svg></div>
+          <p class="caption" id="yoonCap"></p>
+        </div>
+        <div class="panel">
+          <h3>My model: surface charge and adsorbate dipoles</h3>
+          <div class="plot-wrap"><svg id="myPanel" viewBox="0 0 300 220" role="img" aria-label="Surface charge and adsorbates"></svg></div>
+          <div class="ctl" style="margin-top:0.6rem">
+            <label for="uSlider">Electrode potential \(U\) vs. SHE <span class="val" id="uVal"></span></label>
+            <input type="range" id="uSlider" min="-1.6" max="0.4" step="0.01" value="-1.3">
+          </div>
+        </div>
+      </div>
+      <div class="table-wrap" style="margin-top:1rem">
+        <table>
+          <thead><tr><th>Species or step</th><th>\(\Delta a_i\) (eV per \(\mu\)C cm\(^{-2}\))</th><th>Field term \(\Delta a\,\sigma\) (eV)</th><th>Type</th></tr></thead>
+          <tbody id="shiftBody"></tbody>
+        </table>
+      </div>
+      <div class="readout">
+        <span>Surface charge \(\sigma\): <b id="roSigma"></b></span>
+        <span>Sign of the surface: <b id="roSign"></b></span>
+      </div>
+      <p class="caption">
+        \(\sigma\) beyond \(\pm 20\ \mu\mathrm{C\,cm^{-2}}\) extrapolates the DFT fit (DFT range \(\pm 20\)); the quadratic term is omitted, as in the model.
+        For a step, the field term is the difference of \(\Delta a\) between final and initial states times
+        \(\sigma\). PCET steps also shift by \(eU\) through the transferred electron; that term is not in the
+        table. Note that the chemical step \(2\mathrm{CO^*} \rightarrow \mathrm{OCCO^*}\) has no electron transfer
+        but still depends on the potential, through the field.
+      </p>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th></th><th>\(\Delta\chi_r\) (Yoon and Bazant)</th><th>\(\Delta a_i\,\sigma\) (my model)</th></tr></thead>
+        <tbody>
+          <tr><td>Physical origin</td><td>Net orientation of solvent dipoles between the metal and the reaction plane</td><td>Dipole of each adsorbate in the double layer field set by \(\sigma\)</td></tr>
+          <tr><td>What it shifts</td><td>Effective electron concentration \(\tilde c_e\), hence the barrier of the charge transfer step (kinetic)</td><td>Formation energy of each intermediate (thermodynamic); barriers follow through BEP</td></tr>
+          <tr><td>Depends on</td><td>Group of metal (sign of charge at \(E_{\mathrm{eq}}\)); constant within a group</td><td>Potential (through \(\sigma\)) and species; differs from step to step</td></tr>
+          <tr><td>How it is obtained</td><td>A constant chosen to collapse the two branches (\(-0.4\) V), shown as a plausibility test; first-principles value left open</td><td>Measured \(U_{\mathrm{PZC}}\), \(C_{\mathrm{gap}}\) from Ag single crystals, \(\Delta a_i\) from implicit solvation DFT</td></tr>
+          <tr><td>Scope</td><td>Deliberately leaves out adsorbate-induced shifts of the surface state: these are absorbed into interfacial electrostatics, and the metal trend is carried by the bulk Fermi energy</td><td>A linear dielectric polarizes in proportion to the field, but has no orientation that depends on the sign of the charge; the asymmetric water response behind \(\Delta\chi_r\) is outside it</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="note">
+      <strong>The gap.</strong> The two terms are not the same quantity, and neither model contains the other.
+      An implicit solvent (a linear dielectric) can give each adsorbate's response to the field, but the potential drop from water whose orientation
+      depends on the sign of the surface charge needs an explicit picture of interfacial water (for example ab initio molecular
+      dynamics). Bringing both into CIET means asking which part of the potential dependence of a step comes
+      from the adsorbate (\(\Delta a\,\sigma\)) and which from the electrons at the reaction plane (\(\Delta\chi_r\)).
+    </div>
+  </section>
+
+  <!-- 3. HER vs COR -->
+  <section id="networks">
+    <div class="section-header">
+      <span class="section-title">3 · HER is multistep too. What is different?</span>
+      <div class="section-rule"></div>
+    </div>
+    <p>
+      HER has its own elementary steps: Volmer, Heyrovsky and Tafel. Yoon and Bazant state that they assume
+      the ICET mechanism for HER and fit <em>exchange currents</em> across metals with one rate law. The HER fit lumps the volcano function
+      \(f_v\) into \(J_0^*\) (Eq. 30); Appendix D shows, for a generic adsorbed couple, how \(f_v\) gives a volcano when
+      adsorption is fast. The paper argues that the cross-metal HER data can be understood without a unique
+      hydrogen adsorption free energy for each electrode. It does not say which of the Volmer or Heyrovsky steps the ICET step is. Butler's 1936 derivation of the BV
+      equation for HER assumed a fast Tafel step and a slow Volmer step. Click a step.
+    </p>
+    <div class="sim-box">
+      <div class="net-row"><span class="net-label">HER (also inside my model, steps 1 to 3)</span>
+        <button class="step pcet" data-s="volmer">1 · H₂O + e⁻ + * → H* + OH⁻</button>
+        <button class="step pcet" data-s="heyrovsky">2 · H* + H₂O + e⁻ → H₂ + * + OH⁻</button>
+        <button class="step chem" data-s="tafel">3 · 2H* → H₂ + 2*</button>
+      </div>
+      <div class="net-row"><span class="net-label">CO reduction to C₂₊ on Cu, OCCO pathway (my model)</span>
+        <button class="step transport rc" data-s="trans">4 · CO(g) ⇌ CO_loc</button><span class="arrow">→</span>
+        <button class="step chem" data-s="ads">5 · CO_loc + * → CO*</button><span class="arrow">→</span>
+        <button class="step chem" data-s="couple">13 · 2CO* → OCCO*</button><span class="arrow">→</span>
+        <button class="step pcet rc" data-s="occoh">14 · OCCO* → OCCOH*</button><span class="arrow">→</span>
+        <button class="step pcet rc" data-s="cco">15 · OCCOH* → CCO*</button><span class="arrow">→</span>
+        <button class="step pcet" data-s="chco">18 · CCO* → CHCO*</button><span class="arrow">→</span>
+        <button class="step pcet" data-s="c2h4">19 · CHCO* → C₂H₄ (lumped)</button>
+      </div>
+      <div class="net-row"><span class="net-label">Competing branches</span>
+        <button class="step pcet" data-s="c1">6, 7, 8 · CO* → CHO* → CHOH* → CH*</button>
+        <button class="step pcet" data-s="cstar">10, 11 · CO* → COH* → C*</button>
+        <button class="step chem" data-s="ccoup">16, 17 · CO* + C* / CH* coupling</button>
+      </div>
+      <div class="legend">
+        <span><span class="swatch" style="background:var(--pcet)"></span>PCET (water is the proton donor)</span>
+        <span><span class="swatch" style="background:var(--chem)"></span>chemical, no electron transfer</span>
+        <span><span class="swatch" style="background:var(--transport)"></span>transport</span>
+        <span><span class="swatch" style="background:#F2C94C"></span>rate-controlling in the calibrated model</span>
+      </div>
+      <div class="note" id="stepNote" aria-live="polite" style="margin-top:0.8rem">Click a step.</div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th></th><th>HER in Yoon and Bazant (2026)</th><th>CO reduction on Cu (my model)</th></tr></thead>
+        <tbody>
+          <tr><td>Network</td><td>One ICET rate law per metal; \(f_v\) lumped into \(J_0^*\), no unique \(\Delta G_{\mathrm{ads,H}}\) needed</td><td>19 steps, branching to H₂, CH₄ and C₂₊; three C–C coupling routes</td></tr>
+          <tr><td>Step types</td><td>Charge transfer step(s)</td><td>PCET steps mixed with chemical steps (C–C coupling) and CO transport</td></tr>
+          <tr><td>What controls the rate</td><td>The ICET exchange current, through \(\Delta\Phi\) and \(\Delta\chi_r\)</td><td>Low overpotential: stability of OCCOH* relative to CO* (steps 14 and 15 share it); high overpotential: CO transport</td></tr>
+          <tr><td>Quantity compared with data</td><td>Exchange current density across metals</td><td>Polarization curves and CO pressure series on one metal</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      So "multistep" alone does not separate the two. What separates them is a <em>network</em>: branches that
+      compete for the same CO*, chemical steps whose potential dependence comes only through the field, and
+      rate control that moves from one part of the network to another with potential.
+    </p>
+  </section>
+
+  <!-- 4. OPEN QUESTIONS -->
+  <section id="questions">
+    <div class="section-header">
+      <span class="section-title">4 · Open questions</span>
+      <div class="section-rule"></div>
+    </div>
+    <ol class="plain">
+      <li>Steps 14 and 15 control the C₂₊ rate at low overpotential and involve proton transfer from water. Do they stay in the ICET (Butler-Volmer-like) regime, or does any reach the regime limited by electron transfer?</li>
+      <li>With \(U_{\mathrm{PZC}} = 0.09\) V, the Cu surface carries about \(-28\ \mu\mathrm{C\,cm^{-2}}\) at \(-1.3\) V. Is a single \(\Delta\chi_r\) for "negatively charged" surfaces enough at this charge, or does \(\Delta\chi_r\) depend on \(\sigma\)?</li>
+      <li>How much of the potential dependence of a PCET step belongs to \(\Delta a\,\sigma\) and how much to \(\Delta\chi_r\)? Would adding both count the same water twice?</li>
+      <li>What does an explicit water calculation (orientation at the reaction plane) add that implicit solvation cannot, and can its result be passed to a microkinetic model as one number per potential?</li>
+      <li>Chemical steps such as 2CO* → OCCO* have no electron transfer. CIET does not apply to them, but their equilibrium shifts with \(\sigma\). How should a CIET network treat them consistently?</li>
+    </ol>
+  </section>
+
+  <!-- REFERENCES -->
+  <section id="references">
+    <div class="section-header">
+      <span class="section-title">References</span>
+      <div class="section-rule"></div>
+    </div>
+    <ol class="refs">
+      <li>J. Yoon and M. Z. Bazant, “Quantum theory of the metal dependence of electrocatalysis”, <em>J. Electrochem. Soc.</em> 173, 036502 (2026), doi:10.1149/1945-7111/ae3c46.</li>
+      <li>M. Z. Bazant, “Unified quantum theory of electrochemical kinetics by coupled ion–electron transfer”, <em>Faraday Discuss.</em> 246, 60 (2023), doi:10.1039/D3FD00108C.</li>
+      <li>S. Trasatti, <em>J. Electroanal. Chem. Interfacial Electrochem.</em> 39, 163 (1972); data source of Fig. 2 in Ref. 1.</li>
+      <li>S. Ringe, “The importance of a charge transfer descriptor for screening potential CO₂ reduction electrocatalysts”, <em>Nat. Commun.</em> 14, 2598 (2023).</li>
+      <li>K. Mathew, V. S. C. Kolluru, S. Mula, S. N. Steinmann and R. G. Hennig, “Implicit self-consistent electrolyte model in plane-wave density-functional theory”, <em>J. Chem. Phys.</em> 151, 234101 (2019).</li>
+      <li>B. Chun <em>et al.</em>, calibration of a microkinetic model of CO reduction on Cu (manuscript in preparation): mechanism, \(\Delta a_i\), \(C_{\mathrm{gap}}\), \(U_{\mathrm{PZC}}\) and rate control.</li>
+    </ol>
+  </section>
+
+</div>
+
+<footer>
+  &copy; 2026 Byungmin Chun &nbsp;·&nbsp; Korea University, Seoul
+</footer>
+
+<script>
+// ---------- constants (sources listed in the comment block at the end of the file) ----------
+const KT = 8.617333e-5 * 298.15;          // eV
+const LN10 = Math.LN10;
+const FIT1 = { m: 6.6, b: -2.9, x0: -1.13, x1: 0.0 };   // d metals + positively charged sp metals
+const FIT2 = { m: 6.6, b: -5.5, x0: -1.01, x1: -0.25 }; // negatively charged sp metals (Hg excluded)
+const MASTER = { m: 6.5, b: -3.0 };
+const C_GAP = 20, U_PZC = 0.09;            // uF/cm^2, V vs SHE
+const DA = { 'H*': 0.00269, 'CO*': 0.00021, 'OCCO*': 0.02188, 'OCCOH*': 0.01665, 'CCO*': 0.00989 };
+
+const els = id => document.getElementById(id);
+const cssVar = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+const SVGNS = 'http://www.w3.org/2000/svg';
+function S(tag, attrs, text) {
+  const e = document.createElementNS(SVGNS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (text !== undefined) e.textContent = text;
+  return e;
+}
+
+// ---------- 1. Trasatti / Yoon plot ----------
+const P = { mode: 'raw', chi: -0.4, alpha: 0.61 };
+const box = { l: 58, r: 620, t: 18, b: 318 };
+const X = { min: -1.6, max: 0.2 }, Y = { min: -13, max: -2 };
+const px = x => box.l + (x - X.min) / (X.max - X.min) * (box.r - box.l);
+const py = y => box.b - (y - Y.min) / (Y.max - Y.min) * (box.b - box.t);
+
+function drawTrasatti() {
+  const svg = els('trasatti');
+  svg.replaceChildren();
+  const defs = S('defs', {}), clip = S('clipPath', { id: 'plotClip' });
+  clip.append(S('rect', { x: box.l, y: box.t, width: box.r - box.l, height: box.b - box.t }));
+  defs.append(clip); svg.append(defs);
+  const plotG = S('g', { 'clip-path': 'url(#plotClip)' });
+  for (let y = -12; y <= -3; y += 1) {
+    svg.append(S('line', { x1: box.l, x2: box.r, y1: py(y), y2: py(y), stroke: '#ECE9E3' }));
+    svg.append(S('text', { x: box.l - 8, y: py(y) + 4, 'text-anchor': 'end', 'font-size': 11, fill: '#5A6472', 'font-family': 'system-ui' }, y));
+  }
+  for (let x = -1.6; x <= 0.21; x += 0.2) {
+    const xr = Math.round(x * 10) / 10;
+    svg.append(S('line', { x1: px(xr), x2: px(xr), y1: box.b, y2: box.b + 5, stroke: '#999' }));
+    svg.append(S('text', { x: px(xr), y: box.b + 18, 'text-anchor': 'middle', 'font-size': 11, fill: '#5A6472', 'font-family': 'system-ui' }, xr.toFixed(1)));
+  }
+  svg.append(S('line', { x1: box.l, x2: box.r, y1: box.b, y2: box.b, stroke: '#888' }));
+  svg.append(S('line', { x1: box.l, x2: box.l, y1: box.t, y2: box.b, stroke: '#888' }));
+  svg.append(S('text', { x: (box.l + box.r) / 2, y: 352, 'text-anchor': 'middle', 'font-size': 12, fill: '#1A1A1A', 'font-family': 'system-ui' },
+    P.mode === 'raw' ? 'ΔΦ (eV, relative to Pt)' : 'ΔΦ + eΔχr (eV)'));
+  svg.append(S('text', { x: 14, y: (box.t + box.b) / 2, 'text-anchor': 'middle', 'font-size': 12, fill: '#1A1A1A', 'font-family': 'system-ui',
+    transform: `rotate(-90 14 ${(box.t + box.b) / 2})` }, 'log₁₀ J₀ (A cm⁻²)'));
+
+  svg.append(plotG);
+  const line = (x0, x1, f, color, dash, w) => plotG.append(S('line', {
+    x1: px(x0), y1: py(f(x0)), x2: px(x1), y2: py(f(x1)), stroke: color, 'stroke-width': w || 3,
+    'stroke-dasharray': dash || '', 'stroke-linecap': 'round' }));
+
+  const shift = P.mode === 'corr' ? P.chi : 0;   // group 1 keeps Δχr = 0
+  if (P.mode === 'corr') line(-1.41, 0.0, x => MASTER.m * x + MASTER.b, '#999', '6 5', 2);
+  line(FIT1.x0, FIT1.x1, x => FIT1.m * x + FIT1.b, cssVar('--pcet'));
+  line(FIT2.x0 + shift, FIT2.x1 + shift, x => FIT2.m * (x - shift) + FIT2.b, cssVar('--chem'));
+
+  // slope implied by alpha, through the midpoint of group 1
+  const s = (1 - P.alpha) / (KT * LN10), xm = (FIT1.x0 + FIT1.x1) / 2, ym = FIT1.m * xm + FIT1.b;
+  line(xm - 0.35, xm + 0.35, x => ym + s * (x - xm), cssVar('--red'), '', 1.6);
+
+  // readouts: vertical gap between the lines in decades, measured at equal x
+  const gap = P.mode === 'corr' ? (FIT2.b - FIT2.m * shift) - FIT1.b : FIT2.b - FIT1.b;
+  els('roGap').textContent = `${gap >= 0 ? '+' : ''}${gap.toFixed(2)} decades` + (P.mode === 'raw' ? ' (raw axis)' : '');
+  els('roSlope').textContent = `${s.toFixed(2)} per eV (fit: 6.6 and 6.5)`;
+  els('roFactor').textContent = P.mode === 'corr'
+    ? `${Math.exp((1 - P.alpha) * P.chi / KT).toExponential(2)} (${((1 - P.alpha) * P.chi / (KT * LN10)).toFixed(2)} decades)`
+    : 'switch to the ΔΦ + eΔχr axis';
+  els('chiVal').textContent = `${P.chi.toFixed(2)} V`;
+  els('alphaVal').textContent = P.alpha.toFixed(2);
+}
+document.querySelectorAll('#axisMode button').forEach(b => b.addEventListener('click', () => {
+  P.mode = b.dataset.mode;
+  document.querySelectorAll('#axisMode button').forEach(c => { c.classList.toggle('active', c === b); c.setAttribute('aria-pressed', c === b); });
+  drawTrasatti();
+}));
+els('chiSlider').addEventListener('input', e => { P.chi = +e.target.value; drawTrasatti(); });
+els('alphaSlider').addEventListener('input', e => { P.alpha = +e.target.value; drawTrasatti(); });
+
+// ---------- 2a. Yoon panel ----------
+let group = 'pos';
+function drawYoon() {
+  const svg = els('yoonPanel');
+  svg.replaceChildren();
+  svg.append(S('rect', { x: 0, y: 0, width: 70, height: 220, fill: '#B8BEC6' }));
+  svg.append(S('text', { x: 35, y: 112, 'text-anchor': 'middle', 'font-size': 12, 'font-family': 'system-ui', fill: '#1A2E42' }, 'metal'));
+  svg.append(S('line', { x1: 150, x2: 150, y1: 10, y2: 210, stroke: '#C0473A', 'stroke-dasharray': '4 4' }));
+  svg.append(S('text', { x: 155, y: 22, 'font-size': 11, 'font-family': 'system-ui', fill: '#C0473A' }, 'reaction plane'));
+  // water dipoles: arrow from H side to O side (O end drawn as larger circle)
+  const ordered = group === 'pos';
+  for (let i = 0; i < 6; i++) {
+    const y = 30 + i * 32, x = 105;
+    const ang = ordered ? Math.PI : (i % 3 === 0 ? Math.PI * 0.8 : i % 3 === 1 ? Math.PI * 0.35 : -Math.PI * 0.55);
+    const dx = Math.cos(ang) * 16, dy = Math.sin(ang) * 16;
+    svg.append(S('line', { x1: x - dx, y1: y - dy, x2: x + dx, y2: y + dy, stroke: '#4A7FA5', 'stroke-width': 2 }));
+    svg.append(S('circle', { cx: x + dx, cy: y + dy, r: 6, fill: '#C0473A' }));   // O end
+    svg.append(S('circle', { cx: x - dx, cy: y - dy, r: 3.5, fill: '#fff', stroke: '#4A7FA5' })); // H end
+  }
+  const chi = ordered ? 0 : -0.4;
+  svg.append(S('text', { x: 160, y: 120, 'font-size': 13, 'font-family': 'system-ui', fill: '#1A1A1A' }, `Δχr = ${chi.toFixed(1)} V`));
+  svg.append(S('text', { x: 160, y: 140, 'font-size': 11, 'font-family': 'system-ui', fill: '#5A6472' }, ordered ? 'O-down, ordered water' : 'weak ordering'));
+  svg.append(S('text', { x: 160, y: 158, 'font-size': 11, 'font-family': 'system-ui', fill: '#5A6472' }, `J₀ factor ×${Math.exp((1 - 0.61) * chi / KT).toPrecision(2)}`));
+  els('yoonCap').innerHTML = ordered
+    ? 'Group 1 (includes the Pt reference): water structure assumed similar, so the relative drop is about 0. Trasatti: chemisorption fixes the water dipoles.'
+    : 'Negatively charged sp metals (E<sub>eq,HER</sub> &lt; E<sub>pzc</sub>): weaker ordering, one constant Δχr = −0.4 V for the whole group. Factor uses α = 0.61. Orientations are a cartoon.';
+}
+document.querySelectorAll('#groupMode button').forEach(b => b.addEventListener('click', () => {
+  group = b.dataset.g;
+  document.querySelectorAll('#groupMode button').forEach(c => { c.classList.toggle('active', c === b); c.setAttribute('aria-pressed', c === b); });
+  drawYoon();
+}));
+
+// ---------- 2b. My model panel ----------
+let U = -1.3;
+const ROWS = [
+  { name: 'H*', da: DA['H*'], type: 'adsorbate' },
+  { name: 'CO*', da: DA['CO*'], type: 'adsorbate' },
+  { name: 'OCCO*', da: DA['OCCO*'], type: 'adsorbate' },
+  { name: 'OCCOH*', da: DA['OCCOH*'], type: 'adsorbate' },
+  { name: 'step 13: 2CO* → OCCO*', da: DA['OCCO*'] - 2 * DA['CO*'], type: 'chemical step' },
+  { name: 'step 14: OCCO* → OCCOH*', da: DA['OCCOH*'] - DA['OCCO*'], type: 'PCET step (+ eU)' },
+  { name: 'step 15: OCCOH* → CCO*', da: DA['CCO*'] - DA['OCCOH*'], type: 'PCET step (+ eU)' },
+];
+function drawMine() {
+  const sigma = C_GAP * (U - U_PZC);
+  const svg = els('myPanel');
+  svg.replaceChildren();
+  svg.append(S('rect', { x: 0, y: 0, width: 70, height: 220, fill: '#B8BEC6' }));
+  svg.append(S('text', { x: 35, y: 112, 'text-anchor': 'middle', 'font-size': 12, 'font-family': 'system-ui', fill: '#1A2E42' }, 'Cu(211)'));
+  const n = Math.min(10, Math.round(Math.abs(sigma) / 3));
+  for (let i = 0; i < n; i++) {
+    svg.append(S('text', { x: 62, y: 20 + i * 20, 'text-anchor': 'middle', 'font-size': 14, 'font-family': 'system-ui', fill: sigma < 0 ? '#3A7EA3' : '#C0473A' }, sigma < 0 ? '−' : '+'));
+  }
+  // continuum solvent
+  svg.append(S('rect', { x: 140, y: 0, width: 160, height: 220, fill: '#E3EEF5' }));
+  svg.append(S('text', { x: 220, y: 210, 'text-anchor': 'middle', 'font-size': 11, 'font-family': 'system-ui', fill: '#2D5F80' }, 'implicit solvent (linear dielectric)'));
+  // adsorbates with dipole arrows scaled by Δa
+  const ads = [['CO*', 40], ['OCCO*', 100], ['OCCOH*', 160]];
+  for (const [name, y] of ads) {
+    const len = 8 + DA[name] * 1200;
+    svg.append(S('circle', { cx: 85, cy: y, r: 7, fill: '#fff', stroke: '#1A2E42' }));
+    svg.append(S('line', { x1: 92, y1: y, x2: 92 + len, y2: y, stroke: '#D9822B', 'stroke-width': 2.5 }));
+    svg.append(S('text', { x: 96 + len, y: y + 4, 'font-size': 11, 'font-family': 'system-ui', fill: '#1A1A1A' }, `${name}  ${(DA[name] * sigma).toFixed(2)} eV`));
+  }
+  els('uVal').textContent = `${U.toFixed(2)} V`;
+  els('roSigma').textContent = `${sigma.toFixed(1)} μC cm⁻²` + (Math.abs(sigma) > 20 ? ' (beyond the DFT range ±20: extrapolated)' : '');
+  els('roSign').textContent = sigma < 0 ? `negative (U < U_PZC = ${U_PZC} V)` : 'positive or zero';
+  els('shiftBody').replaceChildren(...ROWS.map(r => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${r.name}</td><td class="num">${r.da.toFixed(5)}</td><td class="num">${(r.da * sigma).toFixed(2)}</td><td>${r.type}</td>`;
+    return tr;
+  }));
+}
+els('uSlider').addEventListener('input', e => { U = +e.target.value; drawMine(); });
+
+// ---------- 3. network notes ----------
+const NOTES = {
+  volmer: 'Volmer: PCET from water. In my calibrated model it limits H₂ evolution (degree of rate control 0.67 to 0.89), consistent with Butler\'s 1936 picture of a slow Volmer step. A CIET question in its own right (ICET or ECIT?).',
+  heyrovsky: 'Heyrovsky: a second PCET. Yoon and Bazant fit one ICET exchange current and do not say whether it is Volmer or Heyrovsky.',
+  tafel: 'Tafel: chemical recombination, no electron transfer. CIET does not apply; in Butler\'s derivation it is fast and reversible.',
+  trans: 'CO transport (diffusion layer, fitted mass transfer coefficient). Controls the C₂₊ rate at high overpotential. No kinetics theory of charge transfer changes this limit.',
+  ads: 'CO adsorption: chemical. Lateral interactions keep CO* coverage at about 0.24 even at 1 bar, so CO* does not saturate.',
+  couple: 'C–C coupling: chemical, no electron transfer, so CIET does not apply directly. It is close to equilibrium at −1.3 V (backward/forward rate 0.936), and its equilibrium still shifts with potential through the field term (Δa σ).',
+  occoh: 'OCCO* → OCCOH*: PCET from water. Shares the rate control with step 15 at low overpotential. Candidate for asking: ICET (BV-like) or electron-transfer-limited?',
+  cco: 'OCCOH* → CCO*: PCET (proton from water to the leaving OH). Its computed transition state lies below OCCOH*, so the rate is set by the stability of OCCOH* relative to CO*, not by a barrier.',
+  chco: 'CCO* → CHCO*: PCET after the rate-controlling part of the pathway.',
+  c2h4: 'Lumped, barrierless hydrogenation to C₂H₄, which represents all C₂₊ products.',
+  c1: 'C₁ branch to CH₄ through CHO*: PCET steps that compete for the same CO*. CO* → CHO* controls the CH₄ rate between −1.55 and −1.2 V.',
+  cstar: 'C* branch through COH*: PCET steps. The atomic carbon pathway carries less than 1% of the C₂₊ flux between −1.1 and −1.6 V.',
+  ccoup: 'Other C–C couplings (CO* with C* or CH*): chemical steps; minor in the calibrated model.',
+};
+document.querySelectorAll('.step').forEach(b => b.addEventListener('click', () => {
+  document.querySelectorAll('.step').forEach(c => c.classList.toggle('selected', c === b));
+  els('stepNote').textContent = NOTES[b.dataset.s];
+}));
+
+// ---------- init ----------
+document.querySelectorAll('#axisMode button, #groupMode button').forEach(c => c.setAttribute('aria-pressed', 'false'));
+for (const sel of ['#axisMode button[data-mode="raw"]', '#groupMode button[data-g="pos"]']) {
+  const b = document.querySelector(sel); b.classList.add('active'); b.setAttribute('aria-pressed', 'true');
+}
+drawTrasatti(); drawYoon(); drawMine();
+</script>
+</body>
+</html>
