@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ions at Interfaces | Byungmin Chun</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false}]});"></script>
+<style>
+:root {
+  --navy: #0D1B2A;
+  --navy-mid: #1A2E42;
+  --blue: #4A7FA5;
+  --blue-light: #7AAFC8;
+  --cream: #F8F7F4;
+  --text: #1A1A1A;
+  --text-muted: #5A6472;
+  --border: #D8DCE2;
+  --radius: 4px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  background: var(--cream);
+  color: var(--text);
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+/* NAV */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--navy);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 2.5rem;
+  height: 56px;
+}
+.nav-name { color: #fff; font-size: 15px; letter-spacing: 0.02em; text-decoration: none; }
+.nav-links { display: flex; gap: 2rem; list-style: none; }
+.nav-links a {
+  color: rgba(255,255,255,0.65);
+  text-decoration: none;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  transition: color 0.2s;
+}
+.nav-links a:hover, .nav-links a.active { color: #fff; }
+
+/* HERO */
+.hero-bg { background: var(--navy); }
+.hero { color: #fff; padding: 3.5rem 2.5rem 3rem; max-width: 900px; margin: 0 auto; }
+.hero-label {
+  font-family: system-ui, sans-serif; font-size: 12px; letter-spacing: 0.12em;
+  color: var(--blue-light); margin-bottom: 1rem; display: block;
+}
+.hero h1 { font-size: clamp(1.8rem, 4.5vw, 2.6rem); font-weight: normal; line-height: 1.2; margin-bottom: 1rem; }
+.hero p { font-family: system-ui, sans-serif; font-size: 15px; color: rgba(255,255,255,0.65); max-width: 680px; }
+
+.container { max-width: 900px; margin: 0 auto; padding: 0 2.5rem; }
+section { padding: 3rem 0 1rem; }
+.section-header { display: flex; align-items: center; gap: 1.25rem; margin-bottom: 1.5rem; }
+.section-title {
+  font-family: system-ui, sans-serif; font-size: 11px; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--blue); white-space: nowrap;
+}
+.section-rule { flex: 1; height: 1px; background: var(--border); }
+h3 { font-family: system-ui, sans-serif; font-size: 15px; color: var(--navy-mid); margin: 1.5rem 0 0.6rem; }
+p { margin-bottom: 1rem; }
+a { color: var(--blue); }
+.muted { color: var(--text-muted); }
+.small { font-family: system-ui, sans-serif; font-size: 13px; }
+.src { font-family: system-ui, sans-serif; font-size: 12px; color: var(--text-muted); white-space: nowrap; }
+
+/* FIGURES */
+.fig { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem; margin-bottom: 1rem; }
+.fig-scroll { overflow-x: auto; }
+.fig-scroll svg { min-width: 560px; }
+.fig svg { width: 100%; height: auto; display: block; }
+.fig .lbl { font-family: system-ui, sans-serif; font-size: 12px; fill: #1A1A1A; }
+.fig .lbl-m { font-family: system-ui, sans-serif; font-size: 11px; fill: #5A6472; }
+.fig .ttl { font-family: system-ui, sans-serif; font-size: 13px; font-weight: 600; fill: #1A2E42; }
+.fig .badge circle { fill: #0D1B2A; }
+.fig .badge text { font-family: system-ui, sans-serif; font-size: 11px; font-weight: 700; fill: #fff; text-anchor: middle; }
+.caption { font-family: system-ui, sans-serif; font-size: 13px; color: var(--text-muted); margin-top: 0.75rem; line-height: 1.5; }
+.pair { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+ol.legend-list { font-family: system-ui, sans-serif; font-size: 13px; padding-left: 1.4rem; margin-top: 0.75rem; }
+ol.legend-list li { margin-bottom: 0.25rem; }
+
+/* INTERACTIVE */
+button {
+  font-family: system-ui, sans-serif; font-size: 13px; cursor: pointer;
+  background: var(--cream); color: var(--text); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 0.4rem 0.85rem;
+}
+button:hover { border-color: var(--blue); }
+button.active { background: var(--navy); color: #fff; border-color: var(--navy); }
+.presets { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
+.plot { width: 100%; height: 250px; display: block; background: #FBFBFA; border: 1px solid var(--border); border-radius: var(--radius); }
+.controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.75rem 1.5rem; margin: 1rem 0; }
+.ctl label { display: flex; justify-content: space-between; font-family: system-ui, sans-serif; font-size: 13px; margin-bottom: 0.2rem; }
+.ctl label span.val { font-variant-numeric: tabular-nums; color: var(--blue); }
+.ctl input[type=range] { width: 100%; accent-color: var(--blue); }
+.readout {
+  margin-top: 0.6rem; font-family: system-ui, sans-serif; font-size: 12.5px; color: var(--text-muted);
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 0.25rem 1rem;
+}
+.readout b { color: var(--text); font-weight: 600; font-variant-numeric: tabular-nums; }
+.actions { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; margin-top: 0.75rem; }
+.plot-title { font-family: system-ui, sans-serif; font-size: 13px; font-weight: 600; color: var(--navy-mid); margin: 1rem 0 0.4rem; }
+
+/* TABLES */
+.table-wrap { overflow-x: auto; margin-bottom: 1rem; }
+table { border-collapse: collapse; width: 100%; font-family: system-ui, sans-serif; font-size: 13.5px; background: #fff; }
+th, td { border-bottom: 1px solid var(--border); padding: 0.55rem 0.7rem; text-align: left; vertical-align: top; }
+th { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); font-weight: 600; background: var(--cream); }
+td.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.eq-box { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 0.5rem 1rem; margin-bottom: 1rem; overflow-x: auto; }
+.note { background: #fff; border-left: 3px solid var(--blue); padding: 0.75rem 1rem; margin-bottom: 1rem; font-size: 15px; }
+.warn { border-left-color: #C0473A; }
+ul.plain { padding-left: 1.25rem; margin-bottom: 1rem; }
+ul.plain li { margin-bottom: 0.35rem; }
+ol.refs { padding-left: 1.25rem; font-size: 14px; }
+ol.refs li { margin-bottom: 0.4rem; }
+
+footer {
+  margin-top: 3rem; padding: 2rem 2.5rem; text-align: center;
+  font-family: system-ui, sans-serif; font-size: 12px; color: var(--text-muted); border-top: 1px solid var(--border);
+}
+
+@media (max-width: 640px) {
+  nav { height: auto; min-height: 56px; flex-wrap: wrap; padding: 0.5rem 1rem; }
+  .nav-links { gap: 0.4rem 0.9rem; flex-wrap: wrap; }
+  .hero { padding: 2.5rem 1rem 2rem; }
+  .container { padding: 0 1rem; }
+  .fig { padding: 0.85rem; }
+  .pair { grid-template-columns: 1fr; }
+  .plot { height: 200px; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-name" href="index.html">Byungmin Chun</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="patterns.html">Animal Patterns</a></li>
+    <li><a href="ciet.html">CIET</a></li>
+    <li><a href="surface-potential.html">Surface Potential</a></li>
+    <li><a href="proofs.html">Three Proofs</a></li>
+    <li><a href="interfaces.html" class="active">Ions at Interfaces</a></li>
+  </ul>
+</nav>
+
+<div class="hero-bg">
+  <div class="hero">
+    <span class="hero-label">Electrolyte Theory · Linear Stability · Molecular Simulation</span>
+    <h1>Ions at Interfaces</h1>
+    <p>
+      A short study page in five parts: when mean field electrostatics holds near a charged electrode,
+      what a recent statistical mechanical theory of ion chemical potentials adds, why a growing electrode
+      does not stay flat, how that instability differs from a Turing pattern, and how molecular simulation
+      finds coexisting phases and fits force fields to chemical potentials. Every claim points to an equation
+      or page of the papers listed at the end (page numbers are PDF pages).
+    </p>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- 1. LENGTH SCALES -->
+  <section id="lengths">
+    <div class="section-header">
+      <span class="section-title">1 · When Mean Field Holds</span>
+      <div class="section-rule"></div>
+    </div>
+
+    <p>
+      Mean field (Poisson&ndash;Boltzmann, Debye&ndash;H&uuml;ckel) electrostatics lets each ion feel only the
+      <em>average</em> potential of all the others. Whether that is allowed is decided by comparing lengths.
+    </p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Length</th><th>Definition</th><th>Meaning</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td>Bjerrum length \(\ell_B\)</td><td>\(\ell_B=\dfrac{e^2}{4\pi\varepsilon_0\varepsilon k_BT}\)</td>
+              <td>distance at which two unit charges interact with energy \(k_BT\); set by \(\varepsilon\) and \(T\) only</td><td class="src">[1] Eq. 22, p.10</td></tr>
+          <tr><td>Debye length \(\lambda_D\)</td><td>\(\lambda_D=\left(\dfrac{\varepsilon_0\varepsilon k_BT}{e^2\sum_\gamma z_\gamma^2\rho_\gamma^0}\right)^{1/2}\)</td>
+              <td>radius of the screening cloud around an ion</td><td class="src">[1] Eq. 21, p.10</td></tr>
+          <tr><td>Gouy&ndash;Chapman length \(\ell_{GC}\)</td><td>\(\ell_{GC}=\dfrac{2\varepsilon\varepsilon_0k_BT}{e|\sigma|}\)</td>
+              <td>thickness of the counterion layer a wall of charge density \(\sigma\) holds against thermal motion</td><td class="src">[1] p.22</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Two ratios follow:</p>
+    <div class="eq-box">
+      $$\varepsilon_c=\frac{\ell_B}{\lambda_D}\ \ \text{(bulk; [1] Sec. IV C, p.21)}, \qquad
+        \Xi=\frac{\ell_B}{\ell_{GC}}=\frac{2\pi\ell_B^2|\sigma|}{e}\ \ \text{(charged wall; [1] p.22)}$$
+    </div>
+    <p class="small muted">
+      The paper writes \(\varepsilon=\kappa_D\ell_B\) for the bulk ratio and also uses \(\varepsilon\) for the dielectric
+      constant; here the ratio is called \(\varepsilon_c\) to keep the two apart.
+    </p>
+
+    <h3>Worked numbers (water, \(\varepsilon=78.4\), \(T=298.15\) K, 1:1 salt)</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Condition</th><th>\(\lambda_D\) (nm)</th><th>\(\varepsilon_c=\ell_B/\lambda_D\)</th><th>Ions in a Debye sphere \(=1/(3\varepsilon_c)\)</th></tr></thead>
+        <tbody>
+          <tr><td>1 mM</td><td class="num">9.6</td><td class="num">0.074</td><td class="num">4.5</td></tr>
+          <tr><td>0.1 M (e.g. 0.1 M KOH)</td><td class="num">0.96</td><td class="num">0.74</td><td class="num">0.45</td></tr>
+          <tr><td>1 M</td><td class="num">0.30</td><td class="num">2.35</td><td class="num">0.14</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      with \(\ell_B=0.715\) nm. At a charged electrode, take as an illustration a surface charge of
+      25 to 33 &micro;C/cm&sup2; (for example a 20 &micro;F/cm&sup2; plate capacitor charged by 1.25 to 1.65 V):
+    </p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>\(|\sigma|\) (&micro;C/cm&sup2;)</th><th>\(\ell_{GC}\) (nm)</th><th>\(\Xi=\ell_B/\ell_{GC}\)</th><th>Counterion spacing \(a=\sqrt{e/|\sigma|}\) (nm)</th><th>\(a/\ell_{GC}=\sqrt{2\pi\Xi}\)</th></tr></thead>
+        <tbody>
+          <tr><td>25</td><td class="num">0.14</td><td class="num">5.0</td><td class="num">0.80</td><td class="num">5.6</td></tr>
+          <tr><td>33</td><td class="num">0.11</td><td class="num">6.6</td><td class="num">0.70</td><td class="num">6.4</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="fig">
+      <div class="fig-scroll">
+      <svg viewBox="0 0 760 200" role="img" aria-label="Log scale comparing the Gouy-Chapman length, Bjerrum length, wall ion spacing and Debye lengths">
+        <defs>
+          <marker id="arrRuler" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5A6472"/></marker>
+        </defs>
+        <text class="ttl" x="60" y="18">Bulk electrolyte</text>
+        <text class="ttl" x="60" y="192">At a charged wall</text>
+        <!-- axis -->
+        <line x1="60" y1="110" x2="715" y2="110" stroke="#5A6472" stroke-width="1.2" marker-end="url(#arrRuler)"/>
+        <g stroke="#5A6472" stroke-width="1">
+          <line x1="60" y1="105" x2="60" y2="115"/><line x1="156.3" y1="107" x2="156.3" y2="113"/>
+          <line x1="283.7" y1="107" x2="283.7" y2="113"/><line x1="380" y1="105" x2="380" y2="115"/>
+          <line x1="476.3" y1="107" x2="476.3" y2="113"/><line x1="603.7" y1="107" x2="603.7" y2="113"/>
+          <line x1="700" y1="105" x2="700" y2="115"/>
+        </g>
+        <g class="lbl-m" text-anchor="middle">
+          <text x="60" y="128">0.1</text><text x="156.3" y="128">0.2</text><text x="283.7" y="128">0.5</text>
+          <text x="380" y="128">1</text><text x="476.3" y="128">2</text><text x="603.7" y="128">5</text><text x="700" y="128">10 nm</text>
+        </g>
+        <!-- bulk markers -->
+        <g stroke-width="2.2">
+          <line x1="214.6" y1="110" x2="214.6" y2="44" stroke="#4A7FA5"/>
+          <line x1="374.5" y1="110" x2="374.5" y2="44" stroke="#4A7FA5"/>
+          <line x1="694.5" y1="110" x2="694.5" y2="44" stroke="#4A7FA5"/>
+          <line x1="333.4" y1="110" x2="333.4" y2="74" stroke="#F08A24"/>
+        </g>
+        <text class="lbl" x="210" y="40" text-anchor="end">λ<tspan dy="3" font-size="9">D</tspan><tspan dy="-3"> (1 M) = 0.30</tspan></text>
+        <text class="lbl" x="379" y="40">λ<tspan dy="3" font-size="9">D</tspan><tspan dy="-3"> (0.1 M) = 0.96</tspan></text>
+        <text class="lbl" x="690" y="40" text-anchor="end">λ<tspan dy="3" font-size="9">D</tspan><tspan dy="-3"> (1 mM) = 9.6</tspan></text>
+        <text class="lbl" x="329" y="72" text-anchor="end" style="fill:#B5651D">ℓ<tspan dy="3" font-size="9">B</tspan><tspan dy="-3"> = 0.71</tspan></text>
+        <!-- wall markers -->
+        <rect x="70.6" y="134" width="39" height="10" fill="#C0473A" opacity="0.8"/>
+        <rect x="329.9" y="134" width="19.1" height="10" fill="#1A2E42" opacity="0.8"/>
+        <text class="lbl" x="66" y="162">ℓ<tspan dy="3" font-size="9">GC</tspan><tspan dy="-3"> = 0.11 to 0.14</tspan></text>
+        <text class="lbl" x="326" y="162">counterion spacing a = 0.70 to 0.80</text>
+      </svg>
+      </div>
+      <p class="caption">
+        Lengths on a log scale (nm). Mean field needs \(\ell_B\) to be the <em>smallest</em> electrostatic length.
+        In the bulk this holds at 1 mM (\(\lambda_D\gg\ell_B\)), is marginal at 0.1 M, and fails at 1 M.
+        At a wall charged to 25 to 33 &micro;C/cm&sup2; the counterion layer (\(\ell_{GC}\), red) is thinner than
+        \(\ell_B\) by a factor \(\Xi\approx5\) to 6.6 and much thinner than the spacing between counterions (dark bar).
+      </p>
+    </div>
+
+    <h3>Why a ratio above about 1 breaks mean field</h3>
+    <ul class="plain">
+      <li><strong>Too few ions in the cloud.</strong> For a 1:1 salt \(\sum\rho^0=1/(4\pi\ell_B\lambda_D^2)\), so the number of
+        ions inside a sphere of radius \(\lambda_D\) is \(\tfrac{4\pi}{3}\lambda_D^3\sum\rho^0=1/(3\varepsilon_c)\). An average
+        over the cloud makes sense only if this number is large; at 0.1 M it is already below one.</li>
+      <li><strong>Pair energy above \(k_BT\).</strong> Two unit charges a distance \(\lambda_D\) apart interact with energy
+        \(k_BT\,\ell_B/\lambda_D=\varepsilon_c\,k_BT\). Debye&ndash;H&uuml;ckel linearizes the Boltzmann factor, which needs this
+        to be small. [1] (Fig. 3, p.10) puts it as the screening cloud shrinking into the &ldquo;Bjerrum sphere&rdquo;.</li>
+      <li><strong>At a wall, discrete ions instead of a smooth layer.</strong> The layer is \(\ell_{GC}\approx0.11\) to 0.14 nm thick,
+        while neighbouring counterions sit \(a\approx0.7\) to 0.8 nm apart, about 6 times farther (\(a/\ell_{GC}=\sqrt{2\pi\Xi}\)).
+        A &ldquo;smeared&rdquo; charge density is then a poor picture: each counterion sees its neighbours as individual charges.
+        [1] calls \(\Xi\) the electrostatic coupling parameter (p.22). The layer is also thinner than a hydrated ion
+        (radius a few tenths of a nm), so ion size and crowding (term 3 of Eq. 36, Section 2) matter at the wall too, not only correlations.</li>
+    </ul>
+    <p class="small muted">
+      Assumption: bulk \(\varepsilon=78.4\) everywhere. Water next to an electrode has a lower dielectric constant, which makes
+      \(\ell_B\), and therefore \(\varepsilon_c\) and \(\Xi\), larger still. \(\varepsilon_c\propto c^{1/2}\varepsilon^{-3/2}T^{-3/2}\).
+    </p>
+  </section>
+
+  <!-- 2. ION CHEMICAL POTENTIAL -->
+  <section id="chemical-potential">
+    <div class="section-header">
+      <span class="section-title">2 · The Ion Chemical Potential</span>
+      <div class="section-rule"></div>
+    </div>
+
+    <p>
+      Fraggedakis [1] derives the chemical potential of ion species \(\gamma\) at position \(\mathbf r\) in a primitive model
+      (ions as charged spheres, solvent as a dielectric continuum \(\varepsilon(\mathbf r)\)), Eq. 36 (PDF p.13):
+    </p>
+    <div class="eq-box">
+      $$\mu_\gamma(\mathbf r)=\underbrace{k_BT\ln\!\big(\Lambda_\gamma^3\rho_\gamma^{(1)}(\mathbf r)\big)}_{1}
+        +\underbrace{V_\gamma(\mathbf r)}_{2}+\underbrace{k_BT\ln\gamma^c_\gamma}_{3}
+        +\underbrace{q_\gamma\langle\phi(\mathbf r)\rangle}_{4}
+        +\underbrace{\tfrac{q_\gamma^2}{2}\!\int\! d\mathbf r'\!\int\! d\mathbf r''\,\Delta_\gamma(\mathbf r,\mathbf r')G(\mathbf r',\mathbf r'')\Delta_\gamma(\mathbf r'',\mathbf r)}_{5}
+        +\underbrace{\lim_{\mathbf r'\to\mathbf r}\Big(q_\gamma\!\int_0^1\!d\xi_\gamma\,\psi_\gamma(\mathbf r';\mathbf r,\xi_\gamma)-\tfrac{q_\gamma^2}{2}G(\mathbf r',\mathbf r)\Big)}_{6}$$
+    </div>
+
+    <div class="fig">
+      <svg viewBox="0 0 600 250" role="img" aria-label="An ion near a metal electrode with the six contributions to its chemical potential marked">
+        <defs>
+          <marker id="arrMu" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1A2E42"/></marker>
+        </defs>
+        <rect x="0" y="0" width="150" height="250" fill="#C9CED6"/>
+        <rect x="150" y="0" width="45" height="250" fill="#E3ECF3"/>
+        <text class="lbl" x="14" y="236">metal</text>
+        <text class="lbl-m" x="153" y="236">low ε</text>
+        <!-- image charge -->
+        <line x1="64" y1="120" x2="236" y2="120" stroke="#5A6472" stroke-dasharray="4 3"/>
+        <circle cx="50" cy="120" r="14" fill="none" stroke="#C0473A" stroke-width="1.6" stroke-dasharray="4 3"/>
+        <text class="lbl" x="50" y="125" text-anchor="middle" style="fill:#C0473A">−</text>
+        <text class="lbl-m" x="50" y="150" text-anchor="middle">image</text>
+        <!-- screening cloud -->
+        <circle cx="250" cy="120" r="72" fill="#EEF4F8" stroke="#4A7FA5" stroke-width="1.4" stroke-dasharray="5 4"/>
+        <g fill="#4A7FA5">
+          <circle cx="300" cy="78" r="7"/><circle cx="214" cy="170" r="7"/><circle cx="315" cy="140" r="7"/>
+          <circle cx="246" cy="62" r="7"/><circle cx="205" cy="84" r="7"/>
+        </g>
+        <!-- hard sphere neighbour -->
+        <circle cx="272" cy="143" r="14" fill="#B8BEC7" stroke="#5A6472"/>
+        <!-- the ion -->
+        <circle cx="250" cy="120" r="14" fill="#C0473A"/>
+        <text x="250" y="125" text-anchor="middle" font-family="system-ui, sans-serif" font-size="15" font-weight="700" fill="#fff">+</text>
+        <!-- mean potential arrow -->
+        <line x1="205" y1="218" x2="585" y2="218" stroke="#1A2E42" stroke-width="1.4" marker-end="url(#arrMu)"/>
+        <text class="lbl" x="400" y="210" text-anchor="middle">⟨φ(x)⟩ set by electrode potential and charges</text>
+        <!-- density -->
+        <g fill="#C0473A" opacity="0.7">
+          <circle cx="395" cy="60" r="6"/><circle cx="420" cy="110" r="6"/><circle cx="380" cy="150" r="6"/>
+          <circle cx="470" cy="75" r="6"/><circle cx="540" cy="140" r="6"/>
+        </g>
+        <text class="lbl" x="430" y="30">local density ρ(r)</text>
+        <!-- badges -->
+        <g class="badge"><circle cx="420" cy="25" r="9"/><text x="420" y="29">1</text></g>
+        <g class="badge"><circle cx="165" cy="20" r="9"/><text x="165" y="24">2</text></g>
+        <g class="badge"><circle cx="296" cy="146" r="9"/><text x="296" y="150">3</text></g>
+        <g class="badge"><circle cx="190" cy="218" r="9"/><text x="190" y="222">4</text></g>
+        <g class="badge"><circle cx="100" cy="108" r="9"/><text x="100" y="112">5</text></g>
+        <g class="badge"><circle cx="318" cy="56" r="9"/><text x="318" y="60">6</text></g>
+      </svg>
+      <ol class="legend-list">
+        <li><strong>Ideal</strong>: translational entropy of the ion at local density \(\rho(\mathbf r)\).</li>
+        <li><strong>External potential</strong> \(V\): body forces or ion&ndash;wall interactions that are not electrostatic.</li>
+        <li><strong>Short range activity coefficient</strong> \(\gamma^c\): ion size (steric) effects, from the uncharged pair structure \(\hat g^{(0)}\) (Eq. 37).</li>
+        <li><strong>Mean field electrostatics</strong> \(q\langle\phi\rangle\): the applied potential, surface charges and dielectric jumps.</li>
+        <li><strong>Electrostatic solvation (self energy)</strong>: the ion&rsquo;s interaction with its environment through image charges; scales roughly as \((\varepsilon_0\varepsilon)^{-1}\), so it grows where \(\varepsilon\) drops (Born like).</li>
+        <li><strong>Ion&ndash;ion correlations</strong>: the energy of the ion in its own screening cloud, through the fluctuation potential \(\psi\); gives Debye&ndash;H&uuml;ckel \(\ln\gamma\) in the dilute limit.</li>
+      </ol>
+      <p class="caption">Term meanings from [1], list after Eq. 14 (PDF p.8) and discussion after Eq. 36 (p.13). The picture is a schematic, not from the paper.</p>
+    </div>
+
+    <h3>What to remember</h3>
+    <ul class="plain">
+      <li><strong>Where it holds.</strong> The closures for the pair correlation functions come from a regular perturbation
+        expansion in \(\varepsilon_c=\ell_B/\lambda_D\) (Eqs. 23 to 28, p.10 to 11; Sec. IV C, p.21). The paper states that the model is for
+        ion&ndash;ion correlations that are &ldquo;weak to moderate, as determined by values of \(\varepsilon=\kappa_D\ell_B\)&rdquo; (p.12). It compares with Grand Canonical
+        Monte Carlo up to \(\varepsilon\simeq5.76\) and agrees, but stresses that &ldquo;the perturbation is not asymptotically controlled
+        for \(\varepsilon\ge1\)&rdquo;, so agreement there is empirical (Sec. IV F, p.23): the theory is used beyond its formal range, with caution.</li>
+      <li><strong>Unequal ion sizes.</strong> The simple closure breaks the symmetry \(g_{+-}=g_{-+}\) when ions differ in size (Eqs. 29 to 31);
+        a symmetrized closure fixes it (Eq. 35, p.12).</li>
+      <li><strong>Benchmarks are bulk.</strong> The demonstration is the primitive model of a valence asymmetric electrolyte with equal
+        ion sizes in the bulk; for symmetric salts it recovers the extended Debye&ndash;H&uuml;ckel result (abstract, p.2).
+        Near a charged wall the paper names \(\Xi\) as a further parameter: &ldquo;we expect it to play a role&rdquo; (p.22): the interfacial
+        regime of Section 1 is named as the target, not yet computed.</li>
+      <li><strong>Chemical vs electrochemical potential</strong> (Sec. IV G, p.23 to 24). The usual electrochemical potential puts the
+        applied field in \(q\phi\) and lumps ion&ndash;ion correlations into the concentration (activity) part. Eq. 36 keeps the applied
+        field contribution (term 4) separate from the correlation contribution (term 6), which the paper argues is clearer near boundaries.</li>
+    </ul>
+  </section>
+
+  <!-- 3. ROUGHENING -->
+  <section id="roughening">
+    <div class="section-header">
+      <span class="section-title">3 · Why a Growing Surface Roughens</span>
+      <div class="section-rule"></div>
+    </div>
+
+    <p>
+      Dobkin and Fraggedakis [2] apply their deposition theory to a metal (Li) growing from a solid single ion conductor at
+      constant applied current. Is the flat front stable?
+    </p>
+
+    <div class="pair">
+      <div class="fig">
+        <svg viewBox="0 0 360 230" role="img" aria-label="Long wavelength bump: ion flux converges on the crest">
+          <defs>
+            <marker id="arrB" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4A7FA5"/></marker>
+          </defs>
+          <rect x="0" y="0" width="360" height="230" fill="#F4F8FB"/>
+          <line x1="0" y1="22" x2="360" y2="22" stroke="#1A2E42" stroke-width="2"/>
+          <text class="lbl-m" x="6" y="16">counter electrode</text>
+          <path d="M0,172.0 L10,171.7 L20,170.7 L30,169.1 L40,166.9 L50,164.1 L60,161.0 L70,157.5 L80,153.8 L90,150.0 L100,146.2 L110,142.5 L120,139.0 L130,135.9 L140,133.1 L150,130.9 L160,129.3 L170,128.3 L180,128.0 L190,128.3 L200,129.3 L210,130.9 L220,133.1 L230,135.9 L240,139.0 L250,142.5 L260,146.2 L270,150.0 L280,153.8 L290,157.5 L300,161.0 L310,164.1 L320,166.9 L330,169.1 L340,170.7 L350,171.7 L360,172.0 L360,230 L0,230 Z" fill="#B8BEC7" stroke="#1A2E42" stroke-width="1.5"/>
+          <g stroke="#4A7FA5" fill="none" marker-end="url(#arrB)">
+            <line x1="40" y1="32" x2="89" y2="142" stroke-width="1.4"/>
+            <line x1="100" y1="32" x2="128" y2="128" stroke-width="2.2"/>
+            <line x1="180" y1="32" x2="180" y2="120" stroke-width="3.2"/>
+            <line x1="260" y1="32" x2="232" y2="128" stroke-width="2.2"/>
+            <line x1="320" y1="32" x2="271" y2="142" stroke-width="1.4"/>
+          </g>
+          <text class="lbl" x="180" y="200" text-anchor="middle">metal (crest grows, valleys dissolve)</text>
+          <text class="ttl" x="180" y="222" text-anchor="middle">k = 0.01 &lt; k<tspan dy="3" font-size="9">c</tspan><tspan dy="-3">: unstable</tspan></text>
+        </svg>
+      </div>
+      <div class="fig">
+        <svg viewBox="0 0 360 230" role="img" aria-label="Short wavelength bumps: flux from crests to valleys">
+          <defs>
+            <marker id="arrC" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#C0473A"/></marker>
+          </defs>
+          <rect x="0" y="0" width="360" height="230" fill="#F4F8FB"/>
+          <line x1="0" y1="22" x2="360" y2="22" stroke="#1A2E42" stroke-width="2"/>
+          <text class="lbl-m" x="6" y="16">counter electrode</text>
+          <path d="M0,130.0 L5,130.6 L10,132.3 L15,135.0 L20,138.3 L25,141.7 L30,145.0 L35,147.7 L40,149.4 L45,150.0 L50,149.4 L55,147.7 L60,145.0 L65,141.7 L70,138.3 L75,135.0 L80,132.3 L85,130.6 L90,130.0 L95,130.6 L100,132.3 L105,135.0 L110,138.3 L115,141.7 L120,145.0 L125,147.7 L130,149.4 L135,150.0 L140,149.4 L145,147.7 L150,145.0 L155,141.7 L160,138.3 L165,135.0 L170,132.3 L175,130.6 L180,130.0 L185,130.6 L190,132.3 L195,135.0 L200,138.3 L205,141.7 L210,145.0 L215,147.7 L220,149.4 L225,150.0 L230,149.4 L235,147.7 L240,145.0 L245,141.7 L250,138.3 L255,135.0 L260,132.3 L265,130.6 L270,130.0 L275,130.6 L280,132.3 L285,135.0 L290,138.3 L295,141.7 L300,145.0 L305,147.7 L310,149.4 L315,150.0 L320,149.4 L325,147.7 L330,145.0 L335,141.7 L340,138.3 L345,135.0 L350,132.3 L355,130.6 L360,130.0 L360,230 L0,230 Z" fill="#B8BEC7" stroke="#1A2E42" stroke-width="1.5"/>
+          <g stroke="#C0473A" stroke-width="1.8" fill="none" marker-end="url(#arrC)">
+            <line x1="96" y1="121" x2="128" y2="137"/><line x1="84" y1="121" x2="52" y2="137"/>
+            <line x1="186" y1="121" x2="218" y2="137"/><line x1="174" y1="121" x2="142" y2="137"/>
+            <line x1="276" y1="121" x2="308" y2="137"/><line x1="264" y1="121" x2="232" y2="137"/>
+          </g>
+          <g fill="#1A2E42" class="lbl-m" text-anchor="middle">
+            <text x="90" y="112">σ<tspan dy="3" font-size="9">zz</tspan><tspan dy="-3"> &lt; 0</tspan></text><text x="180" y="112">σ<tspan dy="3" font-size="9">zz</tspan><tspan dy="-3"> &lt; 0</tspan></text><text x="270" y="112">σ<tspan dy="3" font-size="9">zz</tspan><tspan dy="-3"> &lt; 0</tspan></text>
+          </g>
+          <text class="lbl" x="180" y="200" text-anchor="middle">metal (crests strip, valleys fill)</text>
+          <text class="ttl" x="180" y="222" text-anchor="middle">k = 10 &gt; k<tspan dy="3" font-size="9">c</tspan><tspan dy="-3">: stable</tspan></text>
+        </svg>
+      </div>
+    </div>
+    <p class="caption" style="margin-top:-0.25rem; margin-bottom:1rem;">
+      Schematic after [2] Fig. 7b and 7c (PDF p.19). Left: for a wide bump the ion flux goes to the crest, and the valleys dissolve.
+      Right: for a sharp bump the compressive normal stress at the crests raises the chemical potential of the deposited metal there,
+      so the crests strip and pressure gradients in the electrolyte carry ions from crests to valleys. \(k\) is in units of
+      \(1/L\), with \(L\) the electrolyte thickness (millimetres for solid state batteries, p.17).
+    </p>
+
+    <h3>The recipe: linearize, then one Fourier mode at a time</h3>
+    <ol class="plain" style="padding-left:1.25rem;">
+      <li><strong>Base state.</strong> Flat front growing at the applied current. The potential in the electrolyte follows from ion
+        conservation, \(-\nabla\cdot\mathbf J=0\Rightarrow e\nabla^2\phi+\Omega\nabla^2p^\beta=0\) (Eq. 61, p.17), which reduces to
+        \(\nabla^2\phi=0\) under plane strain (\(\nabla^2p^\beta=0\)), with the applied current as boundary condition (Eq. 62).
+        The base solution is linear, \(\phi^{(0)}(z)=-Da_i(1-z)\) (Eq. 68, p.18).</li>
+      <li><strong>Perturb.</strong> \(h(x,t)=\langle h(t)\rangle+\epsilon_h\,\delta h(x)\,e^{\omega t}\) (Eq. 70), and expand every field in plane
+        waves, \(f^{(1)}(x,z,t)=\sum_k f^{(1)}_k(z)\,e^{ikx}e^{\omega(k)t}\) (p.18). Each \(k\) gives its own ordinary differential equations in \(z\);
+        in the electrolyte \(\phi^{(1)}_k=\Phi_{1k}e^{kz}+\Phi_{2k}e^{-kz}\).</li>
+      <li><strong>Why each mode is separate.</strong> The flat base state looks the same at every \(x\) (translation invariance), so the linear
+        equations have coefficients independent of \(x\); \(e^{ikx}\) is then an eigenfunction and cannot feed any other \(k\).
+        (Orthogonality is what lets one read off the coefficients afterwards; it is not why the modes decouple.)</li>
+      <li><strong>The destabilizing term.</strong> A crest sits at height \(\delta h\), so the reaction condition is evaluated in the base
+        field at \(z=\delta h\) instead of \(z=0\): the term \(\partial_z\phi^{(0)}\,\delta h_k\) in Eq. 71 (domain perturbation).
+        For long waves this always wins: \(\omega(k\to0)>0\) for any applied current (Eq. 73, p.18).</li>
+      <li><strong>The stabilizing term.</strong> Elastic stress at the interface, \(\sigma^{(1)}_{zz,k}\simeq-\tfrac23\frac{G_o}{1-\nu_\beta}k^4\,\delta h_k\)
+        (Eq. 74), compressive at crests, grows as \(k^4\).</li>
+    </ol>
+
+    <p>Expanding the full growth rate (Eq. 72) for small \(k\) gives (Eq. 78 = Eq. H.2, PDF p.20 and p.29):</p>
+    <div class="eq-box">
+      $$\omega(k)\simeq\omega_0+\omega_2k^2-\omega_4k^4,\qquad
+        k_*^2=\frac{\omega_2}{2\omega_4},\qquad \omega_*=\omega_0+\frac{\omega_2^2}{4\omega_4}\ \ \text{(Eq. 79 = H.5)},\qquad
+        k_c^2=\frac{\omega_2+\sqrt{\omega_2^2+4\omega_0\omega_4}}{2\omega_4}$$
+    </div>
+    <p>
+      with \(\omega_0,\omega_2>0\) for deposition and \(\omega_4>0\) for the elastic parameters considered (p.30). \(\omega_0\) is the field term of Eq. 73; \(\omega_4\) comes from the stress
+      of Eq. 74; \(\omega_2\) comes from expanding \(\tanh(k)/k\) in Eq. H.1 (my reading: the finite electrolyte thickness).
+      Modes with \(k>k_c\) are stabilized by the compressive stress (p.19, p.21); the softer electrolyte (\(G_o=0.1\)) needs a larger
+      \(k_c\) than the stiffer one (\(G_o=2.0\)) (Fig. 7a, p.19). The \(k_c\) formula is the positive root of \(\omega=0\) in this quadratic
+      model, not an equation of the paper, and inherits its \(k^4\) truncation: the zero crossings in Fig. 7a (about 0.4 for
+      \(G_o=2\) and 0.85 to 0.9 for \(G_o=0.1\), read by eye) differ by roughly 20% from this estimate.
+    </p>
+    <div class="note warn">
+      <strong>Selection is weak here.</strong> For the Fig. 7 parameters (\(Da=10\), \(Da_i=0.5\), \(El=20\), \(G_o=2\),
+      \(\nu_\beta=0.33\)), Eqs. H.3 and H.4 give \(\omega_0\approx0.455\), \(\omega_2\approx0.138\), \(\omega_4\approx36\), so
+      \(k_*\approx0.044\) and \(\omega_*-\omega_0\approx1.3\times10^{-4}\) (0.03%). The maximum is a tiny bump on a plateau
+      (Fig. 7a shows no visible peak): growth is nearly flat for small \(k\), so this is a long wave instability rather than a sharply
+      wavelength selected one. The paper still notes the maximum at finite \(k\) (p.20). (My evaluation of the appendix formulas.)
+    </div>
+    <p>
+      Measured roughness tests the theory directly: each mode grows as
+      \(\delta h_k(t)=\delta h_k(0)e^{\omega(k)t}\), so the structure factor obeys
+    </p>
+    <div class="eq-box">
+      $$S_h(k,t)=S_h(k,0)\,e^{2\omega(k)t}\ \ \text{(Eq. 75)},\qquad \omega(k)=\frac{1}{2\Delta t}\ln\frac{S_h(k,t_2)}{S_h(k,t_1)}\ \ \text{(Eq. 76, p.20)}$$
+    </div>
+
+    <!-- INTERACTIVE -->
+    <div class="fig" id="lsa">
+      <div class="presets" id="presets">
+        <button data-preset="long" class="active">Toy long wave, ω(0) &gt; 0, clear peak</button>
+        <button data-preset="fig7">Near Fig. 7 (G<sub>o</sub> = 2): plateau</button>
+        <button data-preset="band">Band away from k = 0, ω(0) &lt; 0 (Turing like)</button>
+        <button data-preset="diff">Diffusion, ω = −Dk²</button>
+      </div>
+      <div class="plot-title">Dispersion relation \(\omega(k)=a+bk^2-ck^4\)</div>
+      <canvas id="dispCanvas" class="plot" role="img" aria-label="Plot of growth rate omega versus wavenumber k for the chosen a, b, c">Plot of the growth rate versus wavenumber; the readout below lists k*, the peak rate and the zero crossings.</canvas>
+      <div class="controls">
+        <div class="ctl">
+          <label for="aSlider">\(a=\omega(0)\) <span class="val" id="aVal"></span></label>
+          <input type="range" id="aSlider" min="-1" max="1" step="0.01">
+        </div>
+        <div class="ctl">
+          <label for="bSlider">\(b\) (\(k^2\) coefficient) <span class="val" id="bVal"></span></label>
+          <input type="range" id="bSlider" min="-1.5" max="2" step="0.01">
+        </div>
+        <div class="ctl">
+          <label for="cSlider">\(c\) (\(k^4\) coefficient) <span class="val" id="cVal"></span></label>
+          <input type="range" id="cSlider" min="0" max="1.5" step="0.01">
+        </div>
+      </div>
+      <div class="readout" aria-live="polite">
+        <span>Fastest mode \(k_*\): <b id="roKstar"></b></span>
+        <span>Peak rate \(\omega_*\): <b id="roWstar"></b></span>
+        <span>\(\omega=0\) crossings: <b id="roRoots"></b></span>
+        <span>Type: <b id="roType"></b></span>
+      </div>
+
+      <div class="plot-title">Surface height \(h(x,t)\) grown from random noise, one mode at a time</div>
+      <canvas id="surfCanvas" class="plot" role="img" aria-label="Surface height profile grown from random noise">Surface height profile grown from random noise; the readout below gives the dominant wavelength and amplitude growth.</canvas>
+      <div class="controls">
+        <div class="ctl">
+          <label for="tSlider">time \(t\) <span class="val" id="tVal"></span></label>
+          <input type="range" id="tSlider" min="0" max="15" step="0.05" value="0">
+        </div>
+      </div>
+      <div class="actions">
+        <button id="playBtn">Play</button>
+        <button id="noiseBtn">New noise</button>
+      </div>
+      <div class="readout" aria-live="polite">
+        <span>Dominant wavelength now: <b id="roLdom"></b></span>
+        <span>Predicted \(2\pi/k_*\): <b id="roLstar"></b></span>
+        <span>rms amplitude vs \(t=0\): <b id="roGrowth"></b></span>
+      </div>
+      <p class="caption">
+        Periodic box of length 40 (units of \(1/k\)), 256 points. The initial height is white noise; its discrete Fourier
+        coefficients are multiplied by \(e^{\omega(k)t}\) and transformed back, which is exactly the linear evolution of Eq. 75. The
+        \(k=0\) mode (a uniform shift of the front) is left out, as in Eq. H.6. The profile is rescaled to fit; the true amplitude is in
+        the readout. Only wavelengths 40/n fit in the box, so the dominant wavelength settles on the allowed value nearest \(2\pi/k_*\). The scalar \(\omega(k)\) is a toy model: the deposition coefficients are Eqs. H.3 and H.4 of [2], and a real
+        Turing \(\omega\) is an eigenvalue of a 2&times;2 matrix (Section 4).
+      </p>
+    </div>
+  </section>
+
+  <!-- 4. CONTRAST -->
+  <section id="contrast">
+    <div class="section-header">
+      <span class="section-title">4 · Three Kinds of Dispersion</span>
+      <div class="section-rule"></div>
+    </div>
+    <p>
+      The method (linearize, Fourier modes, read the sign of \(\omega(k)\)) is the same in all three; the physics in \(\omega(k)\) differs.
+      For the Turing case see the <a href="patterns.html">animal patterns page</a>.
+    </p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th></th><th>Diffusion</th><th>Turing (two species)</th><th>Electrodeposition [2]</th></tr></thead>
+        <tbody>
+          <tr><td><strong>\(\omega(k)\)</strong></td><td>\(-Dk^2\)</td><td>eigenvalue with the largest real part of \(J-k^2\,\mathrm{diag}(D_u,D_v)\)</td><td>\(\omega_0+\omega_2k^2-\omega_4k^4\) (small \(k\))</td></tr>
+          <tr><td><strong>\(\omega(0)\)</strong></td><td>\(0\)</td><td>\(&lt;0\): the uniform state is stable without diffusion</td><td>\(\omega_0>0\) (Eq. 73)</td></tr>
+          <tr><td><strong>Growing \(k\)</strong></td><td>none, every bump heals; sharp ones fastest</td><td>a band \(k_1&lt;k&lt;k_2\) away from \(k=0\)</td><td>all \(0&lt;k&lt;k_c\), fastest at \(k_*\)</td></tr>
+          <tr><td><strong>Type</strong></td><td>stable, smoothing</td><td>finite wavelength (Turing) instability</td><td>long wave instability; not Turing</td></tr>
+          <tr><td><strong>What sets the spacing</strong></td><td>nothing; the longest wave survives longest</td><td>reaction kinetics \(J\) and the diffusivity ratio; needs the inhibitor to diffuse faster, \(D_v/D_u\) above a critical value</td><td>field (\(\omega_0,\omega_2\)) against elastic stress (\(\omega_4\)): \(k_*^2=\omega_2/(2\omega_4)\) (weak here: nearly flat plateau for the Fig. 7 parameters), Eq. H.13 for the Li case</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="note">
+      <strong>Shared idea, different mechanism.</strong> In both Turing patterns and electrodeposition two competing processes pick a
+      length scale. But a Turing instability requires a uniform state that is stable at \(k=0\) and destabilized only by unequal
+      diffusion; in deposition the flat front is unstable already at the longest wavelengths, and stress only cuts off the short ones.
+    </div>
+  </section>
+
+  <!-- 5. SIMULATION -->
+  <section id="simulation">
+    <div class="section-header">
+      <span class="section-title">5 · Phase Equilibria by Simulation</span>
+      <div class="section-rule"></div>
+    </div>
+
+    <h3>The Gibbs ensemble</h3>
+    <p>
+      Two phases coexist when \(T\), \(P\) and every chemical potential \(\mu\) are equal. Simulating a liquid next to its vapour
+      directly needs an interface, which for mixtures meant big systems and long equilibration. Panagiotopoulos&rsquo;s idea
+      (autobiography [4], p.2 to 3): simulate two separate periodic boxes, with no interface, and let them exchange volume
+      (conjugate to pressure) and particles (conjugate to chemical potential), so that the equilibrium conditions are met implicitly.
+      One run replaces a series of simulations; the <em>Molecular Physics</em> paper (accepted January 1987) is his most cited [4, p.3].
+    </p>
+    <div class="fig">
+      <div class="fig-scroll">
+      <svg viewBox="0 0 600 260" role="img" aria-label="Gibbs ensemble: a dense box and a dilute box exchanging volume and particles">
+        <defs>
+          <marker id="arrG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1A2E42"/></marker>
+        </defs>
+        <text class="ttl" x="300" y="20" text-anchor="middle">same imposed T in both boxes</text>
+        <rect x="40" y="50" width="200" height="170" fill="#EEF4F8" stroke="#1A2E42" stroke-width="1.6"/>
+        <rect x="400" y="70" width="160" height="150" fill="#F8F7F4" stroke="#1A2E42" stroke-width="1.6"/>
+        <text class="lbl" x="140" y="42" text-anchor="middle">Box I: liquid (dense)</text>
+        <text class="lbl" x="480" y="62" text-anchor="middle">Box II: vapour (dilute)</text>
+        <g fill="#4A7FA5">
+          <circle cx="92" cy="142" r="5"/> <circle cx="116" cy="151" r="5"/> <circle cx="163" cy="68" r="5"/> <circle cx="50" cy="187" r="5"/> <circle cx="96" cy="94" r="5"/> <circle cx="231" cy="130" r="5"/> <circle cx="202" cy="131" r="5"/> <circle cx="166" cy="81" r="5"/> <circle cx="165" cy="192" r="5"/> <circle cx="144" cy="172" r="5"/> <circle cx="188" cy="149" r="5"/> <circle cx="103" cy="63" r="5"/> <circle cx="180" cy="193" r="5"/> <circle cx="121" cy="181" r="5"/> <circle cx="130" cy="202" r="5"/> <circle cx="210" cy="73" r="5"/> <circle cx="73" cy="91" r="5"/> <circle cx="163" cy="104" r="5"/> <circle cx="141" cy="117" r="5"/> <circle cx="206" cy="211" r="5"/> <circle cx="214" cy="146" r="5"/> <circle cx="179" cy="91" r="5"/> <circle cx="201" cy="146" r="5"/> <circle cx="64" cy="181" r="5"/> <circle cx="124" cy="81" r="5"/> <circle cx="102" cy="176" r="5"/> <circle cx="180" cy="109" r="5"/> <circle cx="141" cy="212" r="5"/> <circle cx="84" cy="121" r="5"/> <circle cx="106" cy="206" r="5"/> <circle cx="213" cy="116" r="5"/> <circle cx="133" cy="138" r="5"/> <circle cx="166" cy="150" r="5"/> <circle cx="151" cy="153" r="5"/>
+          <circle cx="543" cy="146" r="5"/> <circle cx="470" cy="175" r="5"/> <circle cx="442" cy="118" r="5"/> <circle cx="487" cy="80" r="5"/> <circle cx="468" cy="156" r="5"/> <circle cx="411" cy="161" r="5"/>
+        </g>
+        <!-- particle transfer -->
+        <path d="M245,95 Q320,55 395,95" fill="none" stroke="#1A2E42" stroke-width="1.5" marker-start="url(#arrG)" marker-end="url(#arrG)"/>
+        <text class="lbl" x="320" y="98" text-anchor="middle">particle transfer</text>
+        <text class="lbl-m" x="320" y="113" text-anchor="middle">→ equal μ</text>
+        <!-- volume exchange -->
+        <line x1="245" y1="165" x2="395" y2="165" stroke="#1A2E42" stroke-width="1.5" stroke-dasharray="5 3" marker-start="url(#arrG)" marker-end="url(#arrG)"/>
+        <text class="lbl" x="320" y="157" text-anchor="middle">volume exchange</text>
+        <text class="lbl-m" x="320" y="182" text-anchor="middle">V<tspan dy="3" font-size="9">I</tspan><tspan dy="-3"> + V</tspan><tspan dy="3" font-size="9">II</tspan><tspan dy="-3"> fixed → equal P</tspan></text>
+        <text class="lbl-m" x="300" y="248" text-anchor="middle">each box has periodic boundaries: no interface anywhere</text>
+      </svg>
+      </div>
+      <p class="caption">
+        Schematic of the Gibbs ensemble Monte Carlo method as described in [4] (p.2 to 3). Moves of particles inside each box
+        (standard Monte Carlo displacements, not described in [4]) equilibrate each phase internally.
+      </p>
+    </div>
+
+    <h3>Self assembly: micelles</h3>
+    <p>
+      Surfactants (molecules with a water loving head and a water avoiding tail) stay dissolved as single molecules at low
+      concentration; above the <em>critical micelle concentration</em> (CMC) added surfactant goes into aggregates (micelles). His
+      group obtained CMCs from grand canonical Monte Carlo with histogram reweighting, reading the CMC off the osmotic pressure as a
+      function of concentration [4, p.4]. Why that works (the standard picture, not explained in [4]): the osmotic pressure counts free
+      particles, so its rise slows once new molecules join micelles instead of staying free. A long open question, why simulated systems showed either ordinary phase
+      separation or finite clusters but not both, was traced to solvent selectivity [4, p.4].
+    </p>
+
+    <h3>Top down force field optimization</h3>
+    <p>
+      Baron and Panagiotopoulos [3] fit classical, polarizable (Drude oscillator) force fields for aqueous salts <em>directly to
+      chemical potential data</em>. The new step is an efficient way to compute derivatives of the salt chemical potential with respect
+      to force field parameters, so gradient based fitting works (abstract, p.2; loss gradient Eq. 23, p.9). None of the models studied (and, to the authors&rsquo; knowledge, no current model) reproduces even the slope of the NaCl solid&ndash;solution coexistence line (Fig. 1, p.3). At saturation the salt chemical
+      potential in solution equals that of the crystal, so fitting \(\mu\) means fitting solubility.
+    </p>
+    <ul class="plain">
+      <li><strong>Result.</strong> Solubility at one temperature can be improved, but no parameter set could be found that reproduces NaCl solubility at
+        both 298.15 K (6.15 mol/kg) and 373.15 K (6.68 mol/kg): every optimized model overestimates the first and underestimates the
+        second, so the solid&ndash;solution coexistence line gets a negative slope, while the measured slope is positive (Fig. 8, p.13).</li>
+      <li><strong>Why.</strong> The slope \((dm/dT)_\text{sat}\) depends on the activity coefficients and on the enthalpy of solution (Eq. 35, p.13).
+        The activity coefficient slope at the solubility limit is positive (shown for the Na-CG-2020 models, Fig. 3), so the error is the <em>sign</em> of the model&rsquo;s enthalpy of solution, which is small
+        but positive experimentally (p.13). In the paper&rsquo;s words, fixed charge polarizable models cannot describe &ldquo;the magnitude of the
+        energy change upon solvation relative to the lattice energy&rdquo; (p.14).</li>
+      <li><strong>Conclusion.</strong> Classical polarizability with fixed atomic charges is not enough; charge transfer and many body
+        effects need a first principles description, for example neural network potentials trained on DFT (abstract p.2; conclusions p.14).</li>
+    </ul>
+  </section>
+
+  <!-- REFERENCES -->
+  <section id="references">
+    <div class="section-header">
+      <span class="section-title">References</span>
+      <div class="section-rule"></div>
+    </div>
+    <ol class="refs">
+      <li>D. Fraggedakis, &ldquo;Theory of ion chemical potentials in heterogeneous electrolyte environments&rdquo;, <em>J. Chem. Phys.</em> 164, 124705 (2026), doi:<a href="https://doi.org/10.1063/5.0319762">10.1063/5.0319762</a>.</li>
+      <li>G. Dobkin and D. Fraggedakis, &ldquo;Theory of Deposition and Growth in Electrochemical Systems&rdquo;, <em>J. Electrochem. Soc.</em> 173, 202501 (2026).</li>
+      <li>P. B. Baron and A. Z. Panagiotopoulos, &ldquo;Top&ndash;down optimization of aqueous electrolyte force fields to model chemical potentials and solubilities&rdquo;, <em>J. Chem. Phys.</em> 162, 214112 (2025), doi:<a href="https://doi.org/10.1063/5.0272640">10.1063/5.0272640</a>.</li>
+      <li>A. Z. Panagiotopoulos, &ldquo;Autobiography of Athanassios Z. Panagiotopoulos&rdquo;, <em>J. Phys. Chem. B</em> 129, 11104 (2025), doi:<a href="https://doi.org/10.1021/acs.jpcb.5c06656">10.1021/acs.jpcb.5c06656</a>.</li>
+    </ol>
+    <p class="small muted" style="margin-top:1rem;">
+      Page numbers refer to the PDF pages of each article. Numbers in Section 1 were computed for this page with
+      \(e\), \(\varepsilon_0\), \(k_B\), \(N_A\) at their SI values. Figures are schematics drawn for this page, not reproductions.
+    </p>
+  </section>
+
+</div>
+
+<footer>
+  &copy; 2026 Byungmin Chun &nbsp;·&nbsp; Korea University, Seoul
+</footer>
+
+<script>
+(function () {
+  'use strict';
+
+  // ---------- dispersion model ----------
+  const PRESETS = {
+    long: { a: 0.3, b: 1.0, c: 0.5 },
+    fig7: { a: 0.45, b: 0.15, c: 1.5 },   // omega_4 = 36 is off the slider; c capped at 1.5
+    band: { a: -0.3, b: 1.0, c: 0.5 },
+    diff: { a: 0.0, b: -1.0, c: 0.0 }
+  };
+  const KMAX = 2.5;          // plotted wavenumber range
+  const N = 256;             // grid points of the surface
+  const LBOX = 40;           // periodic box length
+  const NM = N / 2 - 1;      // number of Fourier modes kept (k_n = 2 pi n / LBOX, n = 1..NM)
+  const TMAX = 15;
+
+  const $ = (id) => document.getElementById(id);
+  const aS = $('aSlider'), bS = $('bSlider'), cS = $('cSlider'), tS = $('tSlider');
+  const dispCanvas = $('dispCanvas'), surfCanvas = $('surfCanvas');
+  const dctx = dispCanvas.getContext('2d'), sctx = surfCanvas.getContext('2d');
+
+  const omega = (k, p) => p.a + p.b * k * k - p.c * k * k * k * k;
+  const params = () => ({ a: parseFloat(aS.value), b: parseFloat(bS.value), c: parseFloat(cS.value) });
+  const fmt = (x, d) => (Math.abs(x) < 1e-12 ? 0 : x).toFixed(d);
+
+  // Fastest growing mode, peak rate, and the positive roots of omega(k) = 0.
+  function features(p) {
+    let kstar;
+    if (p.c > 0 && p.b > 0) kstar = Math.sqrt(p.b / (2 * p.c));
+    else if (p.b > 0) kstar = Infinity;  // c = 0, b > 0: no short wave cutoff
+    else kstar = 0;                       // maximum at k = 0
+    const roots = [];
+    if (p.c > 0) {
+      const disc = p.b * p.b + 4 * p.a * p.c;
+      if (disc >= 0) {
+        const s = Math.sqrt(disc);
+        [(p.b - s) / (2 * p.c), (p.b + s) / (2 * p.c)].forEach((q) => { if (q > 1e-12) roots.push(Math.sqrt(q)); });
+      }
+    } else if (p.b !== 0) {
+      const q = -p.a / p.b;
+      if (q > 1e-12) roots.push(Math.sqrt(q));
+    }
+    const uniq = roots.filter((r, i) => i === 0 || Math.abs(r - roots[i - 1]) > 1e-9);
+    const wstar = isFinite(kstar) ? omega(kstar, p) : Infinity;
+    return { kstar, wstar, roots: uniq };
+  }
+
+  function classify(p, f) {
+    if (p.c === 0 && p.b > 0) return 'ill posed: every short wave grows';
+    if (!(f.wstar > 1e-12)) return p.a === 0 && p.b < 0 && p.c === 0 ? 'diffusion: all modes decay' : 'stable: all modes decay';
+    if (p.a > 0) return 'long wave instability (k from 0 to k_c)';
+    if (p.a < 0) return 'finite band away from k = 0';
+    return 'marginal at k = 0, growth for 0 < k < k_c';
+  }
+
+  // ---------- canvas helpers ----------
+  function fitCanvas(cv) {
+    const r = cv.getBoundingClientRect(), dpr = window.devicePixelRatio || 1;
+    const w = Math.max(1, Math.round(r.width * dpr)), h = Math.max(1, Math.round(r.height * dpr));
+    if (cv.width !== w || cv.height !== h) { cv.width = w; cv.height = h; }
+    return dpr;
+  }
+
+  function drawDispersion(p, f) {
+    const dpr = fitCanvas(dispCanvas);
+    const W = dispCanvas.width, H = dispCanvas.height, ctx = dctx;
+    const padL = 44 * dpr, padR = 14 * dpr, padT = 14 * dpr, padB = 30 * dpr;
+    ctx.clearRect(0, 0, W, H);
+
+    const M = 300, ks = [], ws = [];
+    for (let i = 0; i <= M; i++) { const k = KMAX * i / M; ks.push(k); ws.push(omega(k, p)); }
+    let ymin = Math.min(0, ...ws), ymax = Math.max(0, ...ws);
+    ymin = Math.max(ymin, -2.5); ymax = Math.min(ymax, 2.5);
+    if (ymax - ymin < 0.5) { ymax += 0.25; ymin -= 0.25; }
+    const padY = 0.08 * (ymax - ymin); ymin -= padY; ymax += padY;
+    const X = (k) => padL + (W - padL - padR) * k / KMAX;
+    const Y = (w) => padT + (H - padT - padB) * (ymax - w) / (ymax - ymin);
+
+    ctx.save();
+    ctx.beginPath(); ctx.rect(padL, padT, W - padL - padR, H - padT - padB); ctx.clip();
+    // shade where omega > 0
+    ctx.fillStyle = 'rgba(192,71,58,0.13)';
+    for (let i = 0; i < M; i++) {
+      if (ws[i] > 0 || ws[i + 1] > 0) ctx.fillRect(X(ks[i]), padT, X(ks[i + 1]) - X(ks[i]) + 0.5, H - padT - padB);
+    }
+    // zero line
+    ctx.strokeStyle = '#8A93A0'; ctx.lineWidth = 1 * dpr;
+    ctx.beginPath(); ctx.moveTo(padL, Y(0)); ctx.lineTo(W - padR, Y(0)); ctx.stroke();
+    // curve
+    ctx.strokeStyle = '#1A2E42'; ctx.lineWidth = 2.2 * dpr; ctx.beginPath();
+    ks.forEach((k, i) => { const y = Y(ws[i]); if (i === 0) ctx.moveTo(X(k), y); else ctx.lineTo(X(k), y); });
+    ctx.stroke();
+    // roots
+    ctx.fillStyle = '#C0473A'; ctx.font = (11 * dpr) + 'px system-ui, sans-serif'; ctx.textAlign = 'center';
+    f.roots.forEach((r, i) => {
+      if (r <= KMAX) {
+        ctx.beginPath(); ctx.arc(X(r), Y(0), 3.5 * dpr, 0, 2 * Math.PI); ctx.fill();
+        const lab = (p.a > 0 || f.roots.length === 1) ? 'k_c' : (i === 0 ? 'k₁' : 'k₂');
+        ctx.fillText(lab, X(r), Y(0) + 15 * dpr);
+      }
+    });
+    // fastest mode
+    if (isFinite(f.kstar) && f.wstar > 0 && f.kstar <= KMAX) {
+      ctx.fillStyle = '#F08A24';
+      ctx.beginPath(); ctx.arc(X(f.kstar), Y(f.wstar), 5 * dpr, 0, 2 * Math.PI); ctx.fill();
+      ctx.fillStyle = '#1A1A1A'; ctx.fillText('k*', X(f.kstar), Y(f.wstar) - 9 * dpr);
+    }
+    ctx.restore();
+
+    // axes
+    ctx.strokeStyle = '#5A6472'; ctx.lineWidth = 1 * dpr;
+    ctx.beginPath(); ctx.moveTo(padL, padT); ctx.lineTo(padL, H - padB); ctx.lineTo(W - padR, H - padB); ctx.stroke();
+    ctx.fillStyle = '#5A6472'; ctx.font = (11 * dpr) + 'px system-ui, sans-serif';
+    ctx.textAlign = 'center';
+    for (let k = 0; k <= KMAX + 1e-9; k += 0.5) ctx.fillText(k.toFixed(1), X(k), H - padB + 14 * dpr);
+    ctx.fillText('k', W - padR - 6 * dpr, H - padB - 6 * dpr);
+    ctx.textAlign = 'right';
+    [ymin + padY, 0, ymax - padY].forEach((w) => ctx.fillText(w.toFixed(2), padL - 5 * dpr, Y(w) + 4 * dpr));
+    ctx.save(); ctx.translate(12 * dpr, padT + (H - padT - padB) / 2); ctx.rotate(-Math.PI / 2);
+    ctx.textAlign = 'center'; ctx.fillText('ω(k)', 0, 0); ctx.restore();
+  }
+
+  // ---------- surface evolution by Fourier modes ----------
+  const kn = new Float64Array(NM), A = new Float64Array(NM), B = new Float64Array(NM);
+  const COS = new Float64Array(N * NM), SIN = new Float64Array(N * NM);
+  for (let n = 0; n < NM; n++) kn[n] = 2 * Math.PI * (n + 1) / LBOX;
+  for (let j = 0; j < N; j++) {
+    const x = LBOX * j / N;
+    for (let n = 0; n < NM; n++) { COS[j * NM + n] = Math.cos(kn[n] * x); SIN[j * NM + n] = Math.sin(kn[n] * x); }
+  }
+  let rms0 = 1;
+
+  function gauss() {
+    let u = 0, v = 0;
+    while (u === 0) u = Math.random();
+    while (v === 0) v = Math.random();
+    return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+  }
+
+  // White noise in x, projected on the kept modes by a direct DFT (k = 0 mode dropped).
+  function newNoise() {
+    const h = new Float64Array(N);
+    for (let j = 0; j < N; j++) h[j] = gauss();
+    for (let n = 0; n < NM; n++) {
+      let sc = 0, ss = 0;
+      for (let j = 0; j < N; j++) { sc += h[j] * COS[j * NM + n]; ss += h[j] * SIN[j * NM + n]; }
+      A[n] = 2 * sc / N; B[n] = 2 * ss / N;
+    }
+    let s = 0;
+    for (let n = 0; n < NM; n++) s += 0.5 * (A[n] * A[n] + B[n] * B[n]);
+    rms0 = Math.sqrt(s);
+  }
+
+  // Returns the profile scaled by exp(-G), with G the largest log amplitude, so nothing overflows.
+  function profile(p, t) {
+    const logAmp = new Float64Array(NM);
+    let G = -Infinity, nDom = 0;
+    for (let n = 0; n < NM; n++) {
+      const amp = Math.hypot(A[n], B[n]);
+      logAmp[n] = amp > 0 ? omega(kn[n], p) * t + Math.log(amp) : -Infinity;
+      if (logAmp[n] > G) { G = logAmp[n]; nDom = n; }
+    }
+    const w = new Float64Array(NM);
+    let s = 0;
+    for (let n = 0; n < NM; n++) {
+      w[n] = isFinite(logAmp[n]) ? Math.exp(omega(kn[n], p) * t - G) : 0;
+      s += 0.5 * w[n] * w[n] * (A[n] * A[n] + B[n] * B[n]);
+    }
+    const h = new Float64Array(N);
+    for (let j = 0; j < N; j++) {
+      let v = 0;
+      const o = j * NM;
+      for (let n = 0; n < NM; n++) if (w[n] > 1e-300) v += w[n] * (A[n] * COS[o + n] + B[n] * SIN[o + n]);
+      h[j] = v;
+    }
+    // log10 of rms(t) / rms(0)
+    const log10Growth = (Math.log(Math.sqrt(s)) + G - Math.log(rms0)) / Math.LN10;
+    return { h, kDom: kn[nDom], log10Growth };
+  }
+
+  function drawSurface(p, t) {
+    const dpr = fitCanvas(surfCanvas);
+    const W = surfCanvas.width, H = surfCanvas.height, ctx = sctx;
+    const res = profile(p, t);
+    let m = 0;
+    for (let j = 0; j < N; j++) m = Math.max(m, Math.abs(res.h[j]));
+    if (!(m > 0)) m = 1;
+    const mid = H * 0.55, amp = H * 0.3;
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#F4F8FB'; ctx.fillRect(0, 0, W, H);
+    const X = (j) => W * j / (N - 1);
+    ctx.beginPath(); ctx.moveTo(0, H);
+    for (let j = 0; j < N; j++) ctx.lineTo(X(j), mid - amp * res.h[j] / m);
+    ctx.lineTo(W, H); ctx.closePath();
+    ctx.fillStyle = '#B8BEC7'; ctx.fill();
+    ctx.beginPath();
+    for (let j = 0; j < N; j++) { const y = mid - amp * res.h[j] / m; if (j === 0) ctx.moveTo(X(j), y); else ctx.lineTo(X(j), y); }
+    ctx.strokeStyle = '#1A2E42'; ctx.lineWidth = 1.6 * dpr; ctx.stroke();
+    ctx.fillStyle = '#5A6472'; ctx.font = (11 * dpr) + 'px system-ui, sans-serif'; ctx.textAlign = 'left';
+    ctx.fillText('electrolyte', 8 * dpr, 16 * dpr);
+    ctx.fillText('metal (profile rescaled to fit)', 8 * dpr, H - 8 * dpr);
+
+    $('roLdom').textContent = t > 0 ? (2 * Math.PI / res.kDom).toFixed(2) : 'n/a (t = 0, pure noise)';
+    const g = res.log10Growth;
+    $('roGrowth').textContent = isFinite(g) ? ('10^' + (Math.abs(g) < 0.05 ? 0 : g).toFixed(1)) : 'overflow';
+  }
+
+  function updateReadouts(p, f) {
+    $('aVal').textContent = fmt(p.a, 2); $('bVal').textContent = fmt(p.b, 2); $('cVal').textContent = fmt(p.c, 2);
+    $('tVal').textContent = parseFloat(tS.value).toFixed(2);
+    $('roKstar').textContent = isFinite(f.kstar) ? (f.kstar === 0 ? '0 (longest wave)' : f.kstar.toFixed(3)) : 'none (no cutoff)';
+    $('roWstar').textContent = isFinite(f.wstar) ? f.wstar.toFixed(3) : 'unbounded';
+    $('roRoots').textContent = f.roots.length ? f.roots.map((r) => r.toFixed(3)).join(', ') : 'none';
+    $('roType').textContent = classify(p, f);
+    $('roLstar').textContent = (isFinite(f.kstar) && f.kstar > 0 && f.wstar > 0 && f.kstar >= kn[0] && f.kstar < kn[NM - 1]) ? (2 * Math.PI / f.kstar).toFixed(2) : 'n/a';
+  }
+
+  function render() {
+    const p = params(), f = features(p);
+    updateReadouts(p, f);
+    drawDispersion(p, f);
+    drawSurface(p, parseFloat(tS.value));
+  }
+
+  function setPreset(name) {
+    const q = PRESETS[name];
+    aS.value = q.a; bS.value = q.b; cS.value = q.c; tS.value = 0;
+    document.querySelectorAll('#presets button').forEach((b) => b.classList.toggle('active', b.dataset.preset === name));
+    render();
+  }
+
+  // ---------- events ----------
+  let playing = false, raf = null;
+  function step() {
+    let t = parseFloat(tS.value) + 0.05;
+    if (t >= TMAX) { t = TMAX; stop(); }
+    tS.value = t;
+    render();
+    if (playing) raf = requestAnimationFrame(step);
+  }
+  function stop() { playing = false; $('playBtn').textContent = 'Play'; if (raf) cancelAnimationFrame(raf); raf = null; }
+  $('playBtn').addEventListener('click', () => {
+    if (playing) { stop(); return; }
+    if (parseFloat(tS.value) >= TMAX) tS.value = 0;
+    // With reduced motion, jump to the final time instead of animating.
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) { tS.value = TMAX; render(); return; }
+    playing = true; $('playBtn').textContent = 'Pause'; raf = requestAnimationFrame(step);
+  });
+  $('noiseBtn').addEventListener('click', () => { newNoise(); tS.value = 0; render(); });
+  [aS, bS, cS].forEach((s) => s.addEventListener('input', () => {
+    document.querySelectorAll('#presets button').forEach((b) => b.classList.remove('active'));
+    render();
+  }));
+  tS.addEventListener('input', () => { stop(); render(); });
+  document.querySelectorAll('#presets button').forEach((b) => b.addEventListener('click', () => { stop(); setPreset(b.dataset.preset); }));
+  window.addEventListener('resize', render);
+
+  newNoise();
+  setPreset('long');
+})();
+</script>
+</body>
+</html>
