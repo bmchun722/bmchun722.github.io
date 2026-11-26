@@ -121,6 +121,10 @@ button.active { background: var(--navy); color: #fff; border-color: var(--navy);
 .bar::after { content: ""; position: absolute; left: 50%; top: -3px; bottom: -3px; width: 1px; background: #8A93A0; }
 .bar span { position: absolute; top: 0; bottom: 0; border-radius: 2px; }
 .ctl .small { margin-top: 0.25rem; line-height: 1.45; }
+.lterms { display: grid; grid-template-columns: minmax(9rem, auto) 1fr 5.5rem; gap: 0.4rem 0.75rem; align-items: center; font-family: system-ui, sans-serif; font-size: 14.5px; }
+.lterms b { text-align: right; font-variant-numeric: tabular-nums; }
+.lbar { position: relative; height: 12px; background: #EEF1F4; border-radius: 2px; }
+.lbar span { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 2px; }
 .chain-card { display: none; }
 .chain-card.show { display: block; }
 .chain-card p { font-family: system-ui, sans-serif; font-size: 15.5px; margin-bottom: 0.4rem; }
@@ -684,56 +688,39 @@ footer {
       The weight \(e^{\mp\ell_B/s}\) is 0.92 to 1.08 at 1 mM but 0.38 to 2.7 at the electrode (my calculation): like charges avoid the ion and
       opposite charges crowd it. This correlation hole and pairing tendency is what (B) leaves out.</p>
     <h3>The electrode in three lengths</h3>
-    <div class="fig">
-      <svg viewBox="0 0 520 262" role="img" aria-label="Two electrodes. Weakly charged: a thick counterion layer of 18 nm holds many counterions 9 nm apart, much farther than l_B, so the average works. At 30 microcoulomb per square centimetre: the layer PB predicts is 0.12 nm, thinner than the counterion spacing 0.73 nm, which equals l_B, so one thin row of distinct ions remains and the average fails.">
-        <defs><linearGradient id="gcL" x1="0" x2="1"><stop offset="0" stop-color="#4A7FA5" stop-opacity="0.35"/><stop offset="1" stop-color="#4A7FA5" stop-opacity="0"/></linearGradient><marker id="arrE" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1A2E42"/></marker></defs>
-        <text class="ttl" x="125" y="13" text-anchor="middle">weak charge, 0.2 µC/cm², Ξ = 0.04</text>
-        <rect x="0" y="44" width="30" height="170" fill="#DDE1E6"/>
-        <rect x="30" y="44" width="200" height="170" fill="url(#gcL)"/>
-        <line x1="30" y1="38" x2="230" y2="38" class="thin" marker-start="url(#arrE)" marker-end="url(#arrE)"/>
-        <text class="lbl" x="130" y="32" text-anchor="middle">ℓ<tspan dy="4" class="sb">GC</tspan><tspan dy="-4"> = 18 nm</tspan></text>
-        <circle cx="48" cy="70" r="4.5" class="acc"/>
-        <circle cx="60" cy="150" r="4.5" class="acc"/>
-        <circle cx="52" cy="196" r="4.5" class="acc"/>
-        <circle cx="82" cy="108" r="4.5" class="acc"/>
-        <circle cx="95" cy="180" r="4.5" class="acc"/>
-        <circle cx="118" cy="62" r="4.5" class="acc"/>
-        <circle cx="160" cy="122" r="4.5" class="acc"/>
-        <circle cx="170" cy="92" r="4.5" class="acc"/>
-        <circle cx="205" cy="170" r="4.5" class="acc"/>
-        <circle cx="75" cy="58" r="4.5" class="acc"/>
-        <line x1="82" y1="114" x2="95" y2="174" class="thin" marker-start="url(#arrE)" marker-end="url(#arrE)"/>
-        <text class="lbl-m" x="104" y="146">a = 9 nm</text>
-        <line x1="160" y1="200" x2="166" y2="200" stroke="#C0473A" stroke-width="6"/>
-        <text class="lbl-m" x="171" y="204">ℓ<tspan dy="4" class="sb">B</tspan><tspan dy="-4"> 0.71</tspan></text>
-        <text class="lbl" x="125" y="236" text-anchor="middle">ℓ<tspan dy="4" class="sb">B</tspan><tspan dy="-4"> ≪ a &lt; ℓ</tspan><tspan dy="4" class="sb">GC</tspan></text>
-        <text class="lbl-m" x="125" y="254" text-anchor="middle">ions overlap: average works</text>
-        <line x1="258" y1="24" x2="258" y2="258" stroke="#D8DCE2" stroke-width="1"/>
-        <text class="ttl" x="395" y="13" text-anchor="middle">30 µC/cm², Ξ = 6</text>
-        <rect x="270" y="44" width="30" height="170" fill="#DDE1E6"/>
-        <rect x="300" y="44" width="7" height="170" fill="url(#gcL)"/>
-        <line x1="300" y1="34" x2="307" y2="34" class="thin"/><line x1="300" y1="29" x2="300" y2="39" class="thin"/><line x1="307" y1="29" x2="307" y2="39" class="thin"/>
-        <text class="lbl" x="312" y="38">ℓ<tspan dy="4" class="sb">GC</tspan><tspan dy="-4"> = 0.12 nm</tspan></text>
-        <circle cx="304" cy="70" r="4.5" class="acc"/>
-        <circle cx="304" cy="70" r="19" fill="none" class="acc-s" stroke-dasharray="3 3"/>
-        <circle cx="304" cy="112" r="4.5" class="acc"/>
-        <circle cx="304" cy="112" r="19" fill="none" class="acc-s" stroke-dasharray="3 3"/>
-        <circle cx="304" cy="154" r="4.5" class="acc"/>
-        <circle cx="304" cy="154" r="19" fill="none" class="acc-s" stroke-dasharray="3 3"/>
-        <circle cx="304" cy="196" r="4.5" class="acc"/>
-        <circle cx="304" cy="196" r="19" fill="none" class="acc-s" stroke-dasharray="3 3"/>
-        <line x1="336" y1="112" x2="336" y2="154" class="thin" marker-start="url(#arrE)" marker-end="url(#arrE)"/>
-        <text class="lbl-m" x="344" y="137">a = 0.73 nm</text>
-        <line x1="430" y1="112" x2="430" y2="152.8" stroke="#C0473A" stroke-width="6"/>
-        <text class="lbl-m" x="440" y="137">ℓ<tspan dy="4" class="sb">B</tspan><tspan dy="-4"> = 0.71 nm</tspan></text>
-        <text class="lbl" x="395" y="236" text-anchor="middle">ℓ<tspan dy="4" class="sb">GC</tspan><tspan dy="-4"> ≪ a ≈ ℓ</tspan><tspan dy="4" class="sb">B</tspan></text>
-        <text class="lbl-m" x="395" y="254" text-anchor="middle">one thin row of distinct ions: average fails</text>
-      </svg>
-      <p class="caption">Not to scale; numbers are my calculation for water at 298 K. The three lengths are tied by \(a^2=2\pi\,\ell_B\,\ell_{GC}\),
-        so \(a/\ell_{GC}=(2\pi\Xi)^{1/2}\) and \(\ell_B/a=(\Xi/2\pi)^{1/2}\). Weak charge: the counterions spread through a layer thicker than their spacing,
-        so many of them overlap and each feels their average. Strong charge: the layer PB predicts is far thinner than the spacing, and the spacing has
-        shrunk to \(\ell_B\), so each counterion feels its few neighbours one by one, about \(k_BT\) each. The bulk works the same way with
-        \(\lambda_D\) in place of \(\ell_{GC}\) and \(d^3=4\pi\,\ell_B\lambda_D^2\).</p>
+    <div class="fig" id="elec3">
+      <p class="small muted" style="margin-bottom:0.5rem;">In water at 298 K, \(\ell_B\) is fixed. The surface charge \(\sigma\) is the only knob:
+        \(\ell_{GC}\propto1/\sigma\) falls fastest, \(a\propto\sigma^{-1/2}\) falls more slowly.</p>
+      <div class="presets" id="elecPresets">
+        <button data-sigma="0.2">0.2 &micro;C/cm&sup2;</button>
+        <button data-sigma="5">5 &micro;C/cm&sup2; (\(\Xi\approx1\))</button>
+        <button data-sigma="30" class="active">30 &micro;C/cm&sup2;</button>
+      </div>
+      <canvas id="elecCanvas" class="plot" role="img" aria-label="Log log plot of l_B, the counterion spacing a and the Gouy-Chapman length versus surface charge">Lengths versus surface charge.</canvas>
+      <div class="controls">
+        <div class="ctl">
+          <label for="sigmaSlider">Surface charge \(\sigma\) <span class="val" id="sigmaVal"></span></label>
+          <input type="range" id="sigmaSlider" min="-1" max="1.6" step="0.01">
+          <div class="small muted">Charge per area on the electrode; in a capacitor picture \(\sigma=C(U-U_{PZC})\), so it grows with the electrode potential.</div>
+        </div>
+      </div>
+      <div class="plot-title">The three lengths at this \(\sigma\), on one linear scale</div>
+      <div class="lterms">
+        <span>\(\ell_{GC}\): PB layer</span><div class="lbar"><span id="barGC" style="background:#4A7FA5;"></span></div><b id="vGC"></b>
+        <span>\(a\): counterion spacing</span><div class="lbar"><span id="barA" style="background:#1A2E42;"></span></div><b id="vA"></b>
+        <span>\(\ell_B\): \(k_BT\) distance</span><div class="lbar"><span id="barB" style="background:#C0473A;"></span></div><b id="vB"></b>
+      </div>
+      <div class="readout" aria-live="polite">
+        <span>\(\Xi=\ell_B/\ell_{GC}\): <b id="roXi"></b></span>
+        <span>\(\ell_B/a\): <b id="roBa"></b></span>
+        <span>Mean field: <b id="roVerdict"></b></span>
+      </div>
+      <p class="caption">My calculation for water at 298 K: \(\ell_{GC}=3.57\text{ nm}/\sigma\), \(a=4.00\text{ nm}/\sigma^{1/2}\) with \(\sigma\) in
+        &micro;C/cm&sup2;, tied by \(a^2=2\pi\,\ell_B\,\ell_{GC}\). The lines cross twice: at \(\sigma\approx0.8\) the layer becomes thinner than the
+        spacing (\(\ell_{GC}=a\)), and at \(\sigma\approx31\) the spacing reaches \(\ell_B\) (\(a=\ell_B\)). Below the first crossing many counterions
+        overlap in a thick layer and their average works; past the second, each counterion sits about \(\ell_B\) from its neighbours and feels them
+        one by one. Colours as in the bars above: works, onset (\(\Xi\approx1\)), fails. The bulk works the same way with \(\lambda_D\) in place of
+        \(\ell_{GC}\) and \(d^3=4\pi\,\ell_B\lambda_D^2\).</p>
     </div>
   </section>
 
@@ -1502,6 +1489,113 @@ footer {
   }));
 
   setGo(2);
+})();
+</script>
+
+<script>
+(function () {
+  'use strict';
+  // Lengths at a charged electrode in water at 298 K (sigma in uC/cm^2, lengths in nm); my calculation.
+  const LB = 0.715, GC0 = 3.567, A0 = 4.003;
+  const lgc = (sg) => GC0 / sg, aSp = (sg) => A0 / Math.sqrt(sg);
+  const verdict = (xi) => xi < 0.5 ? ['works', '#4A7FA5'] : (xi < 2 ? ['onset', '#E0A030'] : ['fails', '#C0473A']);
+
+  const $ = (id) => document.getElementById(id);
+  const cv = $('elecCanvas'), ctx = cv.getContext('2d'), sl = $('sigmaSlider');
+  const XL = -1, XH = 1.6, YL = -1.3, YH = 1.7;   // log10 ranges
+
+  function fit() {
+    const r = cv.getBoundingClientRect(), dpr = window.devicePixelRatio || 1;
+    const w = Math.max(1, Math.round(r.width * dpr)), h = Math.max(1, Math.round(r.height * dpr));
+    if (cv.width !== w || cv.height !== h) { cv.width = w; cv.height = h; }
+    return dpr;
+  }
+
+  function draw() {
+    const sg = Math.pow(10, parseFloat(sl.value));
+    const dpr = fit(), W = cv.width, H = cv.height;
+    const pL = 48 * dpr, pR = 14 * dpr, pT = 14 * dpr, pB = 34 * dpr;
+    const X = (lx) => pL + (W - pL - pR) * (lx - XL) / (XH - XL);
+    const Y = (ly) => pT + (H - pT - pB) * (YH - ly) / (YH - YL);
+    ctx.clearRect(0, 0, W, H);
+
+    // verdict bands along sigma (Xi = LB / lgc)
+    const xiAt = (sgv) => LB / lgc(sgv);
+    [[XL, Math.log10(0.5 * GC0 / LB), 'rgba(74,127,165,0.08)'],
+     [Math.log10(0.5 * GC0 / LB), Math.log10(2 * GC0 / LB), 'rgba(224,160,48,0.12)'],
+     [Math.log10(2 * GC0 / LB), XH, 'rgba(192,71,58,0.08)']].forEach(([x1, x2, c]) => {
+      ctx.fillStyle = c; ctx.fillRect(X(x1), pT, X(x2) - X(x1), H - pT - pB);
+    });
+
+    // grid and axes
+    ctx.strokeStyle = '#E3E6EA'; ctx.lineWidth = 1 * dpr;
+    for (let e = -1; e <= 1; e++) { ctx.beginPath(); ctx.moveTo(pL, Y(e)); ctx.lineTo(W - pR, Y(e)); ctx.stroke(); }
+    ctx.strokeStyle = '#5A6472';
+    ctx.beginPath(); ctx.moveTo(pL, pT); ctx.lineTo(pL, H - pB); ctx.lineTo(W - pR, H - pB); ctx.stroke();
+    ctx.fillStyle = '#5A6472'; ctx.font = (13 * dpr) + 'px system-ui, sans-serif'; ctx.textAlign = 'center';
+    [0.1, 1, 10].forEach((v) => ctx.fillText(String(v), X(Math.log10(v)), H - pB + 16 * dpr));
+    ctx.fillText('σ (µC/cm², log)', (pL + W - pR) / 2, H - 4 * dpr);
+    ctx.textAlign = 'right';
+    [0.1, 1, 10].forEach((v) => ctx.fillText(String(v), pL - 6 * dpr, Y(Math.log10(v)) + 4 * dpr));
+    ctx.save(); ctx.translate(13 * dpr, (pT + H - pB) / 2); ctx.rotate(-Math.PI / 2);
+    ctx.textAlign = 'center'; ctx.fillText('length (nm, log)', 0, 0); ctx.restore();
+
+    // three lines
+    const line = (f, col, width) => {
+      ctx.strokeStyle = col; ctx.lineWidth = width * dpr; ctx.beginPath();
+      for (let i = 0; i <= 200; i++) {
+        const lx = XL + (XH - XL) * i / 200, y = Y(Math.log10(f(Math.pow(10, lx))));
+        if (i === 0) ctx.moveTo(X(lx), y); else ctx.lineTo(X(lx), y);
+      }
+      ctx.stroke();
+    };
+    ctx.save(); ctx.beginPath(); ctx.rect(pL, pT, W - pL - pR, H - pT - pB); ctx.clip();
+    line(() => LB, '#C0473A', 2.4);
+    line(aSp, '#1A2E42', 2.4);
+    line(lgc, '#4A7FA5', 2.4);
+    // crossings
+    const s1 = Math.pow(GC0 / A0, 2), s2 = Math.pow(A0 / LB, 2);
+    ctx.fillStyle = '#1A1A1A';
+    [[s1, aSp(s1)], [s2, LB]].forEach(([sx, ly]) => { ctx.beginPath(); ctx.arc(X(Math.log10(sx)), Y(Math.log10(ly)), 4 * dpr, 0, 2 * Math.PI); ctx.fill(); });
+    // current sigma
+    ctx.strokeStyle = '#F08A24'; ctx.lineWidth = 2 * dpr;
+    ctx.beginPath(); ctx.moveTo(X(Math.log10(sg)), pT); ctx.lineTo(X(Math.log10(sg)), H - pB); ctx.stroke();
+    ctx.restore();
+    // line labels
+    ctx.font = (13 * dpr) + 'px system-ui, sans-serif'; ctx.textAlign = 'left';
+    ctx.fillStyle = '#C0473A'; ctx.fillText('ℓ_B', X(-0.2), Y(Math.log10(LB)) - 7 * dpr);
+    ctx.fillStyle = '#1A2E42'; ctx.fillText('a', X(0.3), Y(Math.log10(aSp(Math.pow(10, 0.3)))) - 8 * dpr);
+    ctx.fillStyle = '#4A7FA5'; ctx.fillText('ℓ_GC', X(0.3), Y(Math.log10(lgc(Math.pow(10, 0.3)))) + 18 * dpr);
+    ctx.fillStyle = '#1A1A1A'; ctx.textAlign = 'center';
+    ctx.fillText('ℓ_GC = a', X(Math.log10(s1)), Y(Math.log10(aSp(s1))) + 20 * dpr);
+    ctx.fillText('a = ℓ_B', X(Math.log10(s2)) - 18 * dpr, Y(Math.log10(LB)) + 20 * dpr);
+
+    // bars on one linear scale
+    const g = lgc(sg), aa = aSp(sg), mx = Math.max(g, aa, LB);
+    const fmt = (v) => (v >= 10 ? v.toFixed(0) : v >= 1 ? v.toFixed(1) : v.toFixed(2)) + ' nm';
+    $('barGC').style.width = (100 * g / mx) + '%'; $('vGC').textContent = fmt(g);
+    $('barA').style.width = (100 * aa / mx) + '%'; $('vA').textContent = fmt(aa);
+    $('barB').style.width = (100 * LB / mx) + '%'; $('vB').textContent = fmt(LB);
+
+    const xi = xiAt(sg), [vt, vc] = verdict(xi);
+    $('sigmaVal').textContent = (sg < 1 ? sg.toFixed(2) : sg.toFixed(1)) + ' µC/cm²';
+    $('roXi').textContent = xi < 0.1 ? xi.toFixed(3) : xi.toFixed(2);
+    $('roBa').textContent = (LB / aa).toFixed(2);
+    const ve = $('roVerdict'); ve.textContent = vt; ve.style.color = vc;
+  }
+
+  function setSigma(v) {
+    sl.value = Math.log10(v);
+    document.querySelectorAll('#elecPresets button').forEach((b) => b.classList.toggle('active', parseFloat(b.dataset.sigma) === v));
+    draw();
+  }
+  document.querySelectorAll('#elecPresets button').forEach((b) => b.addEventListener('click', () => setSigma(parseFloat(b.dataset.sigma))));
+  sl.addEventListener('input', () => {
+    document.querySelectorAll('#elecPresets button').forEach((b) => b.classList.remove('active'));
+    draw();
+  });
+  window.addEventListener('resize', draw);
+  setSigma(30);
 })();
 </script>
 </body>
