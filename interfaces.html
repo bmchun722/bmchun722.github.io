@@ -202,41 +202,72 @@ footer {
       <table>
         <thead><tr><th>Symbol</th><th>Physical meaning</th></tr></thead>
         <tbody>
+          <tr><td>\(k_BT\)</td><td>thermal energy: the typical energy of random thermal motion per particle, \(4.1\times10^{-21}\) J = 25.7 meV at 298 K. An attraction weaker than \(k_BT\) is shaken apart by thermal motion; a stronger one holds two ions together</td></tr>
           <tr><td>\(\ell_B\)</td><td>distance at which two unit charges in the solvent interact with energy \(k_BT\)</td></tr>
           <tr><td>\(\lambda_D\)</td><td>Debye length: how far the field of one ion reaches before the ion cloud screens it (shorter at higher salt)</td></tr>
           <tr><td>\(\ell_{GC}\)</td><td>Gouy&ndash;Chapman length: thickness of the counterion layer on an electrode of surface charge \(\sigma\) (a charged wall in [1])</td></tr>
-          <tr><td>\(\varepsilon_c,\ \Xi\)</td><td>coupling strengths: ion&ndash;ion energy over \(k_BT\) in the bulk and at the electrode; below 1, mean field works</td></tr>
+          <tr><td>\(\varepsilon_c,\ \Xi\)</td><td>coupling strengths: ion&ndash;ion energy over \(k_BT\) in the bulk and at the electrode; well below 1, correlations are weak and mean field works; near 1 it is only approximate</td></tr>
         </tbody>
       </table>
     </div>
     <div class="fig">
-      <svg viewBox="0 0 520 150" role="img" aria-label="Log scale of the Gouy-Chapman length, Debye lengths and Bjerrum length">
-        <line x1="30" y1="100" x2="490" y2="100" class="ax"/>
-        <g class="ax">
-          <line x1="30" y1="94" x2="30" y2="106"/><line x1="99.2" y1="97" x2="99.2" y2="103"/>
-          <line x1="190.8" y1="97" x2="190.8" y2="103"/><line x1="260" y1="94" x2="260" y2="106"/>
-          <line x1="329.2" y1="97" x2="329.2" y2="103"/><line x1="420.8" y1="97" x2="420.8" y2="103"/>
-          <line x1="490" y1="94" x2="490" y2="106"/>
-        </g>
-        <g class="lbl-m" text-anchor="middle">
-          <text x="30" y="121">0.1</text><text x="260" y="121">1</text><text x="490" y="121">10 nm</text>
-        </g>
-        <g class="mk">
-          <line x1="141.1" y1="100" x2="141.1" y2="46"/>
-          <line x1="256.1" y1="100" x2="256.1" y2="46"/>
-          <line x1="226.4" y1="100" x2="226.4" y2="76"/>
-        </g>
-        <text class="lbl" x="141.1" y="38" text-anchor="middle">λ<tspan dy="4" class="sb">D</tspan><tspan dy="-4"> (1 M) 0.30</tspan></text>
-        <text class="lbl" x="262" y="38">λ<tspan dy="4" class="sb">D</tspan><tspan dy="-4"> (0.1 M) 0.96</tspan></text>
-        <text class="lbl" x="221" y="72" text-anchor="end">ℓ<tspan dy="4" class="sb">B</tspan><tspan dy="-4"> 0.71</tspan></text>
-        <rect x="37.6" y="94" width="28.1" height="12" class="acc"/>
-        <text class="lbl acc-t" x="36" y="143">ℓ<tspan dy="4" class="sb">GC</tspan><tspan dy="-4"> 0.11 to 0.14 at an electrode with 25 to 33 µC/cm²</tspan></text>
+      <svg viewBox="0 0 520 240" role="img" aria-label="Schematic of the three lengths: counterion layer on the electrode, Bjerrum distance of an ion pair, and the screening cloud of radius lambda_D">
+        <defs><marker id="arrL" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1A2E42"/></marker></defs>
+        <rect x="0" y="0" width="60" height="240" fill="#DDE1E6"/>
+        <text class="lbl-m" x="8" y="20">electrode</text>
+        <g class="lbl" text-anchor="middle"><text x="50" y="62">&#8722;</text><text x="50" y="126">&#8722;</text><text x="50" y="190">&#8722;</text></g>
+        <g class="acc"><circle cx="65" cy="58" r="4"/><circle cx="65" cy="122" r="4"/><circle cx="65" cy="186" r="4"/></g>
+        <line x1="60" y1="36" x2="70.5" y2="36" class="thin"/>
+        <line x1="60" y1="31" x2="60" y2="41" class="thin"/><line x1="70.5" y1="31" x2="70.5" y2="41" class="thin"/>
+        <text class="lbl" x="78" y="40">ℓ<tspan dy="4" class="sb">GC</tspan><tspan dy="-4"> 0.12 nm: counterion layer</tspan></text>
+        <circle cx="120" cy="205" r="7" class="acc"/><text x="120" y="210" text-anchor="middle" class="plus" style="font-size:12px">+</text>
+        <circle cx="182.5" cy="205" r="7" fill="#1A2E42"/><text x="182.5" y="209" text-anchor="middle" class="plus" style="font-size:12px">&#8722;</text>
+        <line x1="120" y1="185" x2="182.5" y2="185" class="thin" marker-start="url(#arrL)" marker-end="url(#arrL)"/>
+        <text class="lbl" x="151" y="176" text-anchor="middle">ℓ<tspan dy="4" class="sb">B</tspan><tspan dy="-4"> 0.71 nm</tspan></text>
+        <text class="lbl-m" x="151" y="232" text-anchor="middle">attraction energy = &#8722;k<tspan dy="4" class="sb">B</tspan><tspan dy="-4">T</tspan></text>
+        <circle cx="400" cy="110" r="84.5" fill="#EEF4F8" class="acc-s" stroke-dasharray="5 4"/>
+        <circle cx="400" cy="110" r="7" class="acc"/><text x="400" y="115" text-anchor="middle" class="plus" style="font-size:12px">+</text>
+        <g fill="#1A2E42"><circle cx="352" cy="76" r="4"/></g>
+        <line x1="407" y1="110" x2="484.5" y2="110" class="thin" marker-end="url(#arrL)"/>
+        <text class="lbl" x="446" y="102" text-anchor="middle">λ<tspan dy="4" class="sb">D</tspan><tspan dy="-4"> 0.96 nm</tspan></text>
+        <text class="lbl-m" x="400" y="216" text-anchor="middle">screening cloud (0.1 M)</text>
       </svg>
-      <p class="caption">Water, \(\varepsilon=78.4\), \(T=298.15\) K, 1:1 salt (my calculation from Eqs. 21 and 22 of [1]).</p>
+      <p class="caption">The three lengths drawn to one scale for water (\(\varepsilon=78.4\)) at 298 K, 0.1 M 1:1 salt and an electrode at 30 &micro;C/cm&sup2;
+        (my calculation from Eqs. 21 and 22 of [1]; at 1 M, \(\lambda_D=0.30\) nm); ion sizes not to scale. Counterions on the electrode are 0.73 nm apart; the Debye sphere holds on average about 0.45 other ion, drawn as one. Here \(\ell_{GC}&lt;\ell_B&lt;\lambda_D\): the bulk is at the edge of the weak correlation regime
+        (\(\varepsilon_c=0.74\)), the layer on the electrode is far past it (\(\Xi\approx6\)).</p>
     </div>
+    <h3>What &ldquo;feeling the average&rdquo; means</h3>
+    <div class="fig">
+      <svg viewBox="0 0 520 215" role="img" aria-label="Left: the potential an ion actually feels is jagged and depends on where each neighbour is. Right: mean field replaces it by a smooth average potential from a smeared charge density.">
+        <defs><linearGradient id="smear" x1="0" x2="1"><stop offset="0" stop-color="#4A7FA5" stop-opacity="0.35"/><stop offset="1" stop-color="#4A7FA5" stop-opacity="0.08"/></linearGradient></defs>
+        <text class="ttl" x="125" y="20" text-anchor="middle">what an ion feels: φ</text>
+        <text class="ttl" x="395" y="20" text-anchor="middle">mean field: ⟨φ⟩</text>
+        <line x1="10" y1="95" x2="240" y2="95" class="thin" stroke-dasharray="3 4" opacity="0.4"/>
+        <path d="M10.0,90.4 L11.5,89.9 L13.0,89.3 L14.5,88.6 L16.0,87.7 L17.5,86.7 L19.0,85.4 L20.5,83.9 L22.0,81.9 L23.5,79.4 L25.0,75.9 L26.5,71.0 L28.0,63.5 L29.5,51.0 L31.0,56.4 L32.5,67.3 L34.0,74.2 L35.5,79.1 L37.0,82.8 L38.5,85.7 L40.0,88.1 L41.5,90.2 L43.0,92.1 L44.5,93.9 L46.0,95.6 L47.5,97.3 L49.0,99.0 L50.5,100.9 L52.0,103.0 L53.5,105.3 L55.0,108.2 L56.5,111.8 L58.0,116.6 L59.5,123.5 L61.0,134.3 L62.5,139.6 L64.0,126.9 L65.5,119.3 L67.0,114.2 L68.5,110.6 L70.0,107.8 L71.5,105.6 L73.0,103.8 L74.5,102.2 L76.0,100.7 L77.5,99.4 L79.0,98.1 L80.5,96.8 L82.0,95.5 L83.5,94.0 L85.0,92.3 L86.5,90.3 L88.0,87.8 L89.5,84.6 L91.0,80.2 L92.5,73.8 L94.0,63.5 L95.5,58.8 L97.0,72.0 L98.5,80.2 L100.0,85.9 L101.5,90.3 L103.0,93.9 L104.5,97.1 L106.0,100.1 L107.5,103.0 L109.0,106.0 L110.5,109.4 L112.0,113.3 L113.5,118.2 L115.0,124.8 L116.5,134.5 L118.0,140.0 L119.5,135.8 L121.0,127.4 L122.5,122.2 L124.0,118.8 L125.5,116.4 L127.0,114.8 L128.5,113.6 L130.0,112.8 L131.5,112.4 L133.0,112.2 L134.5,112.2 L136.0,112.5 L137.5,113.1 L139.0,113.9 L140.5,115.2 L142.0,116.8 L143.5,119.2 L145.0,122.4 L146.5,127.2 L148.0,134.5 L149.5,140.0 L151.0,140.0 L152.5,130.6 L154.0,123.6 L155.5,118.7 L157.0,115.1 L158.5,112.2 L160.0,109.8 L161.5,107.8 L163.0,106.0 L164.5,104.4 L166.0,102.9 L167.5,101.5 L169.0,100.1 L170.5,98.6 L172.0,97.1 L173.5,95.4 L175.0,93.6 L176.5,91.4 L178.0,88.7 L179.5,85.3 L181.0,80.7 L182.5,74.0 L184.0,63.4 L185.5,58.4 L187.0,71.3 L188.5,79.2 L190.0,84.6 L191.5,88.6 L193.0,91.7 L194.5,94.4 L196.0,96.7 L197.5,98.9 L199.0,101.0 L200.5,103.1 L202.0,105.4 L203.5,108.0 L205.0,111.0 L206.5,114.8 L208.0,119.7 L209.5,126.7 L211.0,137.6 L212.5,140.0 L214.0,130.4 L215.5,123.0 L217.0,118.1 L218.5,114.6 L220.0,112.0 L221.5,110.0 L223.0,108.4 L224.5,107.2 L226.0,106.1 L227.5,105.2 L229.0,104.5 L230.5,103.8 L232.0,103.3 L233.5,102.8 L235.0,102.3 L236.5,102.0 L238.0,101.6 L239.5,101.3" class="thick" fill="none"/>
+        <circle cx="30" cy="165" r="7" class="acc"/><text x="30" y="170" text-anchor="middle" class="plus" style="font-size:12px">+</text><circle cx="62" cy="165" r="7" fill="#1A2E42"/><text x="62" y="169" text-anchor="middle" class="plus" style="font-size:12px">&#8722;</text><circle cx="95" cy="165" r="7" class="acc"/><text x="95" y="170" text-anchor="middle" class="plus" style="font-size:12px">+</text><circle cx="118" cy="165" r="7" fill="#1A2E42"/><text x="118" y="169" text-anchor="middle" class="plus" style="font-size:12px">&#8722;</text><circle cx="150" cy="165" r="7" fill="#1A2E42"/><text x="150" y="169" text-anchor="middle" class="plus" style="font-size:12px">&#8722;</text><circle cx="185" cy="165" r="7" class="acc"/><text x="185" y="170" text-anchor="middle" class="plus" style="font-size:12px">+</text><circle cx="212" cy="165" r="7" fill="#1A2E42"/><text x="212" y="169" text-anchor="middle" class="plus" style="font-size:12px">&#8722;</text>
+        <text class="lbl-m" x="125" y="200" text-anchor="middle">changes whenever a neighbour moves</text>
+        <rect x="280" y="155" width="230" height="20" fill="url(#smear)"/>
+        <text class="lbl-m" x="395" y="170" text-anchor="middle">smeared charge density ρ±</text>
+        <path d="M280.0,81.0 L283.0,81.6 L286.0,82.2 L289.0,82.7 L292.0,83.2 L295.0,83.7 L298.0,84.2 L301.0,84.6 L304.0,85.1 L307.0,85.5 L310.0,85.9 L313.0,86.3 L316.0,86.6 L319.0,87.0 L322.0,87.3 L325.0,87.6 L328.0,87.9 L331.0,88.2 L334.0,88.5 L337.0,88.8 L340.0,89.1 L343.0,89.3 L346.0,89.5 L349.0,89.8 L352.0,90.0 L355.0,90.2 L358.0,90.4 L361.0,90.6 L364.0,90.8 L367.0,91.0 L370.0,91.1 L373.0,91.3 L376.0,91.4 L379.0,91.6 L382.0,91.7 L385.0,91.9 L388.0,92.0 L391.0,92.1 L394.0,92.3 L397.0,92.4 L400.0,92.5 L403.0,92.6 L406.0,92.7 L409.0,92.8 L412.0,92.9 L415.0,93.0 L418.0,93.1 L421.0,93.1 L424.0,93.2 L427.0,93.3 L430.0,93.4 L433.0,93.4 L436.0,93.5 L439.0,93.6 L442.0,93.6 L445.0,93.7 L448.0,93.7 L451.0,93.8 L454.0,93.8 L457.0,93.9 L460.0,93.9 L463.0,94.0 L466.0,94.0 L469.0,94.1 L472.0,94.1 L475.0,94.1 L478.0,94.2 L481.0,94.2 L484.0,94.2 L487.0,94.3 L490.0,94.3 L493.0,94.3 L496.0,94.4 L499.0,94.4 L502.0,94.4 L505.0,94.4 L508.0,94.5" class="flow"/>
+        <text class="lbl-m" x="395" y="200" text-anchor="middle">average over all neighbour positions</text>
+        <line x1="258" y1="30" x2="258" y2="205" stroke="#D8DCE2" stroke-width="1"/>
+      </svg>
+    </div>
+    <p>
+      The potential \(\phi\) at an ion depends on where every neighbour is at that moment (left). Mean field replaces it by its
+      ensemble average \(\langle\phi\rangle\), the potential of the average (smeared) charge density \(\rho_\pm(\mathbf r)\), which still varies in space, for example across the double layer (right). Three steps give Poisson&ndash;Boltzmann:
+    </p>
+    <div class="eq-box">
+      $$\underbrace{q_\pm\phi\ \to\ q_\pm\langle\phi\rangle}_{\text{1. average}}\quad\Rightarrow\quad
+        \underbrace{\rho_\pm(\mathbf r)=\rho_\pm^{b}\,e^{-q_\pm\langle\phi(\mathbf r)\rangle/k_BT}}_{\text{2. Boltzmann}}\quad\Rightarrow\quad
+        \underbrace{-\nabla\cdot\big(\varepsilon_0\varepsilon\nabla\langle\phi\rangle\big)=\textstyle\sum_\pm q_\pm\rho_\pm}_{\text{3. Gauss}}$$
+    </div>
+    <p class="small muted">1: each ion sees only the average potential. 2: then its density follows a Boltzmann factor in that potential
+      (\(\rho^b\): bulk density, where \(\langle\phi\rangle=0\)). 3: these densities are the charge that makes \(\langle\phi\rangle\).
+      Section 2 derives step 1 from the ion chemical potential and shows what it leaves out.</p>
     <ul class="plain">
       <li><strong>Bulk.</strong> \(\varepsilon_c=0.74\) at 0.1 M and 2.4 at 1 M. A Debye sphere then holds \(1/(3\varepsilon_c)&lt;1\) ion,
-        and an ion pair at distance \(\lambda_D\) has energy \(\varepsilon_c k_BT\), so linearized Debye&ndash;H&uuml;ckel fails ([1] Fig. 3, p.10).</li>
+        and an ion pair at distance \(\lambda_D\) has energy \(\varepsilon_c k_BT\), so linearized Debye&ndash;H&uuml;ckel is only an estimate there ([1] Fig. 3, p.10).</li>
       <li><strong>Electrode.</strong> At 25 to 33 &micro;C/cm&sup2;, \(\Xi\approx5\) to 6.6: the counterion layer (0.11 to 0.14 nm) is about six
         times thinner than the spacing between counterions (0.7 to 0.8 nm), and thinner than a hydrated ion, so discreteness
         and ion size both matter. (\(\ell_{GC}\) and \(\Xi\): [1] p.22; the surface charges are my illustration of typical values.)</li>
@@ -277,6 +308,37 @@ footer {
         <text class="lbl" x="318" y="185" text-anchor="middle">⟨φ⟩ from the electrode (4)</text>
       </svg>
     </div>
+    <h3>Where the six terms come from, and how mean field is corrected</h3>
+    <p><strong>Step 1. Insert one ion, switching its charge on slowly</strong> (Eq. 8, p.6). \(\mu_+\) is the free energy cost of adding
+      one cation; its charge \(\xi q_+\) grows from 0 to \(q_+\) as \(\xi\) goes from 0 to 1. \(Z_N\): configurational integral of the \(N\) ions (a sum over all their positions weighted by \(e^{-\beta U}\)), so its change with \(\xi\) is the work of switching on the new ion.</p>
+    <div class="eq-box">$$\beta\mu_+=\underbrace{\ln(\Lambda^3\rho_+)}_{\text{ideal}}-\underbrace{\int_0^1 d\xi\,\frac{\partial\ln Z_N(\xi)}{\partial\xi}}_{\text{work to switch on its interactions}},\qquad \beta=1/k_BT$$</div>
+
+    <p><strong>Step 2. Split the potential into an average and a fluctuation</strong> (Eqs. 11, 12, p.7).
+      \(G(\mathbf r,\mathbf r')\) is the potential at \(\mathbf r\) of a unit charge at \(\mathbf r'\) (in the bulk \(1/4\pi\varepsilon_0\varepsilon|\mathbf r-\mathbf r'|\)).</p>
+    <div class="eq-box">$$\langle\phi(\mathbf r)\rangle=\underbrace{\phi_{\text{ext}}(\mathbf r)}_{\text{electrode}}+\int d\mathbf r'\,G(\mathbf r,\mathbf r')\sum_\alpha q_\alpha\rho_\alpha(\mathbf r')$$
+      $$\psi_+(\mathbf r;\mathbf r_1,\xi)=\underbrace{\xi q_+G(\mathbf r,\mathbf r_1)}_{\text{the ion itself}}+\underbrace{\int d\mathbf r'\,G(\mathbf r,\mathbf r')\sum_\alpha q_\alpha h_{+\alpha}(\mathbf r_1,\mathbf r';\xi)\,\rho_\alpha(\mathbf r')}_{\text{its cloud}}$$</div>
+    <p class="small muted">\(\langle\phi\rangle\): potential of the electrode plus the average charge (this is Gauss's law, step 3 of section 1).
+      \(\psi_+\): extra potential when one cation is held at \(\mathbf r_1\). \(h=g-1\): how much the neighbour density near that cation
+      differs from the average (\(g\): pair correlation function; \(h=0\) means the neighbours ignore it). \(u^c\) (Step 3): short range pair potential, for example ion size.</p>
+
+    <p><strong>Step 3. Collect terms</strong> (Eq. 14, p.8). The numbers match Eq. 36 above; Eq. 36 is this result after closures for \(g\) (p.13).</p>
+    <div class="eq-box">$$\mu_+=\underbrace{k_BT\ln(\Lambda^3\rho_+)}_{1}+\underbrace{V_+}_{2}+\underbrace{\sum_\alpha\int_0^1\!d\xi\!\int\! d\mathbf r'\,u^c_{+\alpha}\,g_{+\alpha}\,\rho_\alpha}_{3\ \text{short range}}
+      +\underbrace{q_+\langle\phi\rangle}_{4}+\underbrace{\mu^{\text{self}}_+}_{5}+\underbrace{\lim_{\mathbf r\to\mathbf r_1}\Big(q_+\int_0^1\!d\xi\,\psi_+-\frac{q_+^2}{2}G\Big)}_{6\ \text{correlation}}$$</div>
+
+    <p><strong>Step 4. Mean field is \(h=0\)</strong> (my step from Eq. 14). If the neighbours do not respond to the held ion, \(g=1\),
+      so \(\psi_+=\xi q_+G\) and term 6 vanishes exactly:</p>
+    <div class="eq-box">$$q_+\int_0^1 d\xi\,\xi q_+G-\frac{q_+^2}{2}G=\frac{q_+^2}{2}G-\frac{q_+^2}{2}G=0$$</div>
+    <p class="small muted">Poisson&ndash;Boltzmann also neglects terms 3 and 5 (no ion size, no solvation or image energy). Equilibrium then means \(\mu_+\) is the same everywhere,
+      equal to its bulk value \(k_BT\ln(\Lambda^3\rho_+^b)\), where \(V_+=0\) and \(\langle\phi\rangle=0\). Solving for \(\rho_+\) gives \(\rho_+=\rho_+^b e^{-(q_+\langle\phi\rangle+V_+)/k_BT}\): step 2 of section 1.</p>
+
+    <p><strong>Step 5. First correction: the screening cloud</strong> (textbook Debye&ndash;H&uuml;ckel limit, my evaluation; the paper
+      notes this limit on p.8). Take a unit charge, \(q_+=e\), in a dilute bulk. Solving Eq. 15 (p.8) with \(h\) linear in \(\psi\) gives the screened
+      potential \(\psi_+=\xi q_+e^{-r/\lambda_D}/4\pi\varepsilon_0\varepsilon r\), with \(r=|\mathbf r-\mathbf r_1|\). Then</p>
+    <div class="eq-box">$$\text{term 6}=\lim_{r\to0}\frac{q_+^2}{2}\,\frac{e^{-r/\lambda_D}-1}{4\pi\varepsilon_0\varepsilon\,r}=-\frac{q_+^2}{8\pi\varepsilon_0\varepsilon\lambda_D}=-\frac{\varepsilon_c}{2}\,k_BT$$</div>
+    <p class="small muted">The opposite charge gathered around the ion lowers its energy by \(\varepsilon_c/2\) in units of \(k_BT\)
+      (using \(\ell_B\) from section 1). So \(\varepsilon_c\) measures how far mean field is off. This is a small \(\varepsilon_c\) estimate;
+      at 0.1 M it gives \(-0.37\,k_BT\), only indicative since \(\varepsilon_c=0.74\) is not small.</p>
+
     <ul class="plain">
       <li>Terms 4 and 6 are kept apart: applied field vs ion&ndash;ion correlations, which the usual electrochemical potential lumps into
         the activity (Sec. IV G, p.23 to 24). Term 5 scales as \((\varepsilon_0\varepsilon)^{-1}\), so it grows as \(\varepsilon\) decreases, for example with added salt (p.13).</li>
