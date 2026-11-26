@@ -287,8 +287,7 @@ footer {
     <p class="small muted">One equation, but three unknowns: \(\langle\phi\rangle,\rho_+,\rho_-\). We need a rule for how the ions arrange themselves.</p>
 
     <p><strong>(B) Mean field chemical potential (the approximation).</strong> The cost of adding an ion at \(\mathbf r\) is its ideal gas
-      part plus its charge times the <em>average</em> potential; the electrode energy \(V\), ion size, self energy and correlations are dropped (terms 1 and 4 of
-      Eq. 36; section 2 shows this is \(h=0\)):</p>
+      part plus its charge times the <em>average</em> potential; the electrode energy \(V\), ion size, self energy and correlations between ions are dropped:</p>
     <div class="eq-box key">$$\mu_\pm(\mathbf r)=k_BT\ln\!\big(\Lambda^3\rho_\pm(\mathbf r)\big)+q_\pm\langle\phi(\mathbf r)\rangle\qquad\text{(B)}$$</div>
 
     <p><strong>(C) Equilibrium (exact).</strong> Ions move until adding one costs the same everywhere, so \(\mu_\pm(\mathbf r)=\mu_\pm^b\), its value
@@ -313,9 +312,9 @@ footer {
     <p class="small muted">
       Everything rests on (B): it fails when an ion's neighbours do respond to it, which \(\varepsilon_c\) and \(\Xi\) measure.</p>
     <h3>When mean field breaks</h3>
-    <p><strong>(B) treats the positions of neighbours as uncorrelated</strong> (\(h=0\), section 2). A neighbour at spacing \(s\) (\(d\) in
+    <p><strong>(B) treats the positions of neighbours as uncorrelated:</strong> a neighbour is equally likely to sit anywhere near the ion. A neighbour at spacing \(s\) (\(d\) in
       the bulk, \(a\) at the electrode) actually sits next to the ion more or less often than at random, by the Boltzmann weight of their
-      bare Coulomb energy:</p>
+      bare Coulomb energy (\(g\): how much more or less often than at random; (B) sets \(g=1\)):</p>
     <div class="eq-box key">$$\frac{U(s)}{k_BT}=\frac{\ell_B}{s},\qquad g=e^{-U/k_BT}=e^{\mp\ell_B/s}\quad(\text{like / opposite charges})$$</div>
     <p class="small muted">So \(\ell_B/s\) is a ruler for the error of (B). The two coupling numbers are this ruler in disguise (my algebra):
       \(\varepsilon_c=\sqrt{4\pi}\,(\ell_B/d)^{3/2}\) in the bulk and \(\Xi=2\pi(\ell_B/a)^2\) at the electrode. \(\varepsilon_c\) or \(\Xi\approx1\)
@@ -681,9 +680,9 @@ footer {
         an upper bound: in the bulk the cloud screens neighbours (at 1 M by \(e^{-d/\lambda_D}\approx0.05\)), so there the failure shows as a cloud
         holding less than one ion rather than as one strong neighbour. At the electrode, where \(a\gg\ell_{GC}\), the bare \(\ell_B/a\) applies.</p>
     </div>
-    <p><strong>Why this breaks (B).</strong> If \(g=1\), neighbours ignore the ion and only their average matters: (B) is exact (\(h=0\)).
+    <p><strong>Why this breaks (B).</strong> If \(g=1\), neighbours ignore the ion and only their average matters: (B) is exact.
       The weight \(e^{\mp\ell_B/s}\) is 0.92 to 1.08 at 1 mM but 0.38 to 2.7 at the electrode (my calculation): like charges avoid the ion and
-      opposite charges crowd it. This correlation hole and pairing tendency is what (B) leaves out (\(h\neq0\), term 6 of Eq. 36 in section 2).</p>
+      opposite charges crowd it. This correlation hole and pairing tendency is what (B) leaves out.</p>
   </section>
 
   <!-- 2. ION CHEMICAL POTENTIAL -->
