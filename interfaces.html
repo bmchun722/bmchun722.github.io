@@ -25,7 +25,7 @@ body {
   font-family: 'Georgia', 'Times New Roman', serif;
   background: var(--cream);
   color: var(--text);
-  font-size: 16px;
+  font-size: 17px;
   line-height: 1.7;
 }
 
@@ -57,22 +57,22 @@ nav {
   color: var(--blue-light); margin-bottom: 1rem; display: block;
 }
 .hero h1 { font-size: clamp(1.8rem, 4.5vw, 2.6rem); font-weight: normal; line-height: 1.2; margin-bottom: 1rem; }
-.hero p { font-family: system-ui, sans-serif; font-size: 15px; color: rgba(255,255,255,0.65); max-width: 680px; }
+.hero p { font-family: system-ui, sans-serif; font-size: 16.5px; color: rgba(255,255,255,0.65); max-width: 680px; }
 
 .container { max-width: 900px; margin: 0 auto; padding: 0 2.5rem; }
 section { padding: 3rem 0 1rem; }
 .section-header { display: flex; align-items: center; gap: 1.25rem; margin-bottom: 1.5rem; }
 .section-title {
-  font-family: system-ui, sans-serif; font-size: 11px; letter-spacing: 0.14em;
+  font-family: system-ui, sans-serif; font-size: 15px; font-weight: 600; letter-spacing: 0.1em;
   text-transform: uppercase; color: var(--blue); white-space: nowrap;
 }
 .section-rule { flex: 1; height: 1px; background: var(--border); }
-h3 { font-family: system-ui, sans-serif; font-size: 15px; color: var(--navy-mid); margin: 1.5rem 0 0.6rem; }
+h3 { font-family: system-ui, sans-serif; font-size: 18.5px; color: var(--navy-mid); margin: 1.5rem 0 0.6rem; }
 p { margin-bottom: 1rem; }
 a { color: var(--blue); }
 .muted { color: var(--text-muted); }
-.small { font-family: system-ui, sans-serif; font-size: 13px; }
-.src { font-family: system-ui, sans-serif; font-size: 12px; color: var(--text-muted); white-space: nowrap; }
+.small { font-family: system-ui, sans-serif; font-size: 14.5px; }
+.src { font-family: system-ui, sans-serif; font-size: 13px; color: var(--text-muted); white-space: nowrap; }
 
 /* FIGURES: one accent (blue), navy for structure, 1.5px strokes, 13px+ labels */
 .fig { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem; margin-bottom: 1rem; }
@@ -91,47 +91,53 @@ a { color: var(--blue); }
 .fig .acc { fill: #4A7FA5; }
 .fig .acc-t { fill: #2C6283; }
 .fig .acc-s { stroke: #4A7FA5; stroke-width: 1.5; }
-.caption { font-family: system-ui, sans-serif; font-size: 13px; color: var(--text-muted); margin-top: 0.75rem; line-height: 1.5; }
+.caption { font-family: system-ui, sans-serif; font-size: 14.5px; color: var(--text-muted); margin-top: 0.75rem; line-height: 1.5; }
 .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 
 /* INTERACTIVE */
 button {
-  font-family: system-ui, sans-serif; font-size: 13px; cursor: pointer;
+  font-family: system-ui, sans-serif; font-size: 14.5px; cursor: pointer;
   background: var(--cream); color: var(--text); border: 1px solid var(--border);
   border-radius: var(--radius); padding: 0.4rem 0.85rem;
 }
 button:hover { border-color: var(--blue); }
 button.active { background: var(--navy); color: #fff; border-color: var(--navy); }
 .presets { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
-.plot { width: 100%; height: 250px; display: block; background: #FBFBFA; border: 1px solid var(--border); border-radius: var(--radius); }
+.plot { width: 100%; height: 280px; display: block; background: #FBFBFA; border: 1px solid var(--border); border-radius: var(--radius); }
 .controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.75rem 1.5rem; margin: 1rem 0; }
-.ctl label { display: flex; justify-content: space-between; font-family: system-ui, sans-serif; font-size: 13px; margin-bottom: 0.2rem; }
+.ctl label { display: flex; justify-content: space-between; font-family: system-ui, sans-serif; font-size: 14.5px; margin-bottom: 0.2rem; }
 .ctl label span.val { font-variant-numeric: tabular-nums; color: var(--blue); }
 .ctl input[type=range] { width: 100%; accent-color: var(--blue); }
 .readout {
-  margin-top: 0.6rem; font-family: system-ui, sans-serif; font-size: 12.5px; color: var(--text-muted);
+  margin-top: 0.6rem; font-family: system-ui, sans-serif; font-size: 14.5px; color: var(--text-muted);
   display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 0.25rem 1rem;
 }
 .readout b { color: var(--text); font-weight: 600; font-variant-numeric: tabular-nums; }
 .actions { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; margin-top: 0.75rem; }
-.plot-title { font-family: system-ui, sans-serif; font-size: 13px; font-weight: 600; color: var(--navy-mid); margin: 1rem 0 0.4rem; }
+.plot-title { font-family: system-ui, sans-serif; font-size: 14.5px; font-weight: 600; color: var(--navy-mid); margin: 1rem 0 0.4rem; }
+.terms { display: grid; grid-template-columns: minmax(8rem, auto) 1fr 4rem; gap: 0.35rem 0.75rem; align-items: center; font-family: system-ui, sans-serif; font-size: 14.5px; margin-top: 0.75rem; }
+.terms b { text-align: right; font-variant-numeric: tabular-nums; }
+.bar { position: relative; height: 10px; background: #EEF1F4; border-radius: 2px; }
+.bar::after { content: ""; position: absolute; left: 50%; top: -3px; bottom: -3px; width: 1px; background: #8A93A0; }
+.bar span { position: absolute; top: 0; bottom: 0; border-radius: 2px; }
+.ctl .small { margin-top: 0.25rem; line-height: 1.45; }
 .chain-card { display: none; }
 .chain-card.show { display: block; }
-.chain-card p { font-family: system-ui, sans-serif; font-size: 14px; margin-bottom: 0.4rem; }
+.chain-card p { font-family: system-ui, sans-serif; font-size: 15.5px; margin-bottom: 0.4rem; }
 .chain-card p strong { color: var(--navy-mid); }
 
 /* TABLES */
 .table-wrap { overflow-x: auto; margin-bottom: 1rem; }
-table { border-collapse: collapse; width: 100%; font-family: system-ui, sans-serif; font-size: 13.5px; background: #fff; }
+table { border-collapse: collapse; width: 100%; font-family: system-ui, sans-serif; font-size: 15px; background: #fff; }
 th, td { border-bottom: 1px solid var(--border); padding: 0.55rem 0.7rem; text-align: left; vertical-align: top; }
-th { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); font-weight: 600; background: var(--cream); }
+th { font-size: 12.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); font-weight: 600; background: var(--cream); }
 td.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
 .eq-box { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 0.5rem 1rem; margin-bottom: 1rem; overflow-x: auto; }
-.note { background: #fff; border-left: 3px solid var(--blue); padding: 0.75rem 1rem; margin-bottom: 1rem; font-size: 15px; }
+.note { background: #fff; border-left: 3px solid var(--blue); padding: 0.75rem 1rem; margin-bottom: 1rem; font-size: 16px; }
 .warn { border-left-color: #C0473A; }
 ul.plain { padding-left: 1.25rem; margin-bottom: 1rem; }
 ul.plain li { margin-bottom: 0.35rem; }
-ol.refs { padding-left: 1.25rem; font-size: 14px; }
+ol.refs { padding-left: 1.25rem; font-size: 15px; }
 ol.refs li { margin-bottom: 0.4rem; }
 
 footer {
@@ -190,7 +196,18 @@ footer {
     <div class="eq-box">
       $$\ell_B=\frac{e^2}{4\pi\varepsilon_0\varepsilon k_BT},\qquad
         \varepsilon_c=\frac{\ell_B}{\lambda_D}\ \text{(bulk)},\qquad
-        \Xi=\frac{\ell_B}{\ell_{GC}},\ \ \ell_{GC}=\frac{2\varepsilon\varepsilon_0k_BT}{e|\sigma|}\ \text{(charged wall)}$$
+        \Xi=\frac{\ell_B}{\ell_{GC}},\ \ \ell_{GC}=\frac{2\varepsilon\varepsilon_0k_BT}{e|\sigma|}\ \text{(charged electrode)}$$
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Symbol</th><th>Physical meaning</th></tr></thead>
+        <tbody>
+          <tr><td>\(\ell_B\)</td><td>distance at which two unit charges in the solvent interact with energy \(k_BT\)</td></tr>
+          <tr><td>\(\lambda_D\)</td><td>Debye length: how far the field of one ion reaches before the ion cloud screens it (shorter at higher salt)</td></tr>
+          <tr><td>\(\ell_{GC}\)</td><td>Gouy&ndash;Chapman length: thickness of the counterion layer on an electrode of surface charge \(\sigma\) (a charged wall in [1])</td></tr>
+          <tr><td>\(\varepsilon_c,\ \Xi\)</td><td>coupling strengths: ion&ndash;ion energy over \(k_BT\) in the bulk and at the electrode; below 1, mean field works</td></tr>
+        </tbody>
+      </table>
     </div>
     <div class="fig">
       <svg viewBox="0 0 520 150" role="img" aria-label="Log scale of the Gouy-Chapman length, Debye lengths and Bjerrum length">
@@ -213,14 +230,14 @@ footer {
         <text class="lbl" x="262" y="38">λ<tspan dy="4" class="sb">D</tspan><tspan dy="-4"> (0.1 M) 0.96</tspan></text>
         <text class="lbl" x="221" y="72" text-anchor="end">ℓ<tspan dy="4" class="sb">B</tspan><tspan dy="-4"> 0.71</tspan></text>
         <rect x="37.6" y="94" width="28.1" height="12" class="acc"/>
-        <text class="lbl acc-t" x="36" y="143">ℓ<tspan dy="4" class="sb">GC</tspan><tspan dy="-4"> 0.11 to 0.14 at a wall with 25 to 33 µC/cm²</tspan></text>
+        <text class="lbl acc-t" x="36" y="143">ℓ<tspan dy="4" class="sb">GC</tspan><tspan dy="-4"> 0.11 to 0.14 at an electrode with 25 to 33 µC/cm²</tspan></text>
       </svg>
       <p class="caption">Water, \(\varepsilon=78.4\), \(T=298.15\) K, 1:1 salt (my calculation from Eqs. 21 and 22 of [1]).</p>
     </div>
     <ul class="plain">
       <li><strong>Bulk.</strong> \(\varepsilon_c=0.74\) at 0.1 M and 2.4 at 1 M. A Debye sphere then holds \(1/(3\varepsilon_c)&lt;1\) ion,
         and an ion pair at distance \(\lambda_D\) has energy \(\varepsilon_c k_BT\), so linearized Debye&ndash;H&uuml;ckel fails ([1] Fig. 3, p.10).</li>
-      <li><strong>Wall.</strong> At 25 to 33 &micro;C/cm&sup2;, \(\Xi\approx5\) to 6.6: the counterion layer (0.11 to 0.14 nm) is about six
+      <li><strong>Electrode.</strong> At 25 to 33 &micro;C/cm&sup2;, \(\Xi\approx5\) to 6.6: the counterion layer (0.11 to 0.14 nm) is about six
         times thinner than the spacing between counterions (0.7 to 0.8 nm), and thinner than a hydrated ion, so discreteness
         and ion size both matter. (\(\ell_{GC}\) and \(\Xi\): [1] p.22; the surface charges are my illustration of typical values.)</li>
     </ul>
@@ -234,10 +251,13 @@ footer {
     </div>
     <p>Fraggedakis [1] writes the chemical potential of an ion in a nonuniform electrolyte as six terms (Eq. 36, p.13, written compactly; meanings p.8):</p>
     <div class="eq-box">
-      $$\mu_\gamma(\mathbf r)=\underbrace{k_BT\ln(\Lambda^3\rho)}_{1\ \text{ideal}}+\underbrace{V}_{2\ \text{wall}}
+      $$\mu_\gamma(\mathbf r)=\underbrace{k_BT\ln(\Lambda^3\rho)}_{1\ \text{ideal}}+\underbrace{V}_{2\ \text{electrode}}
         +\underbrace{k_BT\ln\gamma^c}_{3\ \text{ion size}}+\underbrace{q\langle\phi\rangle}_{4\ \text{mean field}}
         +\underbrace{\mu^{\text{self}}}_{5\ \text{solvation}}+\underbrace{\mu^{\text{corr}}}_{6\ \text{correlation}}$$
     </div>
+    <p class="small muted">\(\rho\): local ion density; \(\Lambda\): thermal wavelength; \(V\): direct ion&ndash;electrode energy;
+      \(\gamma^c\): activity coefficient from finite ion size; \(q\langle\phi\rangle\): charge times the average potential;
+      \(\mu^{\text{self}}\): energy of the ion with its own solvation and image charge; \(\mu^{\text{corr}}\): energy from the screening cloud of other ions.</p>
     <div class="fig">
       <svg viewBox="0 0 520 220" role="img" aria-label="An ion near a metal with its image charge, screening cloud, neighbour and the mean potential">
         <defs><marker id="arrMu" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#1A2E42"/></marker></defs>
@@ -263,7 +283,7 @@ footer {
       <li>The closures come from a perturbation expansion in \(\varepsilon_c\); the theory is for &ldquo;weak to moderate&rdquo; correlations (p.12).
         It matches GCMC up to \(\varepsilon_c\simeq5.76\), but the expansion &ldquo;is not asymptotically controlled for \(\varepsilon\ge1\)&rdquo; (the paper's \(\varepsilon\) is \(\varepsilon_c\) here)
         (p.23): beyond that, use with caution.</li>
-      <li>Benchmarks are bulk electrolytes; at a charged wall, of \(\Xi\) the paper says &ldquo;we expect it to play a role&rdquo; (p.22).</li>
+      <li>Benchmarks are bulk electrolytes; at a charged electrode, of \(\Xi\) the paper says &ldquo;we expect it to play a role&rdquo; (p.22).</li>
     </ul>
   </section>
 
@@ -375,25 +395,52 @@ footer {
     <!-- REAL DISPERSION (Eq. 72) -->
     <h3>The answer: \(\omega(k)\) from Eq. 72</h3>
     <div class="fig" id="realw">
+      <div class="eq-box">$$\omega(k)=\frac{\sqrt{4Da^2+Da_i^2}\,\Big(\textcolor{#2C6283}{Da_i}+\textcolor{#C0473A}{El\,\hat\sigma_{zz}(k;G_o)}\Big)}{2+\sqrt{4Da^2+Da_i^2}\,\tanh(k)/k}$$</div>
+      <p class="small muted" style="margin-bottom:0.75rem;">
+        <span style="color:#2C6283;font-weight:600;">Blue: field term</span>, more ions to the crest (grows bumps, same for every \(k\)).
+        <span style="color:#C0473A;font-weight:600;">Red: stress term</span>, a compressed crest costs more metal chemical potential (heals bumps, larger for narrower bumps).
+      </p>
       <div class="presets" id="realPresets">
         <button data-go="2" class="active">Fig. 7a stiff (\(G_o=2\))</button>
         <button data-go="0.1">Fig. 7a soft (\(G_o=0.1\))</button>
       </div>
       <canvas id="realCanvas" class="plot" role="img" aria-label="Growth rate from Eq. 72 versus wavenumber on a log axis">Growth rate from Eq. 72 versus wavenumber.</canvas>
       <div class="controls">
-        <div class="ctl"><label for="goSlider">\(G_o\) (electrolyte / metal stiffness) <span class="val" id="goVal"></span></label><input type="range" id="goSlider" min="-1.3" max="0.7" step="0.01"></div>
-        <div class="ctl"><label for="daiSlider">\(Da_i\) (applied current) <span class="val" id="daiVal"></span></label><input type="range" id="daiSlider" min="0.1" max="1" step="0.01"></div>
+        <div class="ctl">
+          <label for="goSlider">\(G_o=G_\beta/G_\alpha\) <span class="val" id="goVal"></span></label>
+          <input type="range" id="goSlider" min="-1.3" max="0.7" step="0.01">
+          <div class="small muted">Electrolyte stiffness relative to Li. Changes only the <span style="color:#C0473A;">red term</span>.
+            Electrolyte shear modulus \(\approx\) <b id="goPhys"></b> (Li: 3.4 GPa, p.19).</div>
+        </div>
+        <div class="ctl">
+          <label for="daiSlider">\(Da_i=eiL/(\sigma k_BT)\) <span class="val" id="daiVal"></span></label>
+          <input type="range" id="daiSlider" min="0.1" max="1" step="0.01">
+          <div class="small muted">Applied current density \(i\); \(\sigma\) = ionic conductivity and \(L\) = thickness of the electrolyte. Ohmic drop across the electrolyte over \(k_BT/e\). Sets the <span style="color:#2C6283;">blue term</span>.
+            Ohmic drop \(iL/\sigma\approx\) <b id="daiPhys"></b> (\(k_BT/e=25.7\) mV, p.17).</div>
+        </div>
+        <div class="ctl">
+          <label for="kSlider">Bump to inspect: \(k\) <span class="val" id="kVal"></span></label>
+          <input type="range" id="kSlider" min="-2" max="1.3" step="0.01">
+          <div class="small muted">Wavenumber of one bump (vertical line on the plot). Width \(2\pi/k\approx\) <b id="kPhys"></b>, \(L\) = electrolyte thickness.</div>
+        </div>
       </div>
+      <div class="terms">
+        <span>Field term \(Da_i\)</span><div class="bar"><span id="barF" style="background:#2C6283;"></span></div><b id="tF"></b>
+        <span>Stress term \(El\,\hat\sigma_{zz}\)</span><div class="bar"><span id="barS" style="background:#C0473A;"></span></div><b id="tS"></b>
+        <span>Sum (sign of \(\omega\))</span><div class="bar"><span id="barT" style="background:#1A2E42;"></span></div><b id="tT"></b>
+      </div>
+      <p class="small" id="verdict" style="margin-top:0.5rem;"></p>
       <div class="readout" aria-live="polite">
-        <span>\(k_c\): <b id="roKc"></b></span>
+        <span>\(k_c\) (red dot): <b id="roKc"></b></span>
         <span>Critical wavelength \(2\pi/k_c\): <b id="roLc"></b></span>
         <span>\(\omega(k\to0)\), Eq. 73: <b id="roW0"></b></span>
       </div>
       <p class="caption">
-        Solid: Eq. 72 with \(\hat\sigma_{zz}\) from the full elastic solution of App. G (my evaluation); \(Da=10\), \(El=20\),
+        Eq. 72 with \(\hat\sigma_{zz}\) from the full elastic solution of App. G (my evaluation); \(Da=10\), \(El=20\),
         \(\nu_\alpha=0.42\), \(\nu_\beta=0.33\) as in Fig. 7 (p.19). Dashed: the two Fig. 7a cases at \(Da_i=0.5\)
-        (\(k_c\approx0.40\) and \(0.85\), my evaluation). \(Da_i\) stays below 1 as in the paper (p.19). Shaded: bumps that grow. Softer electrolyte: larger \(k_c\), so narrower bumps also grow.
-        Lower current: smaller \(k_c\). Lengths in units of the electrolyte thickness \(L\).
+        (\(k_c\approx0.40\) and \(0.85\), my evaluation). \(Da_i\) stays below 1 as in the paper (p.19). Shaded: bumps that grow. Orange line: the inspected bump; bars beyond the scale are clipped.
+        \(k_c\) is where the red term cancels the blue term. Softer electrolyte: weaker red term, larger \(k_c\), narrower bumps also grow.
+        Lower current: weaker blue term, smaller \(k_c\).
       </p>
     </div>
 
@@ -408,9 +455,9 @@ footer {
       </div>
       <canvas id="dispCanvas" class="plot" role="img" aria-label="Growth rate omega versus wavenumber k">Growth rate versus wavenumber.</canvas>
       <div class="controls">
-        <div class="ctl"><label for="aSlider">\(a=\omega(0)\) <span class="val" id="aVal"></span></label><input type="range" id="aSlider" min="-1" max="1" step="0.01"></div>
-        <div class="ctl"><label for="bSlider">\(b\) <span class="val" id="bVal"></span></label><input type="range" id="bSlider" min="-1.5" max="2" step="0.01"></div>
-        <div class="ctl"><label for="cSlider">\(c\) <span class="val" id="cVal"></span></label><input type="range" id="cSlider" min="0" max="1.5" step="0.01"></div>
+        <div class="ctl"><label for="aSlider">\(a=\omega(0)\), like \(\omega_0\): field at every width <span class="val" id="aVal"></span></label><input type="range" id="aSlider" min="-1" max="1" step="0.01"></div>
+        <div class="ctl"><label for="bSlider">\(b\), like \(\omega_2\): \(k^2\) term <span class="val" id="bVal"></span></label><input type="range" id="bSlider" min="-1.5" max="2" step="0.01"></div>
+        <div class="ctl"><label for="cSlider">\(c\), like \(\omega_4\): stress, narrow bumps <span class="val" id="cVal"></span></label><input type="range" id="cSlider" min="0" max="1.5" step="0.01"></div>
       </div>
       <div class="readout" aria-live="polite">
         <span>\(k_*\): <b id="roKstar"></b></span>
@@ -612,7 +659,7 @@ footer {
     ks.forEach((k, i) => { const y = Y(ws[i]); if (i === 0) ctx.moveTo(X(k), y); else ctx.lineTo(X(k), y); });
     ctx.stroke();
     // roots
-    ctx.fillStyle = '#C0473A'; ctx.font = (11 * dpr) + 'px system-ui, sans-serif'; ctx.textAlign = 'center';
+    ctx.fillStyle = '#C0473A'; ctx.font = (13 * dpr) + 'px system-ui, sans-serif'; ctx.textAlign = 'center';
     f.roots.forEach((r, i) => {
       if (r <= KMAX) {
         ctx.beginPath(); ctx.arc(X(r), Y(0), 3.5 * dpr, 0, 2 * Math.PI); ctx.fill();
@@ -631,7 +678,7 @@ footer {
     // axes
     ctx.strokeStyle = '#5A6472'; ctx.lineWidth = 1 * dpr;
     ctx.beginPath(); ctx.moveTo(padL, padT); ctx.lineTo(padL, H - padB); ctx.lineTo(W - padR, H - padB); ctx.stroke();
-    ctx.fillStyle = '#5A6472'; ctx.font = (11 * dpr) + 'px system-ui, sans-serif';
+    ctx.fillStyle = '#5A6472'; ctx.font = (13 * dpr) + 'px system-ui, sans-serif';
     ctx.textAlign = 'center';
     for (let k = 0; k <= KMAX + 1e-9; k += 0.5) ctx.fillText(k.toFixed(1), X(k), H - padB + 14 * dpr);
     ctx.fillText('k', W - padR - 6 * dpr, H - padB - 6 * dpr);
@@ -717,7 +764,7 @@ footer {
     ctx.beginPath();
     for (let j = 0; j < N; j++) { const y = mid - amp * res.h[j] / m; if (j === 0) ctx.moveTo(X(j), y); else ctx.lineTo(X(j), y); }
     ctx.strokeStyle = '#1A2E42'; ctx.lineWidth = 1.6 * dpr; ctx.stroke();
-    ctx.fillStyle = '#5A6472'; ctx.font = (11 * dpr) + 'px system-ui, sans-serif'; ctx.textAlign = 'left';
+    ctx.fillStyle = '#5A6472'; ctx.font = (13 * dpr) + 'px system-ui, sans-serif'; ctx.textAlign = 'left';
     ctx.fillText('electrolyte', 8 * dpr, 16 * dpr);
     ctx.fillText('metal (profile rescaled to fit)', 8 * dpr, H - 8 * dpr);
 
@@ -835,7 +882,7 @@ footer {
 
   const $ = (id) => document.getElementById(id);
   const cv = $('realCanvas'), ctx = cv.getContext('2d');
-  const goS = $('goSlider'), daiS = $('daiSlider');
+  const goS = $('goSlider'), daiS = $('daiSlider'), kS = $('kSlider');
 
   function fit() {
     const r = cv.getBoundingClientRect(), dpr = window.devicePixelRatio || 1;
@@ -863,6 +910,7 @@ footer {
 
     const M = 300, cur = curve(Go, Dai, M);
     const kc = findKc(Go, Dai);
+    const kSel = Math.pow(10, parseFloat(kS.value));
 
     ctx.save();
     ctx.beginPath(); ctx.rect(padL, padT, W - padL - padR, H - padT - padB); ctx.clip();
@@ -887,11 +935,16 @@ footer {
     ctx.strokeStyle = '#1A2E42'; ctx.lineWidth = 2.2 * dpr; ctx.beginPath();
     cur.ks.forEach((k, i) => { if (i === 0) ctx.moveTo(X(k), Y(cur.ws[i])); else ctx.lineTo(X(k), Y(cur.ws[i])); });
     ctx.stroke();
+    // inspected bump
+    ctx.strokeStyle = '#F08A24'; ctx.lineWidth = 1.5 * dpr;
+    ctx.beginPath(); ctx.moveTo(X(kSel), padT); ctx.lineTo(X(kSel), H - padB); ctx.stroke();
+    ctx.fillStyle = '#F08A24';
+    ctx.beginPath(); ctx.arc(X(kSel), Y(omegaFull(kSel, Go, Dai)), 4.5 * dpr, 0, 2 * Math.PI); ctx.fill();
     // k_c marker
     if (isFinite(kc)) {
       ctx.fillStyle = '#C0473A';
       ctx.beginPath(); ctx.arc(X(kc), Y(0), 3.5 * dpr, 0, 2 * Math.PI); ctx.fill();
-      ctx.font = (11 * dpr) + 'px system-ui, sans-serif'; ctx.textAlign = 'center';
+      ctx.font = (13 * dpr) + 'px system-ui, sans-serif'; ctx.textAlign = 'center';
       ctx.fillText('k_c', X(kc), Y(0) + 15 * dpr);
     }
     ctx.restore();
@@ -899,7 +952,7 @@ footer {
     // axes
     ctx.strokeStyle = '#5A6472'; ctx.lineWidth = 1 * dpr;
     ctx.beginPath(); ctx.moveTo(padL, padT); ctx.lineTo(padL, H - padB); ctx.lineTo(W - padR, H - padB); ctx.stroke();
-    ctx.fillStyle = '#5A6472'; ctx.font = (11 * dpr) + 'px system-ui, sans-serif'; ctx.textAlign = 'center';
+    ctx.fillStyle = '#5A6472'; ctx.font = (13 * dpr) + 'px system-ui, sans-serif'; ctx.textAlign = 'center';
     [0.01, 0.1, 1, 10].forEach((k) => ctx.fillText(String(k), X(k), H - padB + 14 * dpr));
     ctx.fillText('k (log)', W - padR - 20 * dpr, H - padB - 6 * dpr);
     ctx.textAlign = 'right';
@@ -913,14 +966,36 @@ footer {
     $('roKc').textContent = isFinite(kc) ? kc.toFixed(3) : '> 30';
     $('roLc').textContent = isFinite(kc) ? (2 * Math.PI / kc).toFixed(1) + ' L' : '< 0.21 L';
     $('roW0').textContent = omegaZero(Dai).toFixed(3);
+
+    // physical readouts
+    $('goPhys').textContent = (3.4 * Go).toFixed(2) + ' GPa';
+    $('daiPhys').textContent = (25.7 * Dai).toFixed(1) + ' mV';
+    $('kVal').textContent = kSel < 0.1 ? kSel.toFixed(3) : kSel.toFixed(2);
+    const width = 2 * Math.PI / kSel;
+    $('kPhys').textContent = (width >= 10 ? width.toFixed(0) : width.toFixed(2)) + ' L';
+
+    // the two terms of the numerator of Eq. 72 at the inspected bump
+    const tF = Dai, tS = EL * sigmaHat(kSel, Go), tT = tF + tS;
+    const scale = 1.2;  // fixed, so a bar changes only when its own term changes; longer bars are clipped
+    const setBar = (id, v) => {
+      const w = Math.min(50, 50 * Math.abs(v) / scale), el = $(id);
+      el.style.width = w + '%'; el.style.left = (v >= 0 ? 50 : 50 - w) + '%';
+    };
+    const f3 = (v) => (v >= 0 ? '+' : '\u2212') + (Math.abs(v) < 1e-3 ? Math.abs(v).toExponential(1) : Math.abs(v).toFixed(3));
+    setBar('barF', tF); setBar('barS', tS); setBar('barT', tT);
+    $('tF').textContent = f3(tF); $('tS').textContent = f3(tS); $('tT').textContent = f3(tT);
+    $('verdict').textContent = tT > 0
+      ? 'Field term wins: ions go to the crest, this bump grows (like Fig. 7b). It is wider than the critical wavelength.'
+      : 'Stress term wins: the compressed crest sends ions to the valleys, this bump heals (like Fig. 7c). It is narrower than the critical wavelength.';
   }
 
   function setGo(g) {
-    goS.value = Math.log10(g); daiS.value = 0.5;
+    goS.value = Math.log10(g); daiS.value = 0.5; kS.value = Math.log10(0.3);
     document.querySelectorAll('#realPresets button').forEach((b) => b.classList.toggle('active', parseFloat(b.dataset.go) === g));
     draw();
   }
   document.querySelectorAll('#realPresets button').forEach((b) => b.addEventListener('click', () => setGo(parseFloat(b.dataset.go))));
+  kS.addEventListener('input', draw);
   [goS, daiS].forEach((s) => s.addEventListener('input', () => {
     document.querySelectorAll('#realPresets button').forEach((b) => b.classList.remove('active'));
     draw();
