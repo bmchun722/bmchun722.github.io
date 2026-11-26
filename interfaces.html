@@ -115,6 +115,10 @@ button.active { background: var(--navy); color: #fff; border-color: var(--navy);
 .readout b { color: var(--text); font-weight: 600; font-variant-numeric: tabular-nums; }
 .actions { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; margin-top: 0.75rem; }
 .plot-title { font-family: system-ui, sans-serif; font-size: 13px; font-weight: 600; color: var(--navy-mid); margin: 1rem 0 0.4rem; }
+.chain-card { display: none; }
+.chain-card.show { display: block; }
+.chain-card p { font-family: system-ui, sans-serif; font-size: 14px; margin-bottom: 0.4rem; }
+.chain-card p strong { color: var(--navy-mid); }
 
 /* TABLES */
 .table-wrap { overflow-x: auto; margin-bottom: 1rem; }
@@ -275,6 +279,54 @@ footer {
       (translation invariance). The potential obeys ion conservation, \(\nabla^2\phi=0\) under plane strain (Eq. 61), with the applied current as boundary
       condition (Eq. 62).
     </p>
+
+    <h3>The problem</h3>
+    <div class="table-wrap">
+      <table>
+        <tbody>
+          <tr><td><strong>Unknown</strong></td><td>\(\omega(k)\): growth rate of a bump \(\delta h_k e^{ikx}\) of wavenumber \(k\) (width \(\sim2\pi/k\)); \(\omega>0\) grows, \(\omega&lt;0\) heals</td><td class="src">Eq. 70, p.18</td></tr>
+          <tr><td><strong>Data</strong></td><td>\(Da\) (reaction / ion conduction), \(Da_i\) (applied current: strength of the field), \(El\) (elastic energy per atom / \(k_BT\)), \(G_o\) (electrolyte / metal stiffness), Poisson ratios \(\nu_\alpha,\nu_\beta\). Fig. 7 values: \(Da=10\), \(El=20\), \(\nu_\alpha=0.42\), \(\nu_\beta=0.33\)</td><td class="src">pp.17, 19</td></tr>
+          <tr><td><strong>Conditions</strong></td><td>small bumps (\(\epsilon_h\ll1\), linear), plane strain (2D), single ion conductor (no concentration gradient), metal and electrolyte bonded, electrolyte top free of traction</td><td class="src">pp.17 to 18</td></tr>
+          <tr><td><strong>Intermediate unknowns</strong></td><td>displacements \(u_k(z)\) and potential \(\phi_k(z)\), solved for one \(k\) at a time</td><td class="src">p.18, App. G</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>The equation chain</h3>
+    <div class="fig">
+      <div class="presets" id="chainSteps">
+        <button data-step="1" class="active">1 · Split into modes</button>
+        <button data-step="2">2 · Mechanics</button>
+        <button data-step="3">3 · Potential</button>
+        <button data-step="4">4 · Growth rate</button>
+      </div>
+      <div class="chain-card show" data-step="1">
+        <div class="eq-box">$$h(x,t)=\langle h(t)\rangle+\epsilon_h\,\delta h(x)\,e^{\omega t},\qquad f^{(1)}(x,z,t)=\sum_k f^{(1)}_k(z)\,e^{ikx}e^{\omega(k)t}$$</div>
+        <p><strong>Unknown here:</strong> how a small bump of any shape evolves.</p>
+        <p><strong>Solved:</strong> nothing yet. The bump is written as a sum of plane waves; the flat state is the same at every \(x\), so each \(k\) evolves on its own (Eq. 70 and the expansion below it, p.18).</p>
+        <p><strong>Hands on:</strong> for each \(k\), ordinary differential equations in \(z\) only.</p>
+      </div>
+      <div class="chain-card" data-step="2">
+        <div class="eq-box">$$C_{ijkl}\,u_{kl,j}=0\ \ (\text{Eq. 63}),\qquad u^{\beta}_{zk}(0)=u^{\alpha}_{zk}(0)+\delta h_k\ \ (\text{Eq. G.6})$$</div>
+        <p><strong>Unknown here:</strong> displacements \(u_{xk}(z),u_{zk}(z)\) in metal and electrolyte.</p>
+        <p><strong>Solved:</strong> first, without the potential (one way coupling). In my reading of Eq. G.6, the metal pushes the bonded electrolyte up by \(\delta h_k\); the electrolyte top is free (Eq. G.4).</p>
+        <p><strong>Hands on:</strong> the normal stress at the interface \(\sigma_{zz,k}(0)\) (App. G, pp.28 to 29). For small \(k\): \(\sigma_{zz,k}\simeq-\tfrac23 G_o k^4\delta h_k/(1-\nu_\beta)\) (Eq. 74).</p>
+      </div>
+      <div class="chain-card" data-step="3">
+        <div class="eq-box">$$\nabla^2\phi=0\ \ (\text{Eq. 61 with }\nabla^2p^\beta=0)\ \Rightarrow\ \phi^{(1)}_k=\Phi_{1k}e^{kz}+\Phi_{2k}e^{-kz}$$
+          $$-\partial_z\phi^{(1)}_k-\Omega_0El\,\partial_z p^{\beta(1)}_k=-Da\sqrt{1+\tfrac{Da_i^2}{4Da^2}}\Big[\phi^{(1)}_k+El\big(\Omega_0p^{\beta(1)}_k+\sigma^{(1)}_{zz,k}\big)+\partial_z\phi^{(0)}\,\delta h_k\Big]\ \ (\text{Eq. 71})$$</div>
+        <p><strong>Unknown here:</strong> the two constants \(\Phi_{1k},\Phi_{2k}\).</p>
+        <p><strong>Solved:</strong> from the counter electrode condition (Eq. 62) and the reaction condition at the interface (Eq. 71).</p>
+        <p><strong>Hands on:</strong> the perturbed deposition current. Eq. 71 holds both rivals: the field term \(\partial_z\phi^{(0)}\delta h_k\) (more ions to the crest) and the stress term \(El\,\sigma_{zz,k}\) (adding metal at a compressed crest costs more).</p>
+      </div>
+      <div class="chain-card" data-step="4">
+        <div class="eq-box">$$\omega(k)=\frac{\sqrt{4Da^2+Da_i^2}\,\big(Da_i+El\,\hat\sigma_{zz,k}(0)\big)}{2+\sqrt{4Da^2+Da_i^2}\,\tanh(k)/k}\ \ (\text{Eq. 72}),\qquad \hat\sigma_{zz,k}=\sigma_{zz,k}/\delta h_k$$</div>
+        <p><strong>Unknown here:</strong> \(\omega(k)\), the answer.</p>
+        <p><strong>Read it:</strong> in the numerator, \(Da_i\) (field) is the same for every \(k\) and grows bumps; \(El\,\hat\sigma_{zz}\) (stress) is negative and its size grows with \(k\). The denominator is positive, so it does not move \(k_c\); it rescales \(\omega\) and shifts the peak slightly. \(\omega(k_c)=0\) where they cancel.</p>
+        <p><strong>Limits:</strong> \(k\to0\): \(\omega\simeq Da_i\sqrt{4Da^2+Da_i^2}/(2+\sqrt{4Da^2+Da_i^2})>0\) (Eq. 73), field wins. Large \(k\): stress wins.</p>
+      </div>
+    </div>
+
     <div class="pair">
       <div class="fig">
         <svg viewBox="0 0 360 210" role="img" aria-label="Wide bump: ion flux goes to the crest">
@@ -320,6 +372,32 @@ footer {
       up to \(k_c\), a long wave instability rather than a sharply selected wavelength. Each mode grows as \(S_h(k,t)=S_h(k,0)e^{2\omega t}\) (Eq. 75).
     </p>
 
+    <!-- REAL DISPERSION (Eq. 72) -->
+    <h3>The answer: \(\omega(k)\) from Eq. 72</h3>
+    <div class="fig" id="realw">
+      <div class="presets" id="realPresets">
+        <button data-go="2" class="active">Fig. 7a stiff (\(G_o=2\))</button>
+        <button data-go="0.1">Fig. 7a soft (\(G_o=0.1\))</button>
+      </div>
+      <canvas id="realCanvas" class="plot" role="img" aria-label="Growth rate from Eq. 72 versus wavenumber on a log axis">Growth rate from Eq. 72 versus wavenumber.</canvas>
+      <div class="controls">
+        <div class="ctl"><label for="goSlider">\(G_o\) (electrolyte / metal stiffness) <span class="val" id="goVal"></span></label><input type="range" id="goSlider" min="-1.3" max="0.7" step="0.01"></div>
+        <div class="ctl"><label for="daiSlider">\(Da_i\) (applied current) <span class="val" id="daiVal"></span></label><input type="range" id="daiSlider" min="0.1" max="1" step="0.01"></div>
+      </div>
+      <div class="readout" aria-live="polite">
+        <span>\(k_c\): <b id="roKc"></b></span>
+        <span>Critical wavelength \(2\pi/k_c\): <b id="roLc"></b></span>
+        <span>\(\omega(k\to0)\), Eq. 73: <b id="roW0"></b></span>
+      </div>
+      <p class="caption">
+        Solid: Eq. 72 with \(\hat\sigma_{zz}\) from the full elastic solution of App. G (my evaluation); \(Da=10\), \(El=20\),
+        \(\nu_\alpha=0.42\), \(\nu_\beta=0.33\) as in Fig. 7 (p.19). Dashed: the two Fig. 7a cases at \(Da_i=0.5\)
+        (\(k_c\approx0.40\) and \(0.85\), my evaluation). \(Da_i\) stays below 1 as in the paper (p.19). Shaded: bumps that grow. Softer electrolyte: larger \(k_c\), so narrower bumps also grow.
+        Lower current: smaller \(k_c\). Lengths in units of the electrolyte thickness \(L\).
+      </p>
+    </div>
+
+    <h3>Auxiliary problem: a toy \(\omega(k)\)</h3>
     <!-- INTERACTIVE -->
     <div class="fig" id="lsa">
       <div class="presets" id="presets">
@@ -700,6 +778,163 @@ footer {
 
   newNoise();
   setPreset('long');
+})();
+</script>
+
+<script>
+(function () {
+  'use strict';
+
+  // BEGIN-MATH: Eq. 72 of Dobkin & Fraggedakis (JES 2026) with the interfacial normal stress of App. G.
+  const NU_A = 0.42, NU_B = 0.33, DA = 10, EL = 20;
+
+  // sigma_zz,k(0) / delta h_k from Eqs. G.7-G.9, G.14-G.17, G.22 evaluated at z = 0.
+  function sigmaHat(k, Go) {
+    const za = NU_A - 1, zb = NU_B - 1, eta = za * zb;
+    const xa = 2 * NU_A - 1, xb = 2 * NU_B - 1, ra = 4 * NU_A - 3, rb = 4 * NU_B - 3;
+    const la = Go * xa - 1;
+    const C = Math.cosh(2 * k) - 1, S = Math.sinh(2 * k);
+    const D = 2 * k * k * (Go - 1) * (Go * ra - 1) + 8 * Go * eta * S
+      - (Go * Go * ra - 2 * Go * xa * xb + rb) * C + 8 * zb * zb;
+    const Qs = k * (2 * k * la - 2 * Go * za * C - la * S);
+    const Puxc = 2 * Go * (za * xb * C + zb * xa * (S - 2 * k) - 2 * za * k * k);
+    const Puzs = (S - 2 * k) * (rb - Go * xa * xb) - 4 * Go * za * k * k - 4 * Go * eta * C;
+    return 2 * Go / ((1 - 2 * NU_B) * D) * (-NU_B * k * Puxc + (1 - NU_B) * (k * Puzs + Qs));
+  }
+
+  function omegaFull(k, Go, Dai) {
+    const s = Math.sqrt(4 * DA * DA + Dai * Dai);
+    return s * (Dai + EL * sigmaHat(k, Go)) / (2 + s * Math.tanh(k) / k);
+  }
+
+  function omegaZero(Dai) {
+    const s = Math.sqrt(4 * DA * DA + Dai * Dai);
+    return Dai * s / (2 + s);
+  }
+
+  // First k where omega changes sign from + to -, on a log grid then bisection. Infinity if none below KHI.
+  const KLO = 0.01, KHI = 30;
+  function findKc(Go, Dai) {
+    const n = 400, a = Math.log(KLO), b = Math.log(KHI);
+    let kp = KLO, wp = omegaFull(kp, Go, Dai);
+    for (let i = 1; i <= n; i++) {
+      const k = Math.exp(a + (b - a) * i / n), w = omegaFull(k, Go, Dai);
+      if (wp > 0 && w <= 0) {
+        let lo = kp, hi = k;
+        for (let j = 0; j < 60; j++) {
+          const m = 0.5 * (lo + hi);
+          if (omegaFull(m, Go, Dai) > 0) lo = m; else hi = m;
+        }
+        return 0.5 * (lo + hi);
+      }
+      kp = k; wp = w;
+    }
+    return Infinity;
+  }
+  // END-MATH
+
+  const $ = (id) => document.getElementById(id);
+  const cv = $('realCanvas'), ctx = cv.getContext('2d');
+  const goS = $('goSlider'), daiS = $('daiSlider');
+
+  function fit() {
+    const r = cv.getBoundingClientRect(), dpr = window.devicePixelRatio || 1;
+    const w = Math.max(1, Math.round(r.width * dpr)), h = Math.max(1, Math.round(r.height * dpr));
+    if (cv.width !== w || cv.height !== h) { cv.width = w; cv.height = h; }
+    return dpr;
+  }
+
+  function curve(Go, Dai, M) {
+    const ks = [], ws = [], a = Math.log10(KLO), b = Math.log10(KHI);
+    for (let i = 0; i <= M; i++) { const k = Math.pow(10, a + (b - a) * i / M); ks.push(k); ws.push(omegaFull(k, Go, Dai)); }
+    return { ks, ws };
+  }
+
+  function draw() {
+    const Go = Math.pow(10, parseFloat(goS.value)), Dai = parseFloat(daiS.value);
+    const dpr = fit(), W = cv.width, H = cv.height;
+    const padL = 44 * dpr, padR = 14 * dpr, padT = 14 * dpr, padB = 30 * dpr;
+    ctx.clearRect(0, 0, W, H);
+
+    const ymax = 1.2 * Math.max(omegaZero(Dai), omegaZero(0.5)), ymin = -0.6 * ymax;
+    const la = Math.log10(KLO), lb = Math.log10(KHI);
+    const X = (k) => padL + (W - padL - padR) * (Math.log10(k) - la) / (lb - la);
+    const Y = (w) => padT + (H - padT - padB) * (ymax - Math.max(ymin - 1, Math.min(ymax + 1, w))) / (ymax - ymin);
+
+    const M = 300, cur = curve(Go, Dai, M);
+    const kc = findKc(Go, Dai);
+
+    ctx.save();
+    ctx.beginPath(); ctx.rect(padL, padT, W - padL - padR, H - padT - padB); ctx.clip();
+    // shade the growing band
+    ctx.fillStyle = 'rgba(192,71,58,0.13)';
+    for (let i = 0; i < M; i++) {
+      if (cur.ws[i] > 0) ctx.fillRect(X(cur.ks[i]), padT, X(cur.ks[i + 1]) - X(cur.ks[i]) + 0.5, H - padT - padB);
+    }
+    // zero line
+    ctx.strokeStyle = '#8A93A0'; ctx.lineWidth = 1 * dpr;
+    ctx.beginPath(); ctx.moveTo(padL, Y(0)); ctx.lineTo(W - padR, Y(0)); ctx.stroke();
+    // dashed reference curves (Fig. 7a)
+    ctx.setLineDash([5 * dpr, 4 * dpr]); ctx.strokeStyle = '#7AAFC8'; ctx.lineWidth = 1.4 * dpr;
+    [2, 0.1].forEach((g) => {
+      const ref = curve(g, 0.5, M);
+      ctx.beginPath();
+      ref.ks.forEach((k, i) => { if (i === 0) ctx.moveTo(X(k), Y(ref.ws[i])); else ctx.lineTo(X(k), Y(ref.ws[i])); });
+      ctx.stroke();
+    });
+    ctx.setLineDash([]);
+    // current curve
+    ctx.strokeStyle = '#1A2E42'; ctx.lineWidth = 2.2 * dpr; ctx.beginPath();
+    cur.ks.forEach((k, i) => { if (i === 0) ctx.moveTo(X(k), Y(cur.ws[i])); else ctx.lineTo(X(k), Y(cur.ws[i])); });
+    ctx.stroke();
+    // k_c marker
+    if (isFinite(kc)) {
+      ctx.fillStyle = '#C0473A';
+      ctx.beginPath(); ctx.arc(X(kc), Y(0), 3.5 * dpr, 0, 2 * Math.PI); ctx.fill();
+      ctx.font = (11 * dpr) + 'px system-ui, sans-serif'; ctx.textAlign = 'center';
+      ctx.fillText('k_c', X(kc), Y(0) + 15 * dpr);
+    }
+    ctx.restore();
+
+    // axes
+    ctx.strokeStyle = '#5A6472'; ctx.lineWidth = 1 * dpr;
+    ctx.beginPath(); ctx.moveTo(padL, padT); ctx.lineTo(padL, H - padB); ctx.lineTo(W - padR, H - padB); ctx.stroke();
+    ctx.fillStyle = '#5A6472'; ctx.font = (11 * dpr) + 'px system-ui, sans-serif'; ctx.textAlign = 'center';
+    [0.01, 0.1, 1, 10].forEach((k) => ctx.fillText(String(k), X(k), H - padB + 14 * dpr));
+    ctx.fillText('k (log)', W - padR - 20 * dpr, H - padB - 6 * dpr);
+    ctx.textAlign = 'right';
+    [ymin, 0, ymax].forEach((w) => ctx.fillText(w.toFixed(2), padL - 5 * dpr, Y(w) + 4 * dpr));
+    ctx.save(); ctx.translate(12 * dpr, padT + (H - padT - padB) / 2); ctx.rotate(-Math.PI / 2);
+    ctx.textAlign = 'center'; ctx.fillText('ω(k)', 0, 0); ctx.restore();
+
+    $('goVal').textContent = Go.toFixed(2);
+    $('daiVal').textContent = Dai.toFixed(2);
+    // The non finite branches below are unreachable for the current slider ranges (largest k_c is about 1.9).
+    $('roKc').textContent = isFinite(kc) ? kc.toFixed(3) : '> 30';
+    $('roLc').textContent = isFinite(kc) ? (2 * Math.PI / kc).toFixed(1) + ' L' : '< 0.21 L';
+    $('roW0').textContent = omegaZero(Dai).toFixed(3);
+  }
+
+  function setGo(g) {
+    goS.value = Math.log10(g); daiS.value = 0.5;
+    document.querySelectorAll('#realPresets button').forEach((b) => b.classList.toggle('active', parseFloat(b.dataset.go) === g));
+    draw();
+  }
+  document.querySelectorAll('#realPresets button').forEach((b) => b.addEventListener('click', () => setGo(parseFloat(b.dataset.go))));
+  [goS, daiS].forEach((s) => s.addEventListener('input', () => {
+    document.querySelectorAll('#realPresets button').forEach((b) => b.classList.remove('active'));
+    draw();
+  }));
+  window.addEventListener('resize', draw);
+
+  // equation chain stepper
+  document.querySelectorAll('#chainSteps button').forEach((b) => b.addEventListener('click', () => {
+    const s = b.dataset.step;
+    document.querySelectorAll('#chainSteps button').forEach((x) => x.classList.toggle('active', x === b));
+    document.querySelectorAll('.chain-card').forEach((c) => c.classList.toggle('show', c.dataset.step === s));
+  }));
+
+  setGo(2);
 })();
 </script>
 </body>
