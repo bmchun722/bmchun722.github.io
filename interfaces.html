@@ -255,16 +255,85 @@ footer {
     </div>
     <p>
       The potential \(\phi\) at an ion depends on where every neighbour is at that moment (left). Mean field replaces it by its
-      ensemble average \(\langle\phi\rangle\), the potential of the average (smeared) charge density \(\rho_\pm(\mathbf r)\), which still varies in space, for example across the double layer (right). Three steps give Poisson&ndash;Boltzmann:
+      ensemble average \(\langle\phi\rangle\), the potential of the average (smeared) charge density \(\rho_\pm(\mathbf r)\), which still varies in space, for example across the double layer (right).
     </p>
-    <div class="eq-box">
-      $$\underbrace{q_\pm\phi\ \to\ q_\pm\langle\phi\rangle}_{\text{1. average}}\quad\Rightarrow\quad
-        \underbrace{\rho_\pm(\mathbf r)=\rho_\pm^{b}\,e^{-q_\pm\langle\phi(\mathbf r)\rangle/k_BT}}_{\text{2. Boltzmann}}\quad\Rightarrow\quad
-        \underbrace{-\nabla\cdot\big(\varepsilon_0\varepsilon\nabla\langle\phi\rangle\big)=\textstyle\sum_\pm q_\pm\rho_\pm}_{\text{3. Gauss}}$$
+    <p>Poisson&ndash;Boltzmann combines two exact statements, (A) and (C), with one approximation, (B), which is also used to evaluate the bulk value in (C):</p>
+    <p><strong>(A) Gauss's law, averaged (exact, uniform \(\varepsilon\)).</strong> At any instant the ions are point charges at positions \(\mathbf r_i\).
+      Averaging over all their positions turns the sum of delta functions into the number densities \(\rho_\pm(\mathbf r)\);
+      because Gauss's law is linear, the average passes straight through ([1] Eq. 11, p.7, in Green's function form; differential form Eq. 38, p.13).
+      The electrode's own potential \(\phi_{\text{ext}}\) in Eq. 11 enters below as a boundary condition:</p>
+    <div class="eq-box">$$-\nabla\cdot\big(\varepsilon_0\varepsilon\nabla\phi\big)=\sum_i q_i\,\delta(\mathbf r-\mathbf r_i)
+      \quad\xrightarrow{\ \text{average}\ }\quad
+      -\nabla\cdot\big(\varepsilon_0\varepsilon\nabla\langle\phi\rangle\big)=q_+\rho_+(\mathbf r)+q_-\rho_-(\mathbf r)\qquad\text{(A)}$$</div>
+    <p class="small muted">One equation, but three unknowns: \(\langle\phi\rangle,\rho_+,\rho_-\). We need a rule for how the ions arrange themselves.</p>
+
+    <p><strong>(B) Mean field chemical potential (the approximation).</strong> The cost of adding an ion at \(\mathbf r\) is its ideal gas
+      part plus its charge times the <em>average</em> potential; the electrode energy \(V\), ion size, self energy and correlations are dropped (terms 1 and 4 of
+      Eq. 36; section 2 shows this is \(h=0\)):</p>
+    <div class="eq-box">$$\mu_\pm(\mathbf r)=k_BT\ln\!\big(\Lambda^3\rho_\pm(\mathbf r)\big)+q_\pm\langle\phi(\mathbf r)\rangle\qquad\text{(B)}$$</div>
+
+    <p><strong>(C) Equilibrium (exact).</strong> Ions move until adding one costs the same everywhere, so \(\mu_\pm(\mathbf r)=\mu_\pm^b\), its value
+      in the bulk. Evaluating (B) in the bulk, where \(\rho_\pm=\rho_\pm^b\) and \(\langle\phi\rangle=0\), gives \(\mu_\pm^b\):</p>
+    <div class="eq-box">$$\mu_\pm(\mathbf r)=\mu_\pm^{b}=k_BT\ln\!\big(\Lambda^3\rho_\pm^b\big)\qquad\text{(C)}$$</div>
+
+    <p><strong>(B) + (C) give the Boltzmann distribution.</strong> Set (B) equal to (C); \(\Lambda^3\) cancels:</p>
+    <div class="eq-box">$$k_BT\ln\frac{\rho_\pm(\mathbf r)}{\rho_\pm^b}=-q_\pm\langle\phi(\mathbf r)\rangle
+      \quad\Rightarrow\quad \rho_\pm(\mathbf r)=\rho_\pm^b\,e^{-q_\pm\langle\phi(\mathbf r)\rangle/k_BT}$$</div>
+    <p class="small muted">Where \(\langle\phi\rangle\) is negative, cations gather and anions are pushed away, each by a Boltzmann factor.</p>
+
+    <p><strong>Boltzmann into (A) gives Poisson&ndash;Boltzmann.</strong> Now only \(\langle\phi\rangle\) is unknown. For a 1:1 salt
+      (\(q_\pm=\pm e\), \(\rho_\pm^b=c\)) next to a flat electrode:</p>
+    <div class="eq-box">$$-\nabla\cdot\big(\varepsilon_0\varepsilon\nabla\langle\phi\rangle\big)=\sum_\pm q_\pm\rho_\pm^b\,e^{-q_\pm\langle\phi\rangle/k_BT}
+      \quad\Rightarrow\quad \varepsilon_0\varepsilon\,\frac{d^2\langle\phi\rangle}{dx^2}=2ec\,\sinh\!\frac{e\langle\phi\rangle}{k_BT}$$</div>
+    <p class="small muted">The electrode enters as a boundary condition, again Gauss's law at the surface:
+      \(-\varepsilon_0\varepsilon\,d\langle\phi\rangle/dx\,|_{x=0}=\sigma\).</p>
+
+    <p><strong>Where the lengths come from.</strong> For a weak potential, \(e\langle\phi\rangle\ll k_BT\), use \(\sinh y\approx y\):</p>
+    <div class="eq-box">$$\frac{d^2\langle\phi\rangle}{dx^2}=\frac{\langle\phi\rangle}{\lambda_D^2},\qquad
+      \lambda_D^2=\frac{\varepsilon_0\varepsilon k_BT}{2e^2c}\quad\Rightarrow\quad \langle\phi(x)\rangle=\langle\phi(0)\rangle\,e^{-x/\lambda_D}\ \ (\langle\phi\rangle\to0\ \text{far away})$$</div>
+    <p class="small muted">So \(\lambda_D\) in the table above is the decay length of the averaged potential (linearized Debye&ndash;H&uuml;ckel).
+      Everything rests on (B): it fails when an ion's neighbours do respond to it, which \(\varepsilon_c\) and \(\Xi\) measure.</p>
+    <h3>When mean field breaks</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Case</th><th>Coupling</th><th>Ions per Debye sphere</th><th>Mean field (B)</th></tr></thead>
+        <tbody>
+          <tr><td>1 mM salt, bulk (\(\lambda_D=9.6\) nm)</td><td class="num">\(\varepsilon_c=0.074\)</td><td class="num">4.5</td><td>good: many neighbours, their average is meaningful</td></tr>
+          <tr><td>0.1 M salt, bulk</td><td class="num">\(\varepsilon_c=0.74\)</td><td class="num">0.45</td><td>edge: an estimate</td></tr>
+          <tr><td>1 M salt, bulk</td><td class="num">\(\varepsilon_c=2.4\)</td><td class="num">0.14</td><td>breaks: the Debye sphere holds less than one ion, and \(\lambda_D\) is below the hydrated ion size</td></tr>
+          <tr><td>electrode, 30 &micro;C/cm&sup2;</td><td class="num">\(\Xi\approx6\)</td><td class="num">n/a</td><td>breaks: see the figure</td></tr>
+        </tbody>
+      </table>
     </div>
-    <p class="small muted">1: each ion sees only the average potential. 2: then its density follows a Boltzmann factor in that potential
-      (\(\rho^b\): bulk density, where \(\langle\phi\rangle=0\)). 3: these densities are the charge that makes \(\langle\phi\rangle\).
-      Section 2 derives step 1 from the ion chemical potential and shows what it leaves out.</p>
+    <p class="small muted">Ions per Debye sphere \(=\tfrac{4\pi}{3}\lambda_D^3\cdot2c=1/(3\varepsilon_c)\) for a 1:1 salt in water at 298 K (my calculation).</p>
+    <div class="fig">
+      <svg viewBox="0 0 520 220" role="img" aria-label="Left: Poisson-Boltzmann pictures the counterions as a smooth layer of thickness l_GC. Right: at Xi about 6 the counterions are discrete, 0.73 nm apart, each surrounded by a correlation hole that neighbours avoid.">
+        <defs><linearGradient id="pbLayer" x1="0" x2="1"><stop offset="0" stop-color="#4A7FA5" stop-opacity="0.9"/><stop offset="1" stop-color="#4A7FA5" stop-opacity="0"/></linearGradient></defs>
+        <text class="ttl" x="130" y="16" text-anchor="middle">PB picture</text>
+        <text class="ttl" x="390" y="16" text-anchor="middle">what happens at Ξ ≈ 6</text>
+        <rect x="20" y="25" width="40" height="185" fill="#DDE1E6"/>
+        <text class="lbl-m" x="40" y="205" text-anchor="middle">&#8722; &#8722; &#8722;</text>
+        <rect x="60" y="25" width="10.5" height="185" fill="url(#pbLayer)"/>
+        <text class="lbl" x="92" y="100">smooth layer,</text>
+        <text class="lbl" x="92" y="118">thickness ℓ<tspan dy="4" class="sb">GC</tspan><tspan dy="-4"> 0.12 nm</tspan></text>
+        <text class="lbl-m" x="92" y="150">each ion feels this</text>
+        <text class="lbl-m" x="92" y="166">average</text>
+        <line x1="258" y1="25" x2="258" y2="210" stroke="#D8DCE2" stroke-width="1"/>
+        <rect x="261" y="25" width="40" height="185" fill="#DDE1E6"/>
+        <circle cx="306" cy="45" r="32" fill="#EEF4F8" class="acc-s" stroke-dasharray="4 3"/><circle cx="306" cy="109" r="32" fill="#EEF4F8" class="acc-s" stroke-dasharray="4 3"/><circle cx="306" cy="173" r="32" fill="#EEF4F8" class="acc-s" stroke-dasharray="4 3"/>
+        <circle cx="306" cy="45" r="4.5" class="acc"/><circle cx="306" cy="109" r="4.5" class="acc"/><circle cx="306" cy="173" r="4.5" class="acc"/>
+        <line x1="350" y1="45" x2="350" y2="109" class="thin"/>
+        <line x1="344" y1="45" x2="356" y2="45" class="thin"/><line x1="344" y1="109" x2="356" y2="109" class="thin"/>
+        <text class="lbl" x="362" y="82">spacing 0.73 nm</text>
+        <text class="lbl-m" x="362" y="150">correlation hole:</text>
+        <text class="lbl-m" x="362" y="166">neighbours keep away,</text>
+        <text class="lbl-m" x="362" y="182">so h ≠ 0</text>
+      </svg>
+      <p class="caption">Electrode at 30 &micro;C/cm&sup2;, drawn to scale (87.5 px per nm; my calculation). The layer PB predicts (0.12 nm) is about
+        \(\sqrt{2\pi\Xi}\approx6\) times thinner than the distance between counterions, so there is no smooth layer to average over: each
+        counterion sits nearly alone, with neighbours kept away (hole size schematic). Assumption (B) fails, and the dropped terms 3, 5 and 6 of Eq. 36
+        can no longer be neglected.</p>
+    </div>
     <ul class="plain">
       <li><strong>Bulk.</strong> \(\varepsilon_c=0.74\) at 0.1 M and 2.4 at 1 M. A Debye sphere then holds \(1/(3\varepsilon_c)&lt;1\) ion,
         and an ion pair at distance \(\lambda_D\) has energy \(\varepsilon_c k_BT\), so linearized Debye&ndash;H&uuml;ckel is only an estimate there ([1] Fig. 3, p.10).</li>
@@ -317,7 +386,7 @@ footer {
       \(G(\mathbf r,\mathbf r')\) is the potential at \(\mathbf r\) of a unit charge at \(\mathbf r'\) (in the bulk \(1/4\pi\varepsilon_0\varepsilon|\mathbf r-\mathbf r'|\)).</p>
     <div class="eq-box">$$\langle\phi(\mathbf r)\rangle=\underbrace{\phi_{\text{ext}}(\mathbf r)}_{\text{electrode}}+\int d\mathbf r'\,G(\mathbf r,\mathbf r')\sum_\alpha q_\alpha\rho_\alpha(\mathbf r')$$
       $$\psi_+(\mathbf r;\mathbf r_1,\xi)=\underbrace{\xi q_+G(\mathbf r,\mathbf r_1)}_{\text{the ion itself}}+\underbrace{\int d\mathbf r'\,G(\mathbf r,\mathbf r')\sum_\alpha q_\alpha h_{+\alpha}(\mathbf r_1,\mathbf r';\xi)\,\rho_\alpha(\mathbf r')}_{\text{its cloud}}$$</div>
-    <p class="small muted">\(\langle\phi\rangle\): potential of the electrode plus the average charge (this is Gauss's law, step 3 of section 1).
+    <p class="small muted">\(\langle\phi\rangle\): potential of the electrode plus the average charge (this is Gauss's law, (A) in section 1).
       \(\psi_+\): extra potential when one cation is held at \(\mathbf r_1\). \(h=g-1\): how much the neighbour density near that cation
       differs from the average (\(g\): pair correlation function; \(h=0\) means the neighbours ignore it). \(u^c\) (Step 3): short range pair potential, for example ion size.</p>
 
@@ -329,7 +398,7 @@ footer {
       so \(\psi_+=\xi q_+G\) and term 6 vanishes exactly:</p>
     <div class="eq-box">$$q_+\int_0^1 d\xi\,\xi q_+G-\frac{q_+^2}{2}G=\frac{q_+^2}{2}G-\frac{q_+^2}{2}G=0$$</div>
     <p class="small muted">Poisson&ndash;Boltzmann also neglects terms 3 and 5 (no ion size, no solvation or image energy). Equilibrium then means \(\mu_+\) is the same everywhere,
-      equal to its bulk value \(k_BT\ln(\Lambda^3\rho_+^b)\), where \(V_+=0\) and \(\langle\phi\rangle=0\). Solving for \(\rho_+\) gives \(\rho_+=\rho_+^b e^{-(q_+\langle\phi\rangle+V_+)/k_BT}\): step 2 of section 1.</p>
+      equal to its bulk value \(k_BT\ln(\Lambda^3\rho_+^b)\), where \(V_+=0\) and \(\langle\phi\rangle=0\). Solving for \(\rho_+\) gives \(\rho_+=\rho_+^b e^{-(q_+\langle\phi\rangle+V_+)/k_BT}\): the Boltzmann step of section 1, here keeping \(V_+\), which (B) set to zero.</p>
 
     <p><strong>Step 5. First correction: the screening cloud</strong> (textbook Debye&ndash;H&uuml;ckel limit, my evaluation; the paper
       notes this limit on p.8). Take a unit charge, \(q_+=e\), in a dilute bulk. Solving Eq. 15 (p.8) with \(h\) linear in \(\psi\) gives the screened
