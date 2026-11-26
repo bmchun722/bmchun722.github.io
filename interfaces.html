@@ -712,14 +712,12 @@ footer {
         <span>\(\ell_B/a\): <b id="roBa"></b></span>
         <span>Mean field: <b id="roVerdict"></b></span>
       </div>
-      <div class="plot-title">Where this \(\sigma\) sits (log scales)</div>
-      <canvas id="elecCanvas" class="plot" style="height:200px;" role="img" aria-label="Log log plot of l_B, the counterion spacing a and the Gouy-Chapman length versus surface charge">Lengths versus surface charge.</canvas>
-      <p class="caption">Top: side view, drawn to scale (the view zooms; see the scale bar). Ions are not to scale. The counterions follow the PB
-        density \(\propto1/(x+\ell_{GC})^2\) away from the electrode (drawn within about \(4\ell_{GC}\)), in a slice as deep as the layer; their side by side spacing becomes regular
-        as \(\Xi\) grows, and dashed circles mark the room each one keeps from its neighbours. Bottom: \(\ell_{GC}=3.57\text{ nm}/\sigma\),
-        \(a=4.00\text{ nm}/\sigma^{1/2}\) with \(\sigma\) in &micro;C/cm&sup2;, tied by \(a^2=2\pi\,\ell_B\,\ell_{GC}\); the lines cross at \(\sigma\approx0.8\)
-        (\(\ell_{GC}=a\)) and \(\sigma\approx31\) (\(a=\ell_B\)). All numbers are my calculation for water at 298 K. The bulk works the same way
-        with \(\lambda_D\) in place of \(\ell_{GC}\) and \(d^3=4\pi\,\ell_B\lambda_D^2\).</p>
+      <p class="caption">Side view, drawn to scale (the view zooms; see the scale bar); ions are not to scale. The counterions follow the PB
+        density \(\propto1/(x+\ell_{GC})^2\) away from the electrode (drawn within about \(4\ell_{GC}\)), in a slice as deep as the layer; their
+        side by side spacing becomes regular as \(\Xi\) grows, and dashed circles mark the room each one keeps from its neighbours.
+        \(\ell_{GC}=3.57\text{ nm}/\sigma\) and \(a=4.00\text{ nm}/\sigma^{1/2}\) with \(\sigma\) in &micro;C/cm&sup2;, tied by \(a^2=2\pi\,\ell_B\,\ell_{GC}\):
+        the layer becomes thinner than the spacing at \(\sigma\approx0.8\), and the spacing reaches \(\ell_B\) at \(\sigma\approx31\). All numbers are my
+        calculation for water at 298 K. The bulk works the same way with \(\lambda_D\) in place of \(\ell_{GC}\) and \(d^3=4\pi\,\ell_B\lambda_D^2\).</p>
     </div>
   </section>
 
@@ -1502,7 +1500,6 @@ footer {
   const $ = (id) => document.getElementById(id);
   const sl = $('sigmaSlider');
   const sc = $('elecScene'), sctx = sc.getContext('2d');
-  const cv = $('elecCanvas'), ctx = cv.getContext('2d');
 
   function fit(c) {
     const r = c.getBoundingClientRect(), dpr = window.devicePixelRatio || 1;
@@ -1588,52 +1585,10 @@ footer {
     c.fillText(sb + ' nm', x1 - 6 * dpr, yb + 4 * dpr);
   }
 
-  const XL = -1, XH = 1.6, YL = -1.3, YH = 1.7;
-  function drawMap(sg) {
-    const dpr = fit(cv), W = cv.width, H = cv.height;
-    const pL = 48 * dpr, pR = 14 * dpr, pT = 10 * dpr, pB = 32 * dpr;
-    const X = (lx) => pL + (W - pL - pR) * (lx - XL) / (XH - XL);
-    const Y = (ly) => pT + (H - pT - pB) * (YH - ly) / (YH - YL);
-    ctx.clearRect(0, 0, W, H);
-    [[XL, Math.log10(0.5 * GC0 / LB), 'rgba(74,127,165,0.08)'],
-     [Math.log10(0.5 * GC0 / LB), Math.log10(2 * GC0 / LB), 'rgba(224,160,48,0.12)'],
-     [Math.log10(2 * GC0 / LB), XH, 'rgba(192,71,58,0.08)']].forEach(([x1, x2, col]) => {
-      ctx.fillStyle = col; ctx.fillRect(X(x1), pT, X(x2) - X(x1), H - pT - pB);
-    });
-    ctx.strokeStyle = '#5A6472'; ctx.lineWidth = 1 * dpr;
-    ctx.beginPath(); ctx.moveTo(pL, pT); ctx.lineTo(pL, H - pB); ctx.lineTo(W - pR, H - pB); ctx.stroke();
-    ctx.fillStyle = '#5A6472'; ctx.font = (13 * dpr) + 'px system-ui, sans-serif'; ctx.textAlign = 'center';
-    [0.1, 1, 10].forEach((v) => ctx.fillText(String(v), X(Math.log10(v)), H - pB + 15 * dpr));
-    ctx.fillText('σ (µC/cm²)', (pL + W - pR) / 2, H - 3 * dpr);
-    ctx.textAlign = 'right';
-    [0.1, 1, 10].forEach((v) => ctx.fillText(String(v), pL - 6 * dpr, Y(Math.log10(v)) + 4 * dpr));
-    ctx.save(); ctx.translate(13 * dpr, (pT + H - pB) / 2); ctx.rotate(-Math.PI / 2);
-    ctx.textAlign = 'center'; ctx.fillText('nm', 0, 0); ctx.restore();
-    const line = (f, col) => {
-      ctx.strokeStyle = col; ctx.lineWidth = 2.4 * dpr; ctx.beginPath();
-      for (let i = 0; i <= 200; i++) {
-        const lx = XL + (XH - XL) * i / 200, y = Y(Math.log10(f(Math.pow(10, lx))));
-        if (i === 0) ctx.moveTo(X(lx), y); else ctx.lineTo(X(lx), y);
-      }
-      ctx.stroke();
-    };
-    ctx.save(); ctx.beginPath(); ctx.rect(pL, pT, W - pL - pR, H - pT - pB); ctx.clip();
-    line(() => LB, '#C0473A'); line(aSp, '#1A2E42'); line(lgc, '#4A7FA5');
-    const s1 = Math.pow(GC0 / A0, 2), s2 = Math.pow(A0 / LB, 2);
-    ctx.fillStyle = '#1A1A1A';
-    [[s1, aSp(s1)], [s2, LB]].forEach(([sx, ly]) => { ctx.beginPath(); ctx.arc(X(Math.log10(sx)), Y(Math.log10(ly)), 4 * dpr, 0, 2 * Math.PI); ctx.fill(); });
-    ctx.strokeStyle = '#F08A24'; ctx.lineWidth = 2 * dpr;
-    ctx.beginPath(); ctx.moveTo(X(Math.log10(sg)), pT); ctx.lineTo(X(Math.log10(sg)), H - pB); ctx.stroke();
-    ctx.restore();
-    ctx.font = (13 * dpr) + 'px system-ui, sans-serif'; ctx.textAlign = 'left';
-    ctx.fillStyle = '#C0473A'; ctx.fillText('ℓ_B', X(-0.2), Y(Math.log10(LB)) - 7 * dpr);
-    ctx.fillStyle = '#1A2E42'; ctx.fillText('a', X(0.3), Y(Math.log10(aSp(Math.pow(10, 0.3)))) - 8 * dpr);
-    ctx.fillStyle = '#4A7FA5'; ctx.fillText('ℓ_GC', X(0.3), Y(Math.log10(lgc(Math.pow(10, 0.3)))) + 18 * dpr);
-  }
 
   function draw() {
     const sg = Math.pow(10, parseFloat(sl.value));
-    drawScene(sg); drawMap(sg);
+    drawScene(sg);
     const g = lgc(sg), aa = aSp(sg), xi = LB / g, [vt, vc] = verdict(xi);
     const fmt = (v) => (v >= 10 ? v.toFixed(0) : v >= 1 ? v.toFixed(1) : v.toFixed(2)) + ' nm';
     $('sigmaVal').textContent = (sg < 1 ? sg.toFixed(2) : sg.toFixed(1)) + ' µC/cm²';
