@@ -133,6 +133,8 @@ th, td { border-bottom: 1px solid var(--border); padding: 0.55rem 0.7rem; text-a
 th { font-size: 12.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); font-weight: 600; background: var(--cream); }
 td.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
 .eq-box { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 0.5rem 1rem; margin-bottom: 1rem; overflow-x: auto; }
+.eq-box.key { border: 2px solid var(--blue); background: #F3F8FB; }
+.words td:first-child { white-space: nowrap; }
 .note { background: #fff; border-left: 3px solid var(--blue); padding: 0.75rem 1rem; margin-bottom: 1rem; font-size: 16px; }
 .warn { border-left-color: #C0473A; }
 ul.plain { padding-left: 1.25rem; margin-bottom: 1rem; }
@@ -204,7 +206,7 @@ footer {
         <tbody>
           <tr><td>\(k_BT\)</td><td>thermal energy: the typical energy of random thermal motion per particle, \(4.1\times10^{-21}\) J = 25.7 meV at 298 K. An attraction weaker than \(k_BT\) is shaken apart by thermal motion; a stronger one holds two ions together</td></tr>
           <tr><td>\(\ell_B\)</td><td>distance at which two unit charges in the solvent interact with energy \(k_BT\)</td></tr>
-          <tr><td>\(\lambda_D\)</td><td>Debye length: how far the field of one ion reaches before the ion cloud screens it (shorter at higher salt)</td></tr>
+          <tr><td>\(\lambda_D\)</td><td>Debye length: how far the field of one ion reaches before the ion cloud screens it (shorter at higher salt); \(\lambda_D^2=\varepsilon_0\varepsilon k_BT/(2e^2c)\) for a 1:1 salt of concentration \(c\)</td></tr>
           <tr><td>\(\ell_{GC}\)</td><td>Gouy&ndash;Chapman length: thickness of the counterion layer on an electrode of surface charge \(\sigma\) (a charged wall in [1])</td></tr>
           <tr><td>\(\varepsilon_c,\ \Xi\)</td><td>coupling strengths: ion&ndash;ion energy over \(k_BT\) in the bulk and at the electrode; well below 1, correlations are weak and mean field works; near 1 it is only approximate</td></tr>
         </tbody>
@@ -262,36 +264,49 @@ footer {
       Averaging over all their positions turns the sum of delta functions into the number densities \(\rho_\pm(\mathbf r)\);
       because Gauss's law is linear, the average passes straight through ([1] Eq. 11, p.7, in Green's function form; differential form Eq. 38, p.13).
       The electrode's own potential \(\phi_{\text{ext}}\) in Eq. 11 enters below as a boundary condition:</p>
-    <div class="eq-box">$$-\nabla\cdot\big(\varepsilon_0\varepsilon\nabla\phi\big)=\sum_i q_i\,\delta(\mathbf r-\mathbf r_i)
+    <div class="eq-box key">$$-\nabla\cdot\big(\varepsilon_0\varepsilon\nabla\phi\big)=\sum_i q_i\,\delta(\mathbf r-\mathbf r_i)
       \quad\xrightarrow{\ \text{average}\ }\quad
       -\nabla\cdot\big(\varepsilon_0\varepsilon\nabla\langle\phi\rangle\big)=q_+\rho_+(\mathbf r)+q_-\rho_-(\mathbf r)\qquad\text{(A)}$$</div>
+    <div class="table-wrap">
+      <table class="words">
+        <thead><tr><th>Piece</th><th>Read it as</th></tr></thead>
+        <tbody>
+          <tr><td>\(\nabla\phi\)</td><td>slope of the potential in each direction; \(\mathbf E=-\nabla\phi\) is the electric field</td></tr>
+          <tr><td>\(\varepsilon_0\varepsilon\nabla\phi\)</td><td>\(\nabla\phi\) times the permittivity \(\varepsilon_0\varepsilon\) (how strongly the solvent polarizes); since \(\mathbf E=-\nabla\phi\), this is \(-\varepsilon_0\varepsilon\mathbf E=-\mathbf D\), minus the displacement field</td></tr>
+          <tr><td>\(\nabla\cdot(\ \cdot\ )\)</td><td>divergence: how much of that field flows out of a tiny volume around \(\mathbf r\)</td></tr>
+          <tr><td>whole of (A)</td><td>field lines leave a point only where there is charge: positive charge is a source, negative a sink</td></tr>
+          <tr><td>in 1D</td><td>\(-\varepsilon_0\varepsilon\,d^2\phi/dx^2=\) charge density. \(d^2\phi/dx^2\) is the curvature of \(\phi\):
+            the potential bends where there is charge (positive charge bends it downward, \(\phi''&lt;0\)) and is a straight line where there is none. In 3D, \(\nabla^2\) sums the curvatures along \(x,y,z\); \(\nabla^2\phi=0\) means they cancel</td></tr>
+        </tbody>
+      </table>
+    </div>
     <p class="small muted">One equation, but three unknowns: \(\langle\phi\rangle,\rho_+,\rho_-\). We need a rule for how the ions arrange themselves.</p>
 
     <p><strong>(B) Mean field chemical potential (the approximation).</strong> The cost of adding an ion at \(\mathbf r\) is its ideal gas
       part plus its charge times the <em>average</em> potential; the electrode energy \(V\), ion size, self energy and correlations are dropped (terms 1 and 4 of
       Eq. 36; section 2 shows this is \(h=0\)):</p>
-    <div class="eq-box">$$\mu_\pm(\mathbf r)=k_BT\ln\!\big(\Lambda^3\rho_\pm(\mathbf r)\big)+q_\pm\langle\phi(\mathbf r)\rangle\qquad\text{(B)}$$</div>
+    <div class="eq-box key">$$\mu_\pm(\mathbf r)=k_BT\ln\!\big(\Lambda^3\rho_\pm(\mathbf r)\big)+q_\pm\langle\phi(\mathbf r)\rangle\qquad\text{(B)}$$</div>
 
     <p><strong>(C) Equilibrium (exact).</strong> Ions move until adding one costs the same everywhere, so \(\mu_\pm(\mathbf r)=\mu_\pm^b\), its value
       in the bulk. Evaluating (B) in the bulk, where \(\rho_\pm=\rho_\pm^b\) and \(\langle\phi\rangle=0\), gives \(\mu_\pm^b\):</p>
-    <div class="eq-box">$$\mu_\pm(\mathbf r)=\mu_\pm^{b}=k_BT\ln\!\big(\Lambda^3\rho_\pm^b\big)\qquad\text{(C)}$$</div>
+    <div class="eq-box key">$$\mu_\pm(\mathbf r)=\mu_\pm^{b}=k_BT\ln\!\big(\Lambda^3\rho_\pm^b\big)\qquad\text{(C)}$$</div>
 
     <p><strong>(B) + (C) give the Boltzmann distribution.</strong> Set (B) equal to (C); \(\Lambda^3\) cancels:</p>
-    <div class="eq-box">$$k_BT\ln\frac{\rho_\pm(\mathbf r)}{\rho_\pm^b}=-q_\pm\langle\phi(\mathbf r)\rangle
-      \quad\Rightarrow\quad \rho_\pm(\mathbf r)=\rho_\pm^b\,e^{-q_\pm\langle\phi(\mathbf r)\rangle/k_BT}$$</div>
+    <div class="eq-box">$$k_BT\ln\!\big(\Lambda^3\rho_\pm(\mathbf r)\big)+q_\pm\langle\phi(\mathbf r)\rangle=k_BT\ln\!\big(\Lambda^3\rho_\pm^b\big)
+      \quad\Rightarrow\quad k_BT\ln\frac{\rho_\pm(\mathbf r)}{\rho_\pm^b}=-q_\pm\langle\phi(\mathbf r)\rangle$$</div>
+    <div class="eq-box key">$$\rho_\pm(\mathbf r)=\rho_\pm^b\,e^{-q_\pm\langle\phi(\mathbf r)\rangle/k_BT}\qquad\text{(Boltzmann)}$$</div>
     <p class="small muted">Where \(\langle\phi\rangle\) is negative, cations gather and anions are pushed away, each by a Boltzmann factor.</p>
 
     <p><strong>Boltzmann into (A) gives Poisson&ndash;Boltzmann.</strong> Now only \(\langle\phi\rangle\) is unknown. For a 1:1 salt
       (\(q_\pm=\pm e\), \(\rho_\pm^b=c\)) next to a flat electrode:</p>
-    <div class="eq-box">$$-\nabla\cdot\big(\varepsilon_0\varepsilon\nabla\langle\phi\rangle\big)=\sum_\pm q_\pm\rho_\pm^b\,e^{-q_\pm\langle\phi\rangle/k_BT}
-      \quad\Rightarrow\quad \varepsilon_0\varepsilon\,\frac{d^2\langle\phi\rangle}{dx^2}=2ec\,\sinh\!\frac{e\langle\phi\rangle}{k_BT}$$</div>
+    <div class="eq-box key">$$-\nabla\cdot\big(\varepsilon_0\varepsilon\nabla\langle\phi\rangle\big)=\sum_\pm q_\pm\rho_\pm^b\,e^{-q_\pm\langle\phi\rangle/k_BT}\qquad\text{(PB)}$$
+      $$\text{1:1 salt, flat electrode:}\quad \varepsilon_0\varepsilon\,\frac{d^2\langle\phi\rangle}{dx^2}=2ec\,\sinh\!\frac{e\langle\phi\rangle}{k_BT}$$</div>
+    <p class="small muted">Read (PB) as: the curvature of the average potential is set by the ions that this same potential has gathered
+      (left side from (A), right side from Boltzmann).</p>
     <p class="small muted">The electrode enters as a boundary condition, again Gauss's law at the surface:
       \(-\varepsilon_0\varepsilon\,d\langle\phi\rangle/dx\,|_{x=0}=\sigma\).</p>
 
-    <p><strong>Where the lengths come from.</strong> For a weak potential, \(e\langle\phi\rangle\ll k_BT\), use \(\sinh y\approx y\):</p>
-    <div class="eq-box">$$\frac{d^2\langle\phi\rangle}{dx^2}=\frac{\langle\phi\rangle}{\lambda_D^2},\qquad
-      \lambda_D^2=\frac{\varepsilon_0\varepsilon k_BT}{2e^2c}\quad\Rightarrow\quad \langle\phi(x)\rangle=\langle\phi(0)\rangle\,e^{-x/\lambda_D}\ \ (\langle\phi\rangle\to0\ \text{far away})$$</div>
-    <p class="small muted">So \(\lambda_D\) in the table above is the decay length of the averaged potential (linearized Debye&ndash;H&uuml;ckel).
+    <p class="small muted">
       Everything rests on (B): it fails when an ion's neighbours do respond to it, which \(\varepsilon_c\) and \(\Xi\) measure.</p>
     <h3>When mean field breaks</h3>
     <div class="table-wrap">
@@ -466,6 +481,9 @@ footer {
       <div class="chain-card" data-step="3">
         <div class="eq-box">$$\nabla^2\phi=0\ \ (\text{Eq. 61 with }\nabla^2p^\beta=0)\ \Rightarrow\ \phi^{(1)}_k=\Phi_{1k}e^{kz}+\Phi_{2k}e^{-kz}$$
           $$-\partial_z\phi^{(1)}_k-\Omega_0El\,\partial_z p^{\beta(1)}_k=-Da\sqrt{1+\tfrac{Da_i^2}{4Da^2}}\Big[\phi^{(1)}_k+El\big(\Omega_0p^{\beta(1)}_k+\sigma^{(1)}_{zz,k}\big)+\partial_z\phi^{(0)}\,\delta h_k\Big]\ \ (\text{Eq. 71})$$</div>
+        <p><strong>Read it:</strong> \(\nabla^2\phi=0\) comes from ion conservation, not from Gauss's law: with constant ion concentration and uniform conductivity, the ion
+          flux (\(\propto-\nabla\phi-\Omega\nabla p/e\)) neither piles up nor disappears anywhere, and \(\nabla^2p=0\) then leaves \(\nabla^2\phi=0\).
+          Same math as (A) of section 1 with zero charge, different physical origin. For one mode \(e^{ikx}\), \(\partial_x^2\) gives \(-k^2\), so \(\partial_z^2\) must give \(+k^2\): hence \(e^{\pm kz}\).</p>
         <p><strong>Unknown here:</strong> the two constants \(\Phi_{1k},\Phi_{2k}\).</p>
         <p><strong>Solved:</strong> from the counter electrode condition (Eq. 62) and the reaction condition at the interface (Eq. 71).</p>
         <p><strong>Hands on:</strong> the perturbed deposition current. Eq. 71 holds both rivals: the field term \(\partial_z\phi^{(0)}\delta h_k\) (more ions to the crest) and the stress term \(El\,\sigma_{zz,k}\) (adding metal at a compressed crest costs more).</p>
