@@ -696,7 +696,7 @@ footer {
         <button data-sigma="5">5 &micro;C/cm&sup2; (\(\Xi\approx1\))</button>
         <button data-sigma="30" class="active">30 &micro;C/cm&sup2;</button>
       </div>
-      <canvas id="elecCanvas" class="plot" role="img" aria-label="Log log plot of l_B, the counterion spacing a and the Gouy-Chapman length versus surface charge">Lengths versus surface charge.</canvas>
+      <canvas id="elecScene" class="plot" style="height:300px;" role="img" aria-label="Side view of the electrode and its counterions drawn to scale at the chosen surface charge, with rulers for l_GC, a and l_B">Electrode and counterions at the chosen surface charge.</canvas>
       <div class="controls">
         <div class="ctl">
           <label for="sigmaSlider">Surface charge \(\sigma\) <span class="val" id="sigmaVal"></span></label>
@@ -704,23 +704,22 @@ footer {
           <div class="small muted">Charge per area on the electrode; in a capacitor picture \(\sigma=C(U-U_{PZC})\), so it grows with the electrode potential.</div>
         </div>
       </div>
-      <div class="plot-title">The three lengths at this \(\sigma\), on one linear scale</div>
-      <div class="lterms">
-        <span>\(\ell_{GC}\): PB layer</span><div class="lbar"><span id="barGC" style="background:#4A7FA5;"></span></div><b id="vGC"></b>
-        <span>\(a\): counterion spacing</span><div class="lbar"><span id="barA" style="background:#1A2E42;"></span></div><b id="vA"></b>
-        <span>\(\ell_B\): \(k_BT\) distance</span><div class="lbar"><span id="barB" style="background:#C0473A;"></span></div><b id="vB"></b>
-      </div>
       <div class="readout" aria-live="polite">
+        <span>\(\ell_{GC}\): <b id="vGC"></b></span>
+        <span>\(a\): <b id="vA"></b></span>
+        <span>\(\ell_B\): <b id="vB"></b></span>
         <span>\(\Xi=\ell_B/\ell_{GC}\): <b id="roXi"></b></span>
         <span>\(\ell_B/a\): <b id="roBa"></b></span>
         <span>Mean field: <b id="roVerdict"></b></span>
       </div>
-      <p class="caption">My calculation for water at 298 K: \(\ell_{GC}=3.57\text{ nm}/\sigma\), \(a=4.00\text{ nm}/\sigma^{1/2}\) with \(\sigma\) in
-        &micro;C/cm&sup2;, tied by \(a^2=2\pi\,\ell_B\,\ell_{GC}\). The lines cross twice: at \(\sigma\approx0.8\) the layer becomes thinner than the
-        spacing (\(\ell_{GC}=a\)), and at \(\sigma\approx31\) the spacing reaches \(\ell_B\) (\(a=\ell_B\)). Below the first crossing many counterions
-        overlap in a thick layer and their average works; past the second, each counterion sits about \(\ell_B\) from its neighbours and feels them
-        one by one. Colours as in the bars above: works, onset (\(\Xi\approx1\)), fails. The bulk works the same way with \(\lambda_D\) in place of
-        \(\ell_{GC}\) and \(d^3=4\pi\,\ell_B\lambda_D^2\).</p>
+      <div class="plot-title">Where this \(\sigma\) sits (log scales)</div>
+      <canvas id="elecCanvas" class="plot" style="height:200px;" role="img" aria-label="Log log plot of l_B, the counterion spacing a and the Gouy-Chapman length versus surface charge">Lengths versus surface charge.</canvas>
+      <p class="caption">Top: side view, drawn to scale (the view zooms; see the scale bar). Ions are not to scale. The counterions follow the PB
+        density \(\propto1/(x+\ell_{GC})^2\) away from the electrode (drawn within about \(4\ell_{GC}\)), in a slice as deep as the layer; their side by side spacing becomes regular
+        as \(\Xi\) grows, and dashed circles mark the room each one keeps from its neighbours. Bottom: \(\ell_{GC}=3.57\text{ nm}/\sigma\),
+        \(a=4.00\text{ nm}/\sigma^{1/2}\) with \(\sigma\) in &micro;C/cm&sup2;, tied by \(a^2=2\pi\,\ell_B\,\ell_{GC}\); the lines cross at \(\sigma\approx0.8\)
+        (\(\ell_{GC}=a\)) and \(\sigma\approx31\) (\(a=\ell_B\)). All numbers are my calculation for water at 298 K. The bulk works the same way
+        with \(\lambda_D\) in place of \(\ell_{GC}\) and \(d^3=4\pi\,\ell_B\lambda_D^2\).</p>
     </div>
   </section>
 
@@ -1501,48 +1500,117 @@ footer {
   const verdict = (xi) => xi < 0.5 ? ['works', '#4A7FA5'] : (xi < 2 ? ['onset', '#E0A030'] : ['fails', '#C0473A']);
 
   const $ = (id) => document.getElementById(id);
-  const cv = $('elecCanvas'), ctx = cv.getContext('2d'), sl = $('sigmaSlider');
-  const XL = -1, XH = 1.6, YL = -1.3, YH = 1.7;   // log10 ranges
+  const sl = $('sigmaSlider');
+  const sc = $('elecScene'), sctx = sc.getContext('2d');
+  const cv = $('elecCanvas'), ctx = cv.getContext('2d');
 
-  function fit() {
-    const r = cv.getBoundingClientRect(), dpr = window.devicePixelRatio || 1;
+  function fit(c) {
+    const r = c.getBoundingClientRect(), dpr = window.devicePixelRatio || 1;
     const w = Math.max(1, Math.round(r.width * dpr)), h = Math.max(1, Math.round(r.height * dpr));
-    if (cv.width !== w || cv.height !== h) { cv.width = w; cv.height = h; }
+    if (c.width !== w || c.height !== h) { c.width = w; c.height = h; }
     return dpr;
   }
 
-  function draw() {
-    const sg = Math.pow(10, parseFloat(sl.value));
-    const dpr = fit(), W = cv.width, H = cv.height;
-    const pL = 48 * dpr, pR = 14 * dpr, pT = 14 * dpr, pB = 34 * dpr;
+  // fixed random numbers per ion index, so the picture morphs smoothly with the slider
+  let seed = 12345;
+  const rnd = () => { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; };
+  const NMAX = 400, U = [], J = [];
+  for (let i = 0; i < NMAX; i++) { U.push(rnd()); J.push(rnd() - 0.5); }
+
+  function niceBar(nm) {
+    const steps = [0.1, 0.2, 0.5, 1, 2, 5, 10, 20, 50];
+    let best = steps[0];
+    steps.forEach((v) => { if (v <= nm) best = v; });
+    return best;
+  }
+
+  function drawScene(sg) {
+    const dpr = fit(sc), W = sc.width, H = sc.height, c = sctx;
+    const g = lgc(sg), aa = aSp(sg), xi = LB / g;
+    const wallPx = 46 * dpr, top = 58 * dpr, bottom = 26 * dpr;
+    const Lw = Math.max(2.4 * Math.max(g, aa, LB), 4 * aa * (W - wallPx) / (H - top - bottom));  // nm shown; at least 4 spacings tall
+    const k = (W - wallPx - 12 * dpr) / Lw;               // px per nm
+    const Hy = (H - top - bottom) / k;                     // nm of electrode shown
+    c.clearRect(0, 0, W, H);
+    c.fillStyle = '#FFFFFF'; c.fillRect(0, 0, W, H);
+
+    // PB layer and electrode
+    const grad = c.createLinearGradient(wallPx, 0, wallPx + g * k * 3, 0);
+    grad.addColorStop(0, 'rgba(74,127,165,0.38)'); grad.addColorStop(1, 'rgba(74,127,165,0)');
+    c.fillStyle = grad; c.fillRect(wallPx, top, Math.min(g * k * 3, W - wallPx), H - top - bottom);
+    c.fillStyle = '#DDE1E6'; c.fillRect(0, top, wallPx, H - top - bottom);
+    c.fillStyle = '#1A2E42'; c.font = 'bold ' + (14 * dpr) + 'px system-ui, sans-serif'; c.textAlign = 'center';
+    const mstep = Math.max(aa * k, 14 * dpr);
+    for (let y = top + mstep / 2; y < H - bottom; y += mstep) c.fillText('−', wallPx - 10 * dpr, y + 5 * dpr);
+    c.fillStyle = '#5A6472'; c.font = (12 * dpr) + 'px system-ui, sans-serif'; c.textAlign = 'left';
+    c.save(); c.translate(16 * dpr, H - bottom - 8 * dpr); c.rotate(-Math.PI / 2); c.fillText('electrode', 0, 0); c.restore();
+
+    // counterions: slice as deep as the layer, PB profile in x, spacing more regular as Xi grows
+    const depth = Math.max(aa, g);
+    const n = Math.min(NMAX, Math.max(1, Math.round(Hy * depth / (aa * aa))));
+    const w = 1 / (1 + xi * xi);                            // 1: random, 0: regular
+    const r = 4.5 * dpr;
+    const pts = [];
+    for (let i = 0; i < n; i++) {
+      const u = 0.8 * U[i];                                   // within about 4 l_GC of the wall
+      const x = g * u / (1 - u);
+      const yReg = (i + 0.5) / n, yRand = U[(i * 7 + 3) % NMAX];
+      const y = (1 - w) * yReg + w * yRand + 0.15 * w * J[i] / n;
+      const px = wallPx + r + x * k, py = top + y * (H - top - bottom);
+      if (px < W - r) pts.push([px, py]);
+    }
+    if (xi > 1) {
+      c.strokeStyle = 'rgba(74,127,165,0.8)'; c.setLineDash([3 * dpr, 3 * dpr]); c.lineWidth = 1.2 * dpr;
+      pts.forEach(([px, py]) => { c.beginPath(); c.arc(px, py, aa * k / 2, 0, 2 * Math.PI); c.stroke(); });
+      c.setLineDash([]);
+    }
+    c.fillStyle = '#4A7FA5';
+    pts.forEach(([px, py]) => { c.beginPath(); c.arc(px, py, r, 0, 2 * Math.PI); c.fill(); });
+
+    // rulers on the same scale, top of the scene
+    const ruler = (y, len, col, label) => {
+      c.strokeStyle = col; c.lineWidth = 5 * dpr;
+      c.beginPath(); c.moveTo(wallPx, y); c.lineTo(wallPx + len * k, y); c.stroke();
+      c.fillStyle = col; c.font = (13 * dpr) + 'px system-ui, sans-serif'; c.textAlign = 'left';
+      c.fillText(label, wallPx + len * k + 6 * dpr, y + 4 * dpr);
+    };
+    const fmt = (v) => (v >= 10 ? v.toFixed(0) : v >= 1 ? v.toFixed(1) : v.toFixed(2)) + ' nm';
+    ruler(12 * dpr, g, '#4A7FA5', 'ℓ_GC ' + fmt(g) + ' (PB layer)');
+    ruler(28 * dpr, aa, '#1A2E42', 'a ' + fmt(aa) + ' (spacing)');
+    ruler(44 * dpr, LB, '#C0473A', 'ℓ_B ' + fmt(LB) + ' (k_BT distance)');
+
+    // scale bar
+    const sb = niceBar(Lw / 4);
+    c.strokeStyle = '#1A1A1A'; c.lineWidth = 2 * dpr;
+    const x1 = W - 14 * dpr - sb * k, yb = H - 10 * dpr;
+    c.beginPath(); c.moveTo(x1, yb); c.lineTo(W - 14 * dpr, yb); c.stroke();
+    c.fillStyle = '#1A1A1A'; c.textAlign = 'right'; c.font = (12 * dpr) + 'px system-ui, sans-serif';
+    c.fillText(sb + ' nm', x1 - 6 * dpr, yb + 4 * dpr);
+  }
+
+  const XL = -1, XH = 1.6, YL = -1.3, YH = 1.7;
+  function drawMap(sg) {
+    const dpr = fit(cv), W = cv.width, H = cv.height;
+    const pL = 48 * dpr, pR = 14 * dpr, pT = 10 * dpr, pB = 32 * dpr;
     const X = (lx) => pL + (W - pL - pR) * (lx - XL) / (XH - XL);
     const Y = (ly) => pT + (H - pT - pB) * (YH - ly) / (YH - YL);
     ctx.clearRect(0, 0, W, H);
-
-    // verdict bands along sigma (Xi = LB / lgc)
-    const xiAt = (sgv) => LB / lgc(sgv);
     [[XL, Math.log10(0.5 * GC0 / LB), 'rgba(74,127,165,0.08)'],
      [Math.log10(0.5 * GC0 / LB), Math.log10(2 * GC0 / LB), 'rgba(224,160,48,0.12)'],
-     [Math.log10(2 * GC0 / LB), XH, 'rgba(192,71,58,0.08)']].forEach(([x1, x2, c]) => {
-      ctx.fillStyle = c; ctx.fillRect(X(x1), pT, X(x2) - X(x1), H - pT - pB);
+     [Math.log10(2 * GC0 / LB), XH, 'rgba(192,71,58,0.08)']].forEach(([x1, x2, col]) => {
+      ctx.fillStyle = col; ctx.fillRect(X(x1), pT, X(x2) - X(x1), H - pT - pB);
     });
-
-    // grid and axes
-    ctx.strokeStyle = '#E3E6EA'; ctx.lineWidth = 1 * dpr;
-    for (let e = -1; e <= 1; e++) { ctx.beginPath(); ctx.moveTo(pL, Y(e)); ctx.lineTo(W - pR, Y(e)); ctx.stroke(); }
-    ctx.strokeStyle = '#5A6472';
+    ctx.strokeStyle = '#5A6472'; ctx.lineWidth = 1 * dpr;
     ctx.beginPath(); ctx.moveTo(pL, pT); ctx.lineTo(pL, H - pB); ctx.lineTo(W - pR, H - pB); ctx.stroke();
     ctx.fillStyle = '#5A6472'; ctx.font = (13 * dpr) + 'px system-ui, sans-serif'; ctx.textAlign = 'center';
-    [0.1, 1, 10].forEach((v) => ctx.fillText(String(v), X(Math.log10(v)), H - pB + 16 * dpr));
-    ctx.fillText('σ (µC/cm², log)', (pL + W - pR) / 2, H - 4 * dpr);
+    [0.1, 1, 10].forEach((v) => ctx.fillText(String(v), X(Math.log10(v)), H - pB + 15 * dpr));
+    ctx.fillText('σ (µC/cm²)', (pL + W - pR) / 2, H - 3 * dpr);
     ctx.textAlign = 'right';
     [0.1, 1, 10].forEach((v) => ctx.fillText(String(v), pL - 6 * dpr, Y(Math.log10(v)) + 4 * dpr));
     ctx.save(); ctx.translate(13 * dpr, (pT + H - pB) / 2); ctx.rotate(-Math.PI / 2);
-    ctx.textAlign = 'center'; ctx.fillText('length (nm, log)', 0, 0); ctx.restore();
-
-    // three lines
-    const line = (f, col, width) => {
-      ctx.strokeStyle = col; ctx.lineWidth = width * dpr; ctx.beginPath();
+    ctx.textAlign = 'center'; ctx.fillText('nm', 0, 0); ctx.restore();
+    const line = (f, col) => {
+      ctx.strokeStyle = col; ctx.lineWidth = 2.4 * dpr; ctx.beginPath();
       for (let i = 0; i <= 200; i++) {
         const lx = XL + (XH - XL) * i / 200, y = Y(Math.log10(f(Math.pow(10, lx))));
         if (i === 0) ctx.moveTo(X(lx), y); else ctx.lineTo(X(lx), y);
@@ -1550,35 +1618,26 @@ footer {
       ctx.stroke();
     };
     ctx.save(); ctx.beginPath(); ctx.rect(pL, pT, W - pL - pR, H - pT - pB); ctx.clip();
-    line(() => LB, '#C0473A', 2.4);
-    line(aSp, '#1A2E42', 2.4);
-    line(lgc, '#4A7FA5', 2.4);
-    // crossings
+    line(() => LB, '#C0473A'); line(aSp, '#1A2E42'); line(lgc, '#4A7FA5');
     const s1 = Math.pow(GC0 / A0, 2), s2 = Math.pow(A0 / LB, 2);
     ctx.fillStyle = '#1A1A1A';
     [[s1, aSp(s1)], [s2, LB]].forEach(([sx, ly]) => { ctx.beginPath(); ctx.arc(X(Math.log10(sx)), Y(Math.log10(ly)), 4 * dpr, 0, 2 * Math.PI); ctx.fill(); });
-    // current sigma
     ctx.strokeStyle = '#F08A24'; ctx.lineWidth = 2 * dpr;
     ctx.beginPath(); ctx.moveTo(X(Math.log10(sg)), pT); ctx.lineTo(X(Math.log10(sg)), H - pB); ctx.stroke();
     ctx.restore();
-    // line labels
     ctx.font = (13 * dpr) + 'px system-ui, sans-serif'; ctx.textAlign = 'left';
     ctx.fillStyle = '#C0473A'; ctx.fillText('ℓ_B', X(-0.2), Y(Math.log10(LB)) - 7 * dpr);
     ctx.fillStyle = '#1A2E42'; ctx.fillText('a', X(0.3), Y(Math.log10(aSp(Math.pow(10, 0.3)))) - 8 * dpr);
     ctx.fillStyle = '#4A7FA5'; ctx.fillText('ℓ_GC', X(0.3), Y(Math.log10(lgc(Math.pow(10, 0.3)))) + 18 * dpr);
-    ctx.fillStyle = '#1A1A1A'; ctx.textAlign = 'center';
-    ctx.fillText('ℓ_GC = a', X(Math.log10(s1)), Y(Math.log10(aSp(s1))) + 20 * dpr);
-    ctx.fillText('a = ℓ_B', X(Math.log10(s2)) - 18 * dpr, Y(Math.log10(LB)) + 20 * dpr);
+  }
 
-    // bars on one linear scale
-    const g = lgc(sg), aa = aSp(sg), mx = Math.max(g, aa, LB);
+  function draw() {
+    const sg = Math.pow(10, parseFloat(sl.value));
+    drawScene(sg); drawMap(sg);
+    const g = lgc(sg), aa = aSp(sg), xi = LB / g, [vt, vc] = verdict(xi);
     const fmt = (v) => (v >= 10 ? v.toFixed(0) : v >= 1 ? v.toFixed(1) : v.toFixed(2)) + ' nm';
-    $('barGC').style.width = (100 * g / mx) + '%'; $('vGC').textContent = fmt(g);
-    $('barA').style.width = (100 * aa / mx) + '%'; $('vA').textContent = fmt(aa);
-    $('barB').style.width = (100 * LB / mx) + '%'; $('vB').textContent = fmt(LB);
-
-    const xi = xiAt(sg), [vt, vc] = verdict(xi);
     $('sigmaVal').textContent = (sg < 1 ? sg.toFixed(2) : sg.toFixed(1)) + ' µC/cm²';
+    $('vGC').textContent = fmt(g); $('vA').textContent = fmt(aa); $('vB').textContent = fmt(LB);
     $('roXi').textContent = xi < 0.1 ? xi.toFixed(3) : xi.toFixed(2);
     $('roBa').textContent = (LB / aa).toFixed(2);
     const ve = $('roVerdict'); ve.textContent = vt; ve.style.color = vc;
